@@ -120,6 +120,8 @@
   .tx-scroll table.tx { min-width:1100px; }
   .chip-sm { font-size:11px; padding:2px 8px; border-radius:9999px; background:var(--fc-color-surface-tertiary); color:var(--fc-color-blue-gray-700); }
   .chip-sm.exempt { background:#dceaff; color:#0358d7; }
+  .side-collapse { display:flex; align-items:center; gap:12px; padding:0 10px; height:38px; color:var(--fc-color-blue-gray-700); font-size:14px; cursor:pointer; border-top:1px solid var(--fc-color-border-primary); margin-top:6px; padding-top:0; }
+  .side-collapse:hover { color:var(--fc-color-blue-gray-900); }
   .nav-item:hover { background:var(--fc-color-surface-tertiary); }
   .nav-item.active { background:var(--fc-color-brand-blue-100); color:var(--fc-color-brand-blue-700); font-family:"Poppins"; font-weight:500; }
   .side-nav-footer { padding:var(--fc-spacing-2); border-top:1px solid var(--fc-color-border-primary); }
@@ -325,6 +327,29 @@
   .twin .tv { font-family:"Poppins"; font-weight:700; font-size:24px; margin-top:6px; color:var(--fc-color-blue-gray-900); }
   .twin .tv.good { color:var(--fc-color-green-600); }
   .twin .ts { font-size:11px; color:var(--fc-color-blue-gray-500); margin-top:4px; }
+  /* Real decision-rationale UI (Impact Analysis + Top Decision Dimensions + Prism) */
+  .ia-layout { display:grid; grid-template-columns:380px 1fr; gap:24px; align-items:start; }
+  .ia-title, .dd-title { font-family:"Poppins"; font-weight:600; font-size:12px; letter-spacing:.04em; text-transform:uppercase; color:var(--fc-color-blue-gray-600); margin:0 0 12px; }
+  .ia-chart { position:relative; }
+  .ia-band { position:absolute; left:62%; right:0; top:0; bottom:0; background:rgba(0,186,127,.07); border-left:2px solid var(--fc-color-green-500); border-radius:0 6px 6px 0; pointer-events:none; }
+  .ia-row { position:relative; display:flex; align-items:center; gap:9px; height:32px; }
+  .ia-row .ia-ic { width:15px; height:15px; flex-shrink:0; z-index:1; }
+  .ia-name { font-size:11.5px; color:var(--fc-color-blue-gray-800); z-index:1; }
+  .ia-bar { position:absolute; height:10px; border-radius:3px; top:50%; transform:translateY(-50%); }
+  .ia-bar.pos { left:62%; background:var(--fc-color-green-500); }
+  .ia-bar.neg { right:38%; background:var(--fc-color-red-500); }
+  .dd-grid { display:grid; grid-template-columns:repeat(3,1fr); border:1px solid var(--fc-color-border-primary); border-radius:12px; overflow:hidden; }
+  .dd-cell { padding:13px 15px; border-right:1px solid var(--fc-color-border-primary); border-bottom:1px solid var(--fc-color-border-primary); }
+  .dd-head { display:flex; justify-content:space-between; align-items:baseline; gap:8px; }
+  .dd-name { font-family:"Poppins"; font-weight:600; font-size:12.5px; color:var(--fc-color-blue-gray-900); }
+  .dd-attr { font-size:10px; color:var(--fc-color-blue-gray-500); white-space:nowrap; }
+  .dd-body { display:flex; gap:7px; margin-top:8px; font-size:11.5px; color:var(--fc-color-text-secondary); line-height:1.4; }
+  .dd-body svg { flex-shrink:0; margin-top:1px; }
+  .prism-box { background:#f4f1ff; border:1px solid #e3dbff; border-radius:10px; padding:14px 16px; margin-bottom:16px; }
+  .prism-box p { font-size:13px; line-height:1.55; color:var(--fc-color-blue-gray-800); margin:0; }
+  .prism-beta { display:inline-flex; align-items:center; gap:7px; margin-top:10px; font-size:11px; color:var(--fc-color-blue-gray-500); }
+  .prism-beta .tag { background:var(--fc-color-gold-500); color:#3a2d00; font-weight:700; font-size:9px; padding:2px 6px; border-radius:4px; letter-spacing:.03em; }
+  @media (max-width:880px){ .ia-layout { grid-template-columns:1fr; } .dd-grid { grid-template-columns:1fr; } }
   .pj-2col { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
   .pj-sub { background:var(--fc-color-blue-gray-50); border-radius:10px; padding:14px 16px; }
   .pj-sub .st { font-family:"Poppins"; font-weight:600; font-size:12px; color:var(--fc-color-blue-gray-700); margin:0 0 10px; display:flex; align-items:center; gap:7px; }
@@ -368,7 +393,44 @@
   .welcome-card { position:relative; overflow:hidden; background:linear-gradient(150deg, rgba(0,30,110,.82) 0%, rgba(0,55,165,.78) 40%, rgba(20,95,215,.72) 100%); backdrop-filter:blur(16px) saturate(1.2); -webkit-backdrop-filter:blur(16px) saturate(1.2); border:1px solid rgba(255,255,255,.18); border-radius:18px; box-shadow:0 24px 60px rgba(0,34,85,.28); max-width:720px; width:100%; padding:34px 40px; }
   .welcome-card::before { content:""; position:absolute; inset:0; z-index:0; background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); pointer-events:none; }
   .welcome-card > div { position:relative; z-index:1; }
-  .welcome-logo { display:flex; align-items:center; gap:10px; margin-bottom:20px; }
+  .welcome-logo { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+  .welcome-tagline { font-family:"Poppins"; font-weight:600; font-size:13px; letter-spacing:.01em; color:rgba(255,255,255,.6); margin:0 0 22px; }
+  /* Connections (exploded network) view */
+  .cn-kpis { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:16px; }
+  .cn-kpi { background:var(--fc-color-blue-gray-50); border-radius:10px; padding:12px 14px; }
+  .cn-kpi .k { font-size:11px; color:var(--fc-color-text-secondary); }
+  .cn-kpi .v { font-family:"Poppins"; font-weight:700; font-size:22px; color:var(--fc-color-blue-gray-900); margin-top:3px; }
+  .cn-kpi .v.good { color:var(--fc-color-green-600); }
+  .cn-body { display:grid; grid-template-columns:168px 1fr 200px; gap:16px; align-items:start; }
+  .cn-rail { font-size:12px; border-right:1px solid var(--fc-color-border-primary); padding-right:12px; }
+  .cn-rail .grp { margin-bottom:13px; }
+  .cn-rail .grp-t { font-family:"Poppins"; font-weight:600; font-size:11px; color:var(--fc-color-blue-gray-700); margin-bottom:6px; }
+  .cn-rail .r { display:flex; align-items:center; gap:7px; padding:3px 0; color:var(--fc-color-blue-gray-700); }
+  .cn-rail .r .d { width:8px; height:8px; border-radius:50%; flex-shrink:0; background:var(--fc-color-blue-gray-300); }
+  .cn-rail .r .d.g { background:#22c55e; } .cn-rail .r .d.r { background:#ef4444; } .cn-rail .r .d.k { background:var(--fc-color-blue-gray-800); }
+  .cn-rail .r .ct { margin-left:auto; color:var(--fc-color-blue-gray-500); font-variant-numeric:tabular-nums; }
+  .cn-rep { display:flex; align-items:center; gap:8px; font-size:13px; color:var(--fc-color-blue-gray-700); margin-bottom:8px; }
+  .cn-rep .rb { font-family:"Poppins"; font-weight:700; font-size:11px; padding:2px 9px; border-radius:6px; background:var(--fc-color-green-100); color:var(--fc-color-green-600); }
+  .cn-graph { position:relative; background:var(--fc-color-blue-gray-50); border-radius:12px; padding:10px; }
+  .cn-graph svg { display:block; width:100%; height:auto; }
+  .cn-zoom { position:absolute; top:12px; left:12px; display:flex; flex-direction:column; gap:7px; z-index:2; }
+  .cn-zoom button { width:30px; height:30px; border-radius:8px; border:1px solid var(--fc-color-border-primary); background:#fff; color:var(--fc-color-blue-gray-700); font-size:17px; line-height:1; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 1px 3px rgba(0,34,85,.08); }
+  .cn-zoom button svg { width:15px; height:15px; stroke:currentColor; fill:none; stroke-width:1.8; }
+  .cn-tip { position:absolute; top:42%; right:58px; width:186px; background:#fff; border:1px solid var(--fc-color-border-primary); border-radius:10px; box-shadow:0 8px 22px rgba(0,34,85,.14); padding:12px 13px; z-index:2; }
+  .cn-tip .tt { font-family:"Poppins"; font-weight:700; font-size:11px; letter-spacing:.04em; text-transform:uppercase; color:var(--fc-color-green-600); margin-bottom:8px; }
+  .cn-tip .ts { font-size:9.5px; letter-spacing:.05em; text-transform:uppercase; color:var(--fc-color-blue-gray-500); margin:9px 0 5px; }
+  .cn-tip .tr { display:flex; align-items:center; gap:7px; font-size:12px; color:var(--fc-color-blue-gray-800); padding:2px 0; }
+  .cn-tip .tr .dd { width:13px; height:13px; border-radius:50%; background:var(--fc-color-brand-blue-100); flex-shrink:0; }
+  .cn-tip .tchips { display:flex; gap:6px; margin-top:3px; }
+  .cn-tip .tchips span { font-family:"Poppins"; font-weight:600; font-size:10px; padding:3px 8px; border-radius:6px; background:var(--fc-color-blue-gray-100); color:var(--fc-color-blue-gray-700); }
+  .cn-pulse { transform-box:fill-box; transform-origin:center; animation:cnpulse 2.6s ease-out infinite; }
+  @keyframes cnpulse { 0%{ transform:scale(.6); opacity:.55 } 70%{ transform:scale(1.6); opacity:0 } 100%{ opacity:0 } }
+  .cn-id-title { font-family:"Poppins"; font-weight:600; font-size:11px; letter-spacing:.04em; text-transform:uppercase; color:var(--fc-color-blue-gray-600); margin-bottom:8px; }
+  .cn-id-row { display:flex; gap:8px; padding:7px 0; border-bottom:1px solid var(--fc-color-border-primary); font-size:12px; }
+  .cn-id-row:last-child { border-bottom:none; }
+  .cn-id-row .lbl { color:var(--fc-color-text-secondary); width:78px; flex-shrink:0; }
+  .cn-id-row .val { color:var(--fc-color-blue-gray-900); font-weight:500; }
+  @media (max-width:880px){ .cn-kpis{ grid-template-columns:repeat(2,1fr); } .cn-body{ grid-template-columns:1fr; } }
   .welcome-card h1 { font-family:"Poppins"; font-weight:700; font-size:28px; color:#fff; margin:0 0 6px; }
   .welcome-card .intro { font-family:"Proxima Nova", Arial, sans-serif; font-size:16px; color:rgba(255,255,255,.72); margin:0 0 26px; }
   .welcome-card h2 { font-family:"Poppins"; font-weight:600; font-size:19px; color:#fff; margin:0 0 5px; }
@@ -410,39 +472,38 @@
       <defs><linearGradient id="fp" x1="30.5" y1="1" x2="0" y2="31" gradientUnits="userSpaceOnUse"><stop stop-color="#5B58EA"/><stop offset="1" stop-color="#1F75F6"/></linearGradient></defs>
     </svg>
     <div>
-      <div class="brand-name">Forter</div>
-      <div class="brand-sub">Demo Merchant</div>
+      <div class="brand-name">Demo Apparel Vertical</div>
+      <div class="brand-sub">Production</div>
     </div>
   </div>
 
   <nav class="nav-scroll">
-    <!-- Real top-level zones (code order). Per-merchant gating to be added later. -->
-    <a class="nav-item active" data-page="Home"><img class="zbadge" src="po-assets/img/zones/home.svg" alt=""> Home</a>
-    <a class="nav-item" data-page="Transactions"><img class="zbadge" src="po-assets/img/zones/transactions.svg" alt=""> Transactions</a>
-    <a class="nav-item" data-page="Claims"><img class="zbadge" src="po-assets/img/zones/claims.svg" alt=""> Claims</a>
-    <a class="nav-item" data-page="Decision Touchpoints"><img class="zbadge" src="po-assets/img/zones/decision_touchpoints.svg" alt=""> Decision Touchpoints</a>
-    <a class="nav-item" data-page="Payments"><img class="zbadge" src="po-assets/img/zones/payments.svg" alt=""> Payments</a>
-    <a class="nav-item" data-page="Compensation"><img class="zbadge" src="po-assets/img/zones/unified_compensation.svg" alt=""> Compensation</a>
-    <a class="nav-item" data-page="Identities"><img class="zbadge" src="po-assets/img/zones/identities.svg" alt=""> Identities</a>
-    <a class="nav-item" data-page="Identity Protection"><img class="zbadge" src="po-assets/img/zones/ato_protection.svg" alt=""> Identity Protection</a>
-    <a class="nav-item" data-page="AI Agent"><img class="zbadge" src="po-assets/img/zones/agents.svg" alt=""> AI Agent</a>
-    <a class="nav-item" data-page="Live Insights"><img class="zbadge" src="po-assets/img/zones/live_js_insights.svg" alt=""> Live Insights</a>
-    <a class="nav-item" data-page="Explore"><img class="zbadge" src="po-assets/img/zones/decision_touchpoints.svg" alt=""> Explore</a>
-    <a class="nav-item" data-page="Intelligence Hub"><img class="zbadge" src="po-assets/img/zones/intelligence_hub.svg" alt=""> Intelligence Hub</a>
-    <a class="nav-item" data-page="Agentic Orchestration"><span class="zfallback"><svg viewBox="0 0 24 24"><circle cx="5" cy="6" r="2"/><circle cx="19" cy="6" r="2"/><circle cx="12" cy="18" r="2"/><path d="M6.5 7.5L11 16M17.5 7.5L13 16M7 6h10"/></svg></span> Agentic Orchestration</a>
+    <a class="nav-item active" data-page="Home"><svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7"/><path d="M6 10v9h12v-9"/></svg> Home</a>
 
-    <div style="height:1px;background:var(--fc-color-border-primary);margin:12px 4px"></div>
+    <div class="nav-section-title">Trust Platform</div>
+    <a class="nav-item" data-page="Transactions"><svg viewBox="0 0 24 24"><path d="M6 9h13l-3-3"/><path d="M18 15H5l3 3"/></svg> Transactions</a>
+    <a class="nav-item" data-page="Account Protection"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.2"/><path d="M5.5 20a6.5 6.5 0 0 1 13 0"/></svg> Account Protection</a>
+    <a class="nav-item" data-page="Claims"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M12 7.5v9M14 9.6a2 2 0 0 0-2-1.4c-1.1 0-2 .6-2 1.5s.9 1.4 2 1.4 2 .6 2 1.5-.9 1.5-2 1.5a2 2 0 0 1-2-1.4"/></svg> Claims</a>
+    <a class="nav-item" data-page="Chargeback Recoveries"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v9M13.8 9.6a1.9 1.9 0 0 0-1.8-1.2c-1 0-1.8.6-1.8 1.4s.8 1.3 1.8 1.3 1.8.6 1.8 1.4-.8 1.4-1.8 1.4a1.9 1.9 0 0 1-1.8-1.2"/></svg> Chargeback Recoveries</a>
+    <a class="nav-item" data-page="Payments"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18M6 14h4"/></svg> Payments</a>
+    <a class="nav-item" data-page="Intelligence Hub"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1"/></svg> Intelligence Hub</a>
 
-    <a class="nav-item" data-page="Lists"><span class="zfallback"><svg viewBox="0 0 24 24"><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/></svg></span> Lists</a>
-    <a class="nav-item" data-page="Policies"><img class="zbadge" src="po-assets/img/zones/policies.svg" alt=""> Policies</a>
-    <a class="nav-item" data-page="Report Center"><img class="zbadge" src="po-assets/img/zones/report_center.svg" alt=""> Report Center</a>
-    <a class="nav-item" data-page="Forter Data Studio"><img class="zbadge" src="po-assets/img/zones/forter_data_studio.svg" alt=""> Forter Data Studio</a>
-    <a class="nav-item" data-page="Integration Center"><img class="zbadge" src="po-assets/img/zones/integration_center.svg" alt=""> Integration Center</a>
+    <div class="nav-section-title">Tools</div>
+    <a class="nav-item" data-page="Forter Data Studio"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1"/><rect x="13" y="4" width="7" height="7" rx="1"/><rect x="4" y="13" width="7" height="7" rx="1"/><rect x="13" y="13" width="7" height="7" rx="1"/></svg> Forter Data Studio</a>
+    <a class="nav-item" data-page="Policies"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg> Policies</a>
+    <a class="nav-item" data-page="Lists"><svg viewBox="0 0 24 24"><path d="M4 7h10M4 12h10M4 17h7"/><path d="M18 14v6M15 17h6"/></svg> Lists</a>
+
+    <div class="nav-section-title">Integration Center</div>
+    <a class="nav-item" data-page="Docs"><svg viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/></svg> Docs</a>
+    <a class="nav-item" data-page="Tools"><svg viewBox="0 0 24 24"><path d="M9 8l-4 4 4 4M15 8l4 4-4 4"/></svg> Tools</a>
+    <a class="nav-item" data-page="JavaScript Integration"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M11 10v4.4a1.3 1.3 0 0 1-2.5.3M14 14.8a1.6 1.6 0 0 0 1.5.9c.9 0 1.4-.5 1.4-1.1 0-1.4-2.8-.9-2.8-2.3 0-.6.5-1 1.3-1 .6 0 1.1.3 1.3.8"/></svg> JavaScript Integration</a>
+    <a class="nav-item" data-page="Credentials"><svg viewBox="0 0 24 24"><circle cx="8" cy="12" r="3.5"/><path d="M11.5 12H20l-2 2 2 2M14 12v3"/></svg> Credentials</a>
+    <a class="nav-item" data-page="Setup"><svg viewBox="0 0 24 24"><circle cx="16" cy="7" r="2"/><circle cx="8" cy="12" r="2"/><circle cx="14" cy="17" r="2"/><path d="M4 7h10M18 7h2M4 12h2M10 12h10M4 17h8M16 17h4"/></svg> Setup</a>
   </nav>
 
   <div class="side-nav-footer">
-    <a class="nav-item" data-page="Help Center"><img class="zbadge" src="po-assets/img/zones/help.svg" alt=""> Help Center</a>
-    <a class="nav-item" data-page="Settings"><img class="zbadge" src="po-assets/img/zones/settings.svg" alt=""> Settings</a>
+    <a class="nav-item" data-page="Settings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg> Settings</a>
+    <div class="side-collapse"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M15 6l-6 6 6 6"/></svg> Collapse</div>
     <div class="user-chip">
       <div class="avatar" id="user-initials">AC</div>
       <div style="min-width:0">
@@ -1037,20 +1098,192 @@
     <div class="pj-card" id="pj-identity">
       <div class="pj-head">
         <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 2a5 5 0 0 0-5 5c0 2 1 3.5 1 6a4 4 0 0 0 8 0c0-2.5 1-4 1-6a5 5 0 0 0-5-5z"/><path d="M9 21h6"/></svg></span>
-        <div><h4>Why Forter recovered this one</h4><p>Forter checked this shopper against its identity network before retrying</p></div>
+        <div><h4>Why Forter trusted this customer</h4><p>Forter’s decision rationale across every dimension that matters</p></div>
         <span class="pj-status ok"><span class="dot"></span>Trusted</span>
       </div>
-      <div class="pj-signals">
-        <span class="pj-sig">Seen across 1,400+ merchants</span>
-        <span class="pj-sig">47 prior clean orders</span>
-        <span class="pj-sig">Trusted device</span>
-        <span class="pj-sig">Known good email</span>
-        <span class="pj-sig">0 chargebacks</span>
+      <div class="prism-box">
+        <p>This customer was approved because they have a strong, positive purchase history with no fraudulent chargebacks and consistently use the same payment method. The account has an established device history on the Forter network. The issuer’s decline did not reflect real risk, so Forter recovered the payment.</p>
+        <div class="prism-beta"><span class="tag">BETA</span> Prism can make mistakes and may be inaccurate. Please use caution.</div>
       </div>
-      <div class="pj-verdict">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--fc-color-green-600)" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
-        Verdict: legitimate customer, safe to recover. Forter retries customers it trusts, not declines.
+      <div class="ia-layout">
+        <div class="ia-col">
+          <div class="ia-title">Impact Analysis</div>
+          <div class="ia-chart">
+            <div class="ia-band"></div>
+            <div class="ia-row"><svg class="ia-ic" viewBox="0 0 24 24" fill="none" stroke="var(--fc-color-green-600)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/></svg><span class="ia-name">Purchase History</span><span class="ia-bar pos" style="width:130px"></span></div>
+            <div class="ia-row"><svg class="ia-ic" viewBox="0 0 24 24" fill="none" stroke="var(--fc-color-green-600)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/></svg><span class="ia-name">Payment Method Usage</span><span class="ia-bar pos" style="width:78px"></span></div>
+            <div class="ia-row"><svg class="ia-ic" viewBox="0 0 24 24" fill="none" stroke="var(--fc-color-red-500)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg><span class="ia-name">Connection Manipulation</span><span class="ia-bar neg" style="width:52px"></span></div>
+            <div class="ia-row"><svg class="ia-ic" viewBox="0 0 24 24" fill="none" stroke="var(--fc-color-red-500)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg><span class="ia-name">Device Quality</span><span class="ia-bar neg" style="width:40px"></span></div>
+            <div class="ia-row"><svg class="ia-ic" viewBox="0 0 24 24" fill="none" stroke="var(--fc-color-red-500)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg><span class="ia-name">Geolocations</span><span class="ia-bar neg" style="width:44px"></span></div>
+            <div class="ia-row"><svg class="ia-ic" viewBox="0 0 24 24" fill="none" stroke="var(--fc-color-green-600)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/></svg><span class="ia-name">Identity Consistency</span><span class="ia-bar pos" style="width:34px"></span></div>
+            <div class="ia-row"><svg class="ia-ic" viewBox="0 0 24 24" fill="none" stroke="var(--fc-color-green-600)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/></svg><span class="ia-name">Browsing Behaviour</span><span class="ia-bar pos" style="width:28px"></span></div>
+            <div class="ia-row"><svg class="ia-ic" viewBox="0 0 24 24" fill="none" stroke="var(--fc-color-red-500)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg><span class="ia-name">Cart Risk</span><span class="ia-bar neg" style="width:24px"></span></div>
+            <div class="ia-row"><svg class="ia-ic" viewBox="0 0 24 24" fill="none" stroke="var(--fc-color-red-500)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg><span class="ia-name">Account / Email Trust Level</span><span class="ia-bar neg" style="width:30px"></span></div>
+          </div>
+        </div>
+        <div class="dd-col">
+          <div class="dd-title">Top Decision Dimensions</div>
+          <div class="dd-grid">
+            <div class="dd-cell">
+              <div class="dd-head"><span class="dd-name">Purchase History</span><span class="dd-attr">2 Attributes</span></div>
+              <div class="dd-body"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--fc-color-green-600)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/></svg>The customer is not associated with fraudulent chargebacks in the Forter network</div>
+            </div>
+            <div class="dd-cell">
+              <div class="dd-head"><span class="dd-name">Payment Method Usage</span><span class="dd-attr">2 Attributes</span></div>
+              <div class="dd-body"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--fc-color-green-600)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/></svg>The customer has been using the same credit card consistently over time</div>
+            </div>
+            <div class="dd-cell">
+              <div class="dd-head"><span class="dd-name">Connection Manipulation</span><span class="dd-attr">1 Attribute</span></div>
+              <div class="dd-body"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--fc-color-red-500)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>The customer’s IP address is a hosting connection frequently used for fraudulent activity</div>
+            </div>
+            <div class="dd-cell">
+              <div class="dd-head"><span class="dd-name">Device Quality</span><span class="dd-attr">1 Attribute</span></div>
+              <div class="dd-body"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--fc-color-red-500)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>The customer is likely spoofing their device</div>
+            </div>
+            <div class="dd-cell">
+              <div class="dd-head"><span class="dd-name">Geolocations</span><span class="dd-attr">1 Attribute</span></div>
+              <div class="dd-body"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--fc-color-red-500)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>Shipping and billing address mismatch</div>
+            </div>
+            <div class="dd-cell">
+              <div class="dd-head"><span class="dd-name">Identity Consistency</span><span class="dd-attr">1 Attribute</span></div>
+              <div class="dd-body"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--fc-color-green-600)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/></svg>The customer is using an account which was opened 6 months and 1 day ago</div>
+            </div>
+            <div class="dd-cell">
+              <div class="dd-head"><span class="dd-name">Browsing Behaviour</span><span class="dd-attr">1 Attribute</span></div>
+              <div class="dd-body"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--fc-color-green-600)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/></svg>Device was first seen in the site/app 2 months and 14 days ago</div>
+            </div>
+            <div class="dd-cell">
+              <div class="dd-head"><span class="dd-name">Cart Risk</span><span class="dd-attr">1 Attribute</span></div>
+              <div class="dd-body"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--fc-color-red-500)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>Transaction amount is unusually high for the website</div>
+            </div>
+            <div class="dd-cell">
+              <div class="dd-head"><span class="dd-name">Account / Email Trust Level</span><span class="dd-attr">1 Attribute</span></div>
+              <div class="dd-body"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--fc-color-red-500)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>The transaction is a regular account checkout</div>
+            </div>
+          </div>
+        </div>
       </div>
+    </div>
+
+    <!-- Connections: the identity exploded across the Forter network -->
+    <div class="pj-card" id="pj-connections">
+      <div class="pj-head">
+        <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="5" cy="6" r="2"/><circle cx="19" cy="6" r="2"/><circle cx="12" cy="18" r="2"/><path d="M6.5 7.5L11 16M17.5 7.5L13 16M7 6h10"/></svg></span>
+        <div><h4>Connections</h4><p>This shopper, recognised right across the Forter network</p></div>
+        <span class="pj-status ok"><span class="dot"></span>Network reputation: Trusted</span>
+      </div>
+      <div class="cn-kpis">
+        <div class="cn-kpi"><div class="k">Transactions</div><div class="v">52</div></div>
+        <div class="cn-kpi"><div class="k">Approved</div><div class="v good">52</div></div>
+        <div class="cn-kpi"><div class="k">Declined</div><div class="v">0</div></div>
+        <div class="cn-kpi"><div class="k">Not reviewed</div><div class="v">0</div></div>
+      </div>
+      <div class="cn-body">
+        <div class="cn-rail">
+          <div class="grp">
+            <div class="grp-t">Decisions</div>
+            <div class="r"><span class="d g"></span>Approved<span class="ct">52</span></div>
+            <div class="r"><span class="d r"></span>Declined<span class="ct">0</span></div>
+            <div class="r"><span class="d"></span>Not reviewed<span class="ct">0</span></div>
+            <div class="r"><span class="d"></span>Verification required<span class="ct">0</span></div>
+          </div>
+          <div class="grp">
+            <div class="grp-t">Connection type</div>
+            <div class="r"><span class="d k"></span>Hard<span class="ct">9</span></div>
+            <div class="r"><span class="d"></span>Probabilistic<span class="ct">43</span></div>
+            <div class="r"><span class="d"></span>First degree<span class="ct">40</span></div>
+            <div class="r"><span class="d"></span>Second degree<span class="ct">12</span></div>
+          </div>
+          <div class="grp">
+            <div class="grp-t">Identity</div>
+            <div class="r">Account<span class="ct">1</span></div>
+            <div class="r">Full name<span class="ct">3</span></div>
+            <div class="r">Payment method<span class="ct">2</span></div>
+            <div class="r">Email<span class="ct">4</span></div>
+          </div>
+          <div class="grp">
+            <div class="grp-t">Cyber intelligence</div>
+            <div class="r">Device<span class="ct">2</span></div>
+            <div class="r">IP address<span class="ct">3</span></div>
+          </div>
+          <div class="grp">
+            <div class="grp-t">Contact details</div>
+            <div class="r">Ship address<span class="ct">2</span></div>
+            <div class="r">Bill address<span class="ct">2</span></div>
+            <div class="r">Billing phone<span class="ct">1</span></div>
+          </div>
+        </div>
+        <div class="cn-center">
+          <div class="cn-rep">Network reputation <span class="rb">Trusted</span></div>
+        <div class="cn-graph">
+          <div class="cn-zoom">
+            <button title="Fit to view"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+            <button title="Zoom in">+</button>
+            <button title="Zoom out">−</button>
+          </div>
+          <svg viewBox="0 0 640 420" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+            <!-- concentric time rings -->
+            <g fill="none" stroke="var(--fc-color-blue-gray-200)" stroke-dasharray="2 5">
+              <circle cx="320" cy="210" r="95"/><circle cx="320" cy="210" r="160"/><circle cx="320" cy="210" r="205"/>
+            </g>
+            <g font-family="Open Sans, sans-serif" font-size="11" fill="var(--fc-color-blue-gray-400)">
+              <text x="150" y="214">1D</text><text x="95" y="214">3M</text>
+            </g>
+            <!-- spokes -->
+            <g stroke="var(--fc-color-blue-gray-300)" stroke-width="1" fill="none">
+              <line x1="320" y1="210" x2="120" y2="95"/><line x1="320" y1="210" x2="300" y2="72"/>
+              <line x1="320" y1="210" x2="440" y2="80"/><line x1="320" y1="210" x2="560" y2="165"/>
+              <line x1="320" y1="210" x2="555" y2="300"/><line x1="320" y1="210" x2="430" y2="360"/>
+              <line x1="320" y1="210" x2="215" y2="360"/><line x1="320" y1="210" x2="95" y2="290"/>
+              <line x1="320" y1="210" x2="78" y2="195"/><line x1="320" y1="210" x2="470" y2="250"/>
+              <line x1="320" y1="210" x2="385" y2="330"/><line x1="320" y1="210" x2="150" y2="120"/>
+              <line x1="320" y1="210" x2="250" y2="72"/><line x1="320" y1="210" x2="520" y2="120"/>
+              <line x1="320" y1="210" x2="160" y2="305"/>
+            </g>
+            <!-- secondary (other-type) small dots -->
+            <g fill="var(--fc-color-blue-gray-400)">
+              <circle cx="250" cy="160" r="3"/><circle cx="392" cy="170" r="3"/><circle cx="270" cy="265" r="3"/><circle cx="405" cy="272" r="3"/>
+            </g>
+            <!-- approved connection nodes -->
+            <g fill="#22c55e">
+              <circle cx="120" cy="95" r="6"/><circle cx="300" cy="72" r="4"/><circle cx="440" cy="80" r="7"/>
+              <circle cx="560" cy="165" r="5"/><circle cx="555" cy="300" r="4"/><circle cx="430" cy="360" r="6"/>
+              <circle cx="215" cy="360" r="5"/><circle cx="95" cy="290" r="4"/><circle cx="78" cy="195" r="5"/>
+              <circle cx="470" cy="250" r="3.5"/><circle cx="385" cy="330" r="4"/>
+            </g>
+            <!-- cluster count bubbles -->
+            <g font-family="Poppins" font-size="11" font-weight="700">
+              <circle cx="150" cy="120" r="13" fill="var(--fc-color-green-100)" stroke="#22c55e"/><text x="150" y="124" text-anchor="middle" fill="var(--fc-color-green-600)">13</text>
+              <circle cx="250" cy="72" r="13" fill="var(--fc-color-green-100)" stroke="#22c55e"/><text x="250" y="76" text-anchor="middle" fill="var(--fc-color-green-600)">8</text>
+              <circle cx="160" cy="305" r="13" fill="var(--fc-color-green-100)" stroke="#22c55e"/><text x="160" y="309" text-anchor="middle" fill="var(--fc-color-green-600)">12</text>
+              <circle cx="520" cy="120" r="13" fill="var(--fc-color-green-100)" stroke="#22c55e"/><text x="520" y="124" text-anchor="middle" fill="var(--fc-color-green-600)">5</text>
+            </g>
+            <!-- anchor -->
+            <circle class="cn-pulse" cx="320" cy="210" r="34" fill="rgba(34,197,94,.18)"/>
+            <circle cx="320" cy="210" r="21" fill="#22c55e"/>
+            <path d="M316 203a4 4 0 0 1 8 0c0 2.5-1.2 4-1.2 6.5a2.8 2.8 0 0 1-5.6 0c0-2.5-1.2-4-1.2-6.5z" fill="#fff"/>
+          </svg>
+          <div class="cn-tip">
+            <div class="tt">Approved transaction</div>
+            <div class="ts">Connected by</div>
+            <div class="tr"><span class="dd"></span>Full name</div>
+            <div class="tr"><span class="dd"></span>Purchase items</div>
+            <div class="tr"><span class="dd"></span>IP patterns</div>
+            <div class="ts">Connection type</div>
+            <div class="tchips"><span>1st degree</span><span>Hard</span></div>
+          </div>
+        </div>
+        </div>
+        <div class="cn-identity">
+          <div class="cn-id-title">Linked identity</div>
+          <div class="cn-id-row"><span class="lbl">Account</span><span class="val mono">u_4f9c…e21</span></div>
+          <div class="cn-id-row"><span class="lbl">Email</span><span class="val">shopper••••@email.com</span></div>
+          <div class="cn-id-row"><span class="lbl">Device</span><span class="val">Trusted, seen 2y+</span></div>
+          <div class="cn-id-row"><span class="lbl">Markets</span><span class="val">UK, FR, US</span></div>
+          <div class="cn-id-row"><span class="lbl">First seen</span><span class="val">Mar 2021</span></div>
+        </div>
+      </div>
+      <p class="calc-note" style="color:var(--fc-color-text-secondary); margin:14px 0 0">One identity, linked to 52 clean transactions across merchants on the network. This shopper is part of Forter’s 2.1B+ identities, seen on average 28 times a year, which is how Forter recognised them as trusted before the issuer ever did.</p>
     </div>
 
     <!-- The road not taken: selectivity proves it is not a blind retry -->
@@ -1131,6 +1364,227 @@
           <div class="pj-row" style="border-bottom:none"><span class="k">Provider</span><span class="v">Stripe · 2.0</span></div>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- ===== "Approved cheaper" detail (cost flow drill-down) ===== -->
+  <section id="page-PayCostDetail" class="page" hidden>
+    <a class="back-link" id="pay-cost-back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg> Back to Payments</a>
+    <div class="detail-title">Payment <span class="mono" style="font-size:18px">pay_ord_2402</span> <span class="badge b-approve"><i></i> Approved</span></div>
+    <div class="detail-meta" style="margin:8px 0 22px">
+      <span class="amt">$214.00</span> &nbsp;·&nbsp; Visa •••• 4071 &nbsp;·&nbsp; FR &nbsp;·&nbsp; Approved frictionlessly
+    </div>
+
+    <!-- Frictionless journey -->
+    <div class="pj-card">
+      <div class="pj-head">
+        <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+        <div><h4>Payment Journey</h4><p>Timeline of payment events and status changes</p></div>
+        <span class="pj-status ok"><span class="dot"></span>Succeeded</span>
+      </div>
+      <div class="pj-timeline">
+        <div class="pj-ev">
+          <span class="ev-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M2 10h20"/></svg></span>
+          <div class="ev-t">Payment Initiated</div>
+          <div class="ev-d">Payment of $214.00 initiated</div>
+          <div class="ev-time">09:14:02</div>
+        </div>
+        <span class="pj-arrow"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        <div class="pj-ev ok" id="pjc-nostepup">
+          <span class="ev-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/></svg></span>
+          <div class="ev-t">3DS Step-up<br><span class="ev-sub">skipped</span></div>
+          <div class="ev-s">Not required</div>
+          <div class="ev-d">No challenge, no friction</div>
+          <div class="ev-time">—</div>
+        </div>
+        <span class="pj-arrow"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        <div class="pj-ev ok">
+          <span class="ev-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>
+          <div class="ev-t">Payment Attempt<br><span class="ev-sub">Stripe #_1</span></div>
+          <div class="ev-s">Succeeded</div>
+          <div class="ev-d">Authorized first time</div>
+          <div class="ev-time">09:14:05</div>
+        </div>
+        <span class="pj-arrow"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        <div class="pj-ev ok">
+          <span class="ev-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>
+          <div class="ev-t">Capture</div>
+          <div class="ev-s">Succeeded</div>
+          <div class="ev-d">Captured $214.00</div>
+          <div class="ev-time">09:19:05</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Network tokenization -->
+    <div class="pj-card" id="pjc-token">
+      <div class="pj-head">
+        <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V8a5 5 0 0 1 10 0v3"/></svg></span>
+        <div><h4>Network Tokenization</h4><p>How Forter lowered the cost of this payment</p></div>
+        <span class="pj-pill">Forter Token</span>
+      </div>
+      <div class="pj-grid">
+        <div class="pj-row"><span class="k">Network token</span><span class="v good">Applied</span></div>
+        <div class="pj-row"><span class="k">Token source</span><span class="v">Updated directly by the network</span></div>
+        <div class="pj-row"><span class="k">Interchange tier</span><span class="v good">Lower (tokenized rate)</span></div>
+        <div class="pj-row"><span class="k">Card credentials</span><span class="v">Kept current automatically</span></div>
+      </div>
+      <div class="pj-callout">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg>
+        <span>Forter presented this payment with a <b>network token</b> rather than the raw card number. Tokenized transactions qualify for lower interchange and avoid declines from expired or reissued cards, so the same sale clears at a lower cost per payment.</span>
+      </div>
+    </div>
+
+    <!-- Lower-cost routing -->
+    <div class="pj-card" id="pjc-routing">
+      <div class="pj-head">
+        <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 4v6h6"/><path d="M20 20v-6h-6"/><path d="M20 4a9 9 0 0 0-15 4M4 20a9 9 0 0 0 15-4"/></svg></span>
+        <div><h4>Routing &amp; Cost</h4><p>Why Forter chose this path</p></div>
+        <span class="pj-pill">Predictive Routing</span>
+      </div>
+      <div class="pj-grid">
+        <div class="pj-row"><span class="k">3DS step-up</span><span class="v good">Skipped (not needed)</span></div>
+        <div class="pj-row"><span class="k">Step-up fee avoided</span><span class="v good">Yes</span></div>
+        <div class="pj-row"><span class="k">Processor chosen</span><span class="v">Stripe (lower-cost rail)</span></div>
+        <div class="pj-row"><span class="k">Routing reason</span><span class="v">Cost optimization, no auth-rate trade-off</span></div>
+      </div>
+    </div>
+
+    <!-- Cost-per-payment comparison -->
+    <div class="pj-card" id="pjc-compare">
+      <div class="pj-head">
+        <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg></span>
+        <div><h4>Approved cheaper, not just approved</h4><p>The same sale, two ways to process it</p></div>
+      </div>
+      <div class="pj-twin" style="margin-bottom:14px">
+        <div class="twin"><div class="tl">Blanket-3DS + standard rail</div><div class="tv">Higher cost</div><div class="ts">step-up fee + standard interchange</div></div>
+        <div class="twin"><div class="tl">Forter: token + smart routing</div><div class="tv good">Lower cost</div><div class="ts">no step-up, tokenized interchange</div></div>
+      </div>
+      <div class="pj-twin">
+        <div class="twin"><div class="tl">Cost per payment</div><div class="tv good">↓ Lower</div><div class="ts">fewer step-ups, tokenized rate</div></div>
+        <div class="twin"><div class="tl">Authorization rate</div><div class="tv">Unaffected</div><div class="ts">no auth traded for cost</div></div>
+      </div>
+      <p class="calc-note" style="color:var(--fc-color-text-secondary); margin:10px 0 0">This is the part that matters: cost comes down with authorization held flat. Forter optimizes both together rather than trading one for the other, so cutting cost never quietly bleeds approvals. Cost figures shown are illustrative; your Forter team confirms savings against your real processor and scheme fees.</p>
+    </div>
+  </section>
+
+  <!-- ===== PSD2 conversion detail (PSD2 flow drill-down) ===== -->
+  <section id="page-PayPsd2Detail" class="page" hidden>
+    <a class="back-link" id="pay-psd2-back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg> Back to Payments</a>
+    <div class="detail-title">Payment <span class="mono" style="font-size:18px">pay_ord_2418</span> <span class="badge b-approve"><i></i> Approved</span></div>
+    <div class="detail-meta" style="margin:8px 0 22px">
+      <span class="amt">€189.00</span> &nbsp;·&nbsp; Visa •••• 5523 &nbsp;·&nbsp; DE &nbsp;·&nbsp; PSD2 / SCA in scope &nbsp;·&nbsp; Approved without a challenge
+    </div>
+
+    <!-- Frictionless SCA journey -->
+    <div class="pj-card">
+      <div class="pj-head">
+        <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+        <div><h4>Payment Journey</h4><p>Timeline of payment events and status changes</p></div>
+        <span class="pj-status ok"><span class="dot"></span>Succeeded</span>
+      </div>
+      <div class="pj-timeline">
+        <div class="pj-ev">
+          <span class="ev-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M2 10h20"/></svg></span>
+          <div class="ev-t">Payment Initiated</div>
+          <div class="ev-d">Payment of €189.00 initiated</div>
+          <div class="ev-time">11:02:41</div>
+        </div>
+        <span class="pj-arrow"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        <div class="pj-ev ok" id="pjp-exempt">
+          <span class="ev-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg></span>
+          <div class="ev-t">SCA Assessment<br><span class="ev-sub">TRA exemption</span></div>
+          <div class="ev-s">Exempted</div>
+          <div class="ev-d">Low risk, no challenge shown</div>
+          <div class="ev-time">11:02:43</div>
+        </div>
+        <span class="pj-arrow"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        <div class="pj-ev ok">
+          <span class="ev-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>
+          <div class="ev-t">Authorized</div>
+          <div class="ev-s">Succeeded</div>
+          <div class="ev-d">Approved first time</div>
+          <div class="ev-time">11:02:45</div>
+        </div>
+        <span class="pj-arrow"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        <div class="pj-ev ok">
+          <span class="ev-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>
+          <div class="ev-t">Capture</div>
+          <div class="ev-s">Succeeded</div>
+          <div class="ev-d">Captured €189.00</div>
+          <div class="ev-time">11:07:45</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCA exemption -->
+    <div class="pj-card" id="pjp-sca">
+      <div class="pj-head">
+        <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg></span>
+        <div><h4>SCA Exemption</h4><p>How Forter kept this compliant and frictionless</p></div>
+        <span class="pj-pill">TRA exemption</span>
+      </div>
+      <div class="pj-grid">
+        <div class="pj-row"><span class="k">SCA outcome</span><span class="v good">Exempted, no challenge</span></div>
+        <div class="pj-row"><span class="k">Exemption type</span><span class="v">Transaction Risk Analysis (TRA)</span></div>
+        <div class="pj-row"><span class="k">Forter risk verdict</span><span class="v good">Low risk, eligible</span></div>
+        <div class="pj-row"><span class="k">Regulatory status</span><span class="v">Compliant under PSD2</span></div>
+      </div>
+      <div class="pj-callout">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg>
+        <span>Rather than challenge every European payment, Forter assessed this one as low risk and claimed a <b>TRA exemption</b>. The customer paid without ever seeing a 3DS screen, which is fully compliant and removes the friction that drives abandonment.</span>
+      </div>
+    </div>
+
+    <!-- The road not taken: blanket-3DS -->
+    <div class="pj-card" id="pjp-skipped">
+      <div class="pj-head">
+        <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3v6a6 6 0 0 0 6 6 6 6 0 0 1 6 6"/><path d="M18 3v6a6 6 0 0 1-6 6"/></svg></span>
+        <div><h4>What blanket-3DS would have done</h4><p>The same low-risk customer, challenged anyway</p></div>
+      </div>
+      <div class="pj-skip-row">
+        <span class="sid">Forter (TRA exemption)</span>
+        <span class="sreason">Low-risk customer, no challenge</span>
+        <span class="stag recovered">Approved, no friction</span>
+      </div>
+      <div class="pj-skip-row">
+        <span class="sid">Blanket-3DS</span>
+        <span class="sreason">Challenged regardless, roughly 1 in 4 customers abandon after a 3DS prompt</span>
+        <span class="stag skipped">Conversion at risk</span>
+      </div>
+      <p class="calc-note" style="color:var(--fc-color-text-secondary); margin:14px 0 0">Sending every transaction to 3DS is the easy way to be compliant, and the expensive way. Exempting the low-risk traffic protects conversion without breaking the regulation.</p>
+    </div>
+
+    <!-- Intent recovery: when SCA can't be avoided -->
+    <div class="pj-card" id="pjp-intent">
+      <div class="pj-head">
+        <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 4v6h6"/><path d="M20 20v-6h-6"/><path d="M20 4a9 9 0 0 0-15 4M4 20a9 9 0 0 0 15-4"/></svg></span>
+        <div><h4>And when a challenge can’t be avoided</h4><p>Forter recovers the payments that still fail</p></div>
+        <span class="pj-pill">Intent Recovery</span>
+      </div>
+      <div class="pj-grid">
+        <div class="pj-row"><span class="k">Failed SCA payments retried</span><span class="v">Automatically</span></div>
+        <div class="pj-row"><span class="k">Recovery rate</span><span class="v good">90.88%</span></div>
+        <div class="pj-row"><span class="k">Recovered by Forter</span><span class="v good">€1.65M this period</span></div>
+        <div class="pj-row"><span class="k">Customer effort</span><span class="v">None, recovered behind the scenes</span></div>
+      </div>
+    </div>
+
+    <!-- Conversion comparison with compliance axis -->
+    <div class="pj-card" id="pjp-compare">
+      <div class="pj-head">
+        <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg></span>
+        <div><h4>Maximum conversion, full compliance</h4><p>What the two PSD2 strategies do to your numbers</p></div>
+      </div>
+      <div class="pj-twin" style="margin-bottom:14px">
+        <div class="twin"><div class="tl">Blanket-3DS</div><div class="tv">Lower conversion</div><div class="ts">friction on everyone, abandonment</div></div>
+        <div class="twin"><div class="tl">Forter: exempt + recover</div><div class="tv good">Higher conversion</div><div class="ts">no friction for low-risk, failures rescued</div></div>
+      </div>
+      <div class="pj-twin">
+        <div class="twin"><div class="tl">Completed payments</div><div class="tv good">↑ Higher</div><div class="ts">exemptions + intent recovery</div></div>
+        <div class="twin"><div class="tl">PSD2 compliance</div><div class="tv">Maintained</div><div class="ts">no compliance traded for conversion</div></div>
+      </div>
+      <p class="calc-note" style="color:var(--fc-color-text-secondary); margin:10px 0 0">Exemptions keep friction off low-risk customers and Intent Recovery rescues the rest, so PSD2 stops costing you sales while you stay fully compliant. Rates shown are illustrative; your Forter team confirms them against your real European traffic.</p>
     </div>
   </section>
 
@@ -1430,6 +1884,7 @@
     <div class="welcome-logo">
       <img src="po-assets/img/forter-logo-white.svg" alt="Forter" style="height:26px">
     </div>
+    <div class="welcome-tagline">Know who to trust, before your bank does.</div>
     <h1 id="welcome-h1">Hi Avishek</h1>
     <p class="intro">Let’s solve your problems, one at a time.</p>
     </div><!-- /welcome-header -->
@@ -1491,7 +1946,7 @@
     <div id="welcome-step-pay" hidden>
       <a class="back-link" id="welcome-back-pay"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg> Back to teams</a>
       <h2>I want Forter to…</h2>
-      <p class="help">Which problem, solved now, moves your growth most? We’ll show you exactly how Forter unlocks it.</p>
+      <p class="help">Forter solves all three together. Pick the one hurting most today, and we’ll show you how.</p>
       <div class="persona-grid" style="grid-template-columns:repeat(3,1fr)">
         <div class="persona" data-paygoal="auth">
           <div class="pa" style="background:#1f75f6"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M3 17l6-6 4 4 7-8"/><path d="M14 7h6v6"/></svg></div>
@@ -1633,7 +2088,7 @@
   })();
 
   /* Nav click → active state + page switching */
-  const builtPages = { 'Home': 'page-Home', 'Payments': 'page-Payments', 'PayDetail': 'page-PayDetail', 'Transactions': 'page-Transactions', 'TxDetail': 'page-TxDetail', 'Claims': 'page-Claims', 'Intelligence Hub': 'page-Intelligence Hub', 'AI Agent': 'page-AI Agent' };
+  const builtPages = { 'Home': 'page-Home', 'Payments': 'page-Payments', 'PayDetail': 'page-PayDetail', 'PayCostDetail': 'page-PayCostDetail', 'PayPsd2Detail': 'page-PayPsd2Detail', 'Transactions': 'page-Transactions', 'TxDetail': 'page-TxDetail', 'Claims': 'page-Claims', 'Intelligence Hub': 'page-Intelligence Hub', 'AI Agent': 'page-AI Agent' };
 
   /* Mock claims */
   const CLAIMS = [
@@ -1917,29 +2372,29 @@
     {
       target: '#tx-body',
       title: 'Not every decline is fraud',
-      body: 'This is your transaction stream. Most fraud tools stop at “Declined”, but some of these are good customers a rigid rule wrongly blocked.'
+      body: 'Your transaction stream. Some of these declines are good customers a rigid rule blocked.'
     },
     {
       target: '#recover-row',
       title: 'Open a declined order',
-      body: 'Let’s open this declined transaction and look at who you actually turned away.'
+      body: 'Let’s see who you turned away.'
     },
     {
       target: '.reason-card',
       title: 'You declined a loyal customer',
-      body: 'A legacy rule blocked this order (high value with a new address). But this shopper has 47 clean orders and $8,420 in lifetime spend, not fraud.',
+      body: 'Blocked by a legacy rule. But it’s a 47-order, $8,420 customer, not fraud.',
       before: () => { openTx(0); },
       delay: 160
     },
     {
       target: '.ai-card',
       title: 'Forter would have approved them',
-      body: 'Forter’s identity network recognizes this trusted customer and approves them, recovering the sale and the acquisition spend behind it.'
+      body: 'Forter recognises this trusted shopper and approves, recovering the sale and the ad spend behind it.'
     },
     {
       center: true,
       title: 'That’s your return on acquisition spend',
-      body: 'Every good customer wrongly declined is wasted CAC and lost revenue. Approving them recovers revenue you already paid to acquire.'
+      body: 'Every good customer wrongly declined is wasted CAC. Approving them is revenue you already paid for.'
     }
   ];
 
@@ -1950,60 +2405,65 @@
     {
       target: '#pm-auth',
       title: 'Your authorization rate',
-      body: 'This is the share of legitimate sales that successfully complete. It is one of the highest-leverage numbers your team owns, because even a one to two point improvement converts straight into recovered revenue.',
+      body: 'The share of good sales that actually complete. A point or two of lift is pure recovered revenue.',
       before: () => switchInsView('Overview'),
       delay: 100
     },
     {
       target: '#pm-revuplift',
-      title: 'Revenue you have already recovered',
-      body: 'This reflects the uplift from borderline transactions a static setup would have declined. Forter recognised these customers as legitimate and let them through, so it is realised revenue rather than a projection.'
+      title: 'Revenue you’ve already recovered',
+      body: 'Won back from borderline payments a static setup would have declined. Real, not projected.'
     },
     {
       target: '#ins-view-funnel',
-      title: 'Where authorization is being lost',
-      body: 'The funnel shows every drop-off between attempt and authorization. The Bank Declined branch is where legitimate sales slip away, so let us open one together.',
+      title: 'Where authorization leaks',
+      body: 'Every drop-off from attempt to authorization. “Bank Declined” is where good sales are lost, let’s open one.',
       before: () => switchInsView('Funnel'),
       delay: 130
     },
     {
       target: '#pay-recover-row',
-      title: 'A closer look at one decline',
-      body: 'Here is a card payment the issuer declined. It is worth seeing what Forter does next, so go ahead and open it.',
+      title: 'One declined payment',
+      body: 'The issuer declined this. Watch what Forter does next.',
       before: () => { showPage('Payments'); showPayTransactions(); },
       delay: 160
     },
     {
       target: '#pj-fail',
-      title: 'The first attempt was declined',
-      body: 'The issuer returned Do Not Honor, a soft decline on a legitimate customer. In most setups the sale would simply stop here.',
+      title: 'Attempt 1: the bank said no',
+      body: 'Do Not Honor, a soft decline on a good customer. Most setups stop here.',
       before: () => openPayTx(),
       delay: 180
     },
     {
       target: '#pj-identity',
-      title: 'Forter retries customers, not declines',
-      body: 'Before reattempting, Forter checked this shopper against its identity network and recognised a trusted customer with a long, clean history. That judgement, rather than a blind reattempt, is what makes recovery safe.'
+      title: 'Why Forter trusted them',
+      body: 'Forter’s read: trusted across the dimensions that matter, only minor flags. That’s why recovery was safe.'
+    },
+    {
+      target: '#pj-connections',
+      title: 'Trusted across the network',
+      body: 'This shopper links to 52 clean transactions across merchants. One of Forter’s 2.1B+ identities, seen ~28× a year, which is how Forter knew them before your bank did.'
     },
     {
       target: '#pj-retry',
-      title: 'Forter recovered the sale',
-      body: 'Recognising a trusted customer, Forter re-presented the payment on a better performing processor, and it authorised on the second attempt.'
+      title: 'Attempt 2: recovered',
+      body: 'Forter re-presented on a better processor. Authorised on the second try.'
     },
     {
       target: '#pj-skipped',
-      title: 'It also knows when not to retry',
-      body: 'In the same window Forter declined to retry two other declines it judged risky. Recovering the trusted ones while leaving the risky ones alone is what separates intelligent recovery from a blanket retry.'
+      title: 'But not a blind retry',
+      body: 'Forter skipped two riskier declines in the same window. It recovers only the ones it trusts.'
     },
     {
       target: '#pj-precision',
       title: 'More approvals, no added fraud',
-      body: 'Because recovery is selective, your authorization rate rises while your chargeback rate holds flat. That precision is the part a generic retry tool cannot give you.'
+      body: 'Auth rate up, chargebacks flat. Forter wins both at once.'
     },
     {
       target: '#pm-revuplift',
-      title: 'The same effect across your volume',
-      body: 'That single recovered sale, repeated across every issuer decline Forter rescues, adds up to the $576.79K in recovered revenue shown here this period. This is your authorization rate working as growth.',
+      title: 'Now multiply across your volume',
+      body: 'One recovered sale, repeated across every issuer decline Forter rescues: $576.79K this period.',
       before: () => { showPage('Payments'); showPayInsights(); switchInsView('Overview'); },
       delay: 180
     }
@@ -2013,27 +2473,51 @@
   const PAY_COST_TOUR = [
     {
       target: '#pm-3ds',
-      title: 'Every 3DS step-up carries a cost',
-      body: 'Sending a transaction to 3DS adds both fees and friction. Forter routes fewer transactions to 3DS, down 7.4 percent here, by stepping up only when it is genuinely needed.',
+      title: 'Every 3DS step-up costs you',
+      body: 'Each 3DS challenge adds a fee and friction. Forter sends fewer, down 7.4%, only when needed.',
       before: () => switchInsView('Overview'),
       delay: 100
     },
     {
       target: '#pm-friction',
-      title: 'More approvals with no added friction',
-      body: 'Frictionless approvals cost you nothing and convert best. Forter moves more of your volume through this path instead of expensive step-ups.'
+      title: 'Frictionless approvals win',
+      body: 'They cost the least and convert best. Let’s see how Forter gets one there.'
     },
     {
-      target: '#pm-psd2exempt',
-      title: 'Exemptions in place of unnecessary 3DS',
-      body: 'In regulated markets Forter claims TRA exemptions wherever it safely can, so you avoid unnecessary 3DS fees while remaining fully compliant.',
-      before: () => switchInsView('EU - Overview'),
-      delay: 130
+      target: '#pay-cost-row',
+      title: 'A low-cost approval',
+      body: 'A simple approval. What matters is how Forter processed it, open it.',
+      before: () => { showPage('Payments'); showPayTransactions(); },
+      delay: 160
     },
     {
-      center: true,
-      title: 'Lower cost with the same conversion',
-      body: 'Fewer step-ups, more exemptions, and more frictionless approvals protect your margin without leaving sales on the table.'
+      target: '#pjc-nostepup',
+      title: 'No step-up, no step-up fee',
+      body: 'Forter judged it safe because it recognised this shopper across its 2.1B-identity network, so no step-up fee and no friction.',
+      before: () => openPayCostTx(),
+      delay: 180
+    },
+    {
+      target: '#pjc-token',
+      title: 'Paid with a network token',
+      body: 'Not the raw card. Lower interchange, and no declines from reissued cards.'
+    },
+    {
+      target: '#pjc-routing',
+      title: 'Routed to a cheaper rail',
+      body: 'Predictive Routing picked a lower-cost processor, without trading away auth.'
+    },
+    {
+      target: '#pjc-compare',
+      title: 'Approved cheaper, not just approved',
+      body: 'Same sale, lower cost, auth held flat. Forter doesn’t make you choose.'
+    },
+    {
+      target: '#pm-friction',
+      title: 'The same saving at scale',
+      body: 'Every step-up avoided on a cheaper rail protects margin across your whole volume.',
+      before: () => { showPage('Payments'); showPayInsights(); switchInsView('Overview'); },
+      delay: 180
     }
   ];
 
@@ -2042,31 +2526,50 @@
     {
       target: '#pm-psd2exempt',
       title: 'Beyond blanket 3DS',
-      body: 'Most processors send everything to 3DS under PSD2. Forter claims exemptions on the large majority, 83 percent here, so low-risk customers never see friction.',
+      body: 'Most processors send everything to 3DS. Forter exempts the low-risk, 83% here, so they never see friction.',
       before: () => switchInsView('EU - Overview'),
       delay: 100
     },
     {
       target: '#pm-psd2auth',
-      title: 'Higher authorization, still compliant',
-      body: 'By exempting the right traffic, your PSD2 authorization rate stays high without breaking the regulation.'
+      title: 'Higher auth, still compliant',
+      body: 'Exempt the right traffic and PSD2 auth stays high. Let’s open one to see how.'
     },
     {
-      target: '#pm-recintent',
-      title: 'Recovering the payments that still fail',
-      body: 'When a payment does fail, Forter works to recover customer intent automatically, so that revenue is not simply written off.'
+      target: '#pay-psd2-row',
+      title: 'A European payment',
+      body: 'In scope for SCA. See how Forter kept it compliant and frictionless.',
+      before: () => { showPage('Payments'); showPayTransactions(); },
+      delay: 160
     },
     {
-      target: '#pm-recforter',
-      title: 'Real money recovered',
-      body: 'Intent Recovery retries failed payments intelligently and recovers them, $1.65M here that would otherwise have been lost.',
-      before: () => switchInsView('Intent Recovery'),
-      delay: 130
+      target: '#pjp-exempt',
+      title: 'Exempted, no challenge shown',
+      body: 'Forter could exempt it because it already knew this shopper across its 2.1B-identity network, so they paid with no 3DS screen. Compliant, zero friction.',
+      before: () => openPayPsd2Tx(),
+      delay: 180
     },
     {
-      center: true,
-      title: 'Maximum conversion with full compliance',
-      body: 'Exemptions keep friction away from low-risk customers and Intent Recovery rescues the rest, so PSD2 stops costing you sales.'
+      target: '#pjp-skipped',
+      title: 'What blanket-3DS would cost',
+      body: 'Challenge this and ~1 in 4 abandon. Conversion lost for no security gain.'
+    },
+    {
+      target: '#pjp-intent',
+      title: 'When a challenge can’t be avoided',
+      body: 'Failed SCA payments get retried automatically and mostly recovered, with no customer effort.'
+    },
+    {
+      target: '#pjp-compare',
+      title: 'Max conversion, full compliance',
+      body: 'Completed payments up, compliance maintained. Never one traded for the other.'
+    },
+    {
+      target: '#pm-psd2exempt',
+      title: 'The same effect at scale',
+      body: 'Every low-risk payment exempted and every failure recovered adds up across your PSD2 traffic.',
+      before: () => { showPage('Payments'); showPayInsights(); switchInsView('EU - Overview'); },
+      delay: 180
     }
   ];
 
@@ -2178,6 +2681,26 @@
         <td>Yes</td>
         <td class="mono" style="font-size:12px">a1f2c3d4-5b6e-47a8-9c01-2d3e4f5a6b7c</td>
         <td><span class="chip-sm exempt">Recovered · Predictive Routing</span></td>
+      </tr>
+      <tr id="pay-cost-row" onclick="openPayCostTx()" style="cursor:pointer">
+        <td class="mono">pay_ord_2402</td>
+        <td><span style="color:var(--fc-color-green-600);font-weight:600">Approved</span> <span style="color:var(--fc-color-blue-gray-500)">· network token, no step-up</span></td>
+        <td>00</td>
+        <td>Stripe (low-cost rail)</td>
+        <td><span class="chip-sm">No 3DS</span></td>
+        <td>No</td>
+        <td class="mono" style="font-size:12px">b7e2d1c8-3a4f-49b2-8d05-6c1e2f3a4b5d</td>
+        <td><span class="chip-sm exempt">Approved cheaper · token + routing</span></td>
+      </tr>
+      <tr id="pay-psd2-row" onclick="openPayPsd2Tx()" style="cursor:pointer">
+        <td class="mono">pay_ord_2418</td>
+        <td><span style="color:var(--fc-color-green-600);font-weight:600">Approved</span> <span style="color:var(--fc-color-blue-gray-500)">· TRA exemption, no challenge</span></td>
+        <td>00</td>
+        <td>Adyen (EU)</td>
+        <td><span class="chip-sm exempt">Exemption</span></td>
+        <td>Yes</td>
+        <td class="mono" style="font-size:12px">c3f4a5b6-7d8e-49f0-a1b2-c3d4e5f6a7b8</td>
+        <td><span class="chip-sm exempt">PSD2 · exemption + intent recovery</span></td>
       </tr>`;
     body.innerHTML = recoverRow + PTX.map(r => `
       <tr>
@@ -2208,8 +2731,22 @@
     document.getElementById('pay-insights').hidden = false;
   }
   function openPayTx() { showPage('PayDetail'); }
+  function openPayCostTx() { showPage('PayCostDetail'); }
+  function openPayPsd2Tx() { showPage('PayPsd2Detail'); }
   const payBack = document.getElementById('pay-back');
   if (payBack) payBack.addEventListener('click', () => {
+    activateNav('Payments');
+    showPage('Payments');
+    showPayTransactions();
+  });
+  const payCostBack = document.getElementById('pay-cost-back');
+  if (payCostBack) payCostBack.addEventListener('click', () => {
+    activateNav('Payments');
+    showPage('Payments');
+    showPayTransactions();
+  });
+  const payPsd2Back = document.getElementById('pay-psd2-back');
+  if (payPsd2Back) payPsd2Back.addEventListener('click', () => {
     activateNav('Payments');
     showPage('Payments');
     showPayTransactions();
