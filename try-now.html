@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Try Now – Forter</title>
+<style>
+  @font-face { font-family:"Proxima Nova"; src:url("po-assets/fonts/ProximaNova-Regular.ttf") format("truetype"); font-weight:400; font-display:swap; }
+  @font-face { font-family:"Proxima Nova"; src:url("po-assets/fonts/ProximaNova-Bold.ttf") format("truetype");    font-weight:700; font-display:swap; }
+  @font-face { font-family:"Poppins"; src:url("po-assets/fonts/Poppins-Medium.ttf") format("truetype");   font-weight:500; font-display:swap; }
+  @font-face { font-family:"Poppins"; src:url("po-assets/fonts/Poppins-SemiBold.ttf") format("truetype"); font-weight:600; font-display:swap; }
+  @font-face { font-family:"Poppins"; src:url("po-assets/fonts/Poppins-Bold.ttf") format("truetype");     font-weight:700; font-display:swap; }
+
+  * { box-sizing:border-box; }
+  html,body { height:100%; }
+  body {
+    margin:0; font-family:"Proxima Nova", Arial, sans-serif; color:#1a2332;
+    min-height:100vh; display:flex; align-items:center; justify-content:center;
+    position:relative; overflow:hidden;
+    background:radial-gradient(circle at 50% 45%, #eef0f3 0%, #e4e6ea 60%, #dadde2 100%);
+  }
+
+  /* Frosted live-product background */
+  .bg-portal { position:fixed; inset:0; width:100%; height:100%; border:0; filter:blur(7px) saturate(1.04); transform:scale(1.06); transform-origin:center; pointer-events:none; z-index:0; }
+  .bg-frost { position:fixed; inset:0; background:rgba(232,235,240,0.55); z-index:1; pointer-events:none; }
+
+  /* Decorative wavy line graphics */
+  .waves { position:fixed; inset:0; z-index:2; pointer-events:none; }
+
+  .card {
+    position:relative; z-index:3;
+    width:520px; max-width:calc(100vw - 2rem);
+    background:#f4f5f7; border-radius:18px;
+    box-shadow:0 30px 60px rgba(26,35,50,.12), 0 8px 20px rgba(26,35,50,.08);
+    padding:44px 56px 52px;
+  }
+  .logo { display:block; height:34px; margin:8px auto 40px; }
+
+  label { font-family:"Proxima Nova"; font-size:1rem; color:#1a2332; display:block; margin-bottom:8px; }
+  .field {
+    width:100%; padding:1rem 1.25rem; border-radius:9999px; border:1px solid #e2e5ea;
+    font-family:"Proxima Nova"; font-size:1rem; color:#1a2332; background:#fff;
+    box-shadow:0 1px 2px rgba(26,35,50,.04);
+  }
+  .field::placeholder { color:#9aa3b2; }
+  .field:focus { outline:none; border-color:#005de8; box-shadow:0 0 0 3px rgba(0,93,232,.15); }
+  .field + label { margin-top:22px; }
+
+  .btn {
+    display:block; width:100%; margin-top:40px; padding:1.05rem 2rem;
+    border:none; border-radius:9999px; cursor:pointer;
+    background:#1556e0; color:#fff;
+    font-family:"Poppins"; font-weight:600; font-size:1rem; letter-spacing:.04em; text-transform:uppercase;
+    transition:background .18s ease;
+  }
+  .btn:hover { background:#0d44b8; }
+
+  .links { position:relative; z-index:3; margin-top:28px; text-align:center; }
+  .links a { display:block; color:#1f6fe5; text-decoration:none; font-size:1.05rem; margin:14px 0; }
+  .links a:hover { text-decoration:underline; }
+
+  .confirm { display:none; margin-top:24px; text-align:center; font-family:"Poppins"; font-weight:600; color:#005de8; }
+</style>
+</head>
+<body>
+
+<!-- Frosted live-product background (the real portal, blurred) -->
+<iframe class="bg-portal" src="app.html?bg=1" title="" aria-hidden="true" tabindex="-1" scrolling="no"></iframe>
+<div class="bg-frost"></div>
+
+<!-- Wavy decorative lines (blue / green / dark), left and right -->
+<svg class="waves" preserveAspectRatio="none" viewBox="0 0 1440 760" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- left cluster -->
+  <path d="M-40 300 C 140 360, 260 460, 420 420" stroke="#1f6fe5" stroke-width="2.5" fill="none"/>
+  <path d="M-40 470 C 160 380, 300 560, 470 470" stroke="#22c07a" stroke-width="2.5" fill="none"/>
+  <path d="M-40 430 C 150 470, 300 470, 470 460" stroke="#1a2332" stroke-width="1.5" fill="none"/>
+  <circle cx="120" cy="345" r="6" fill="#1f6fe5"/>
+  <circle cx="380" cy="430" r="6" fill="#1f6fe5"/>
+  <circle cx="420" cy="438" r="6" fill="#22c07a"/>
+  <circle cx="250" cy="492" r="6" fill="#1a2332"/>
+  <circle cx="345" cy="470" r="7" fill="#1a2332"/>
+  <circle cx="470" cy="470" r="6" fill="#1a2332"/>
+
+  <!-- right cluster (mirrored-ish) -->
+  <path d="M1000 440 C 1160 360, 1320 420, 1500 360" stroke="#22c07a" stroke-width="2.5" fill="none"/>
+  <path d="M1000 540 C 1180 500, 1320 600, 1500 470" stroke="#1f6fe5" stroke-width="2.5" fill="none"/>
+  <path d="M1040 470 C 1200 500, 1340 470, 1500 500" stroke="#1a2332" stroke-width="1.5" fill="none"/>
+  <circle cx="1010" cy="438" r="6" fill="#22c07a"/>
+  <circle cx="1300" cy="408" r="6" fill="#22c07a"/>
+  <circle cx="1430" cy="430" r="6" fill="#22c07a"/>
+  <circle cx="1190" cy="510" r="6" fill="#1a2332"/>
+  <circle cx="1370" cy="490" r="7" fill="#22c07a"/>
+  <circle cx="1010" cy="540" r="6" fill="#1f6fe5"/>
+</svg>
+
+<!-- Login-style card with Name + Email + Try now -->
+<div>
+  <div class="card">
+    <img class="logo" src="po-assets/img/forter-logo-blue.svg" alt="Forter">
+    <form id="try-form">
+      <label for="name">Name</label>
+      <input class="field" type="text" id="name" name="name" placeholder="Your name" required>
+      <label for="email">Email address</label>
+      <input class="field" type="email" id="email" name="email" placeholder="you@company.com" required>
+      <button type="submit" class="btn">Try now</button>
+    </form>
+    <p id="confirm" class="confirm"></p>
+  </div>
+
+</div>
+
+<script>
+  document.getElementById('try-form').addEventListener('submit', function(e){
+    e.preventDefault();
+    var name = document.getElementById('name').value.trim();
+    var email = document.getElementById('email').value.trim();
+    try { sessionStorage.setItem('demoName', name); sessionStorage.setItem('demoEmail', email); } catch(err){}
+    // Route into the portal demo (same tab)
+    window.location.href = 'app.html';
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,2295 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Forter Portal — Demo</title>
+<link rel="stylesheet" href="po-assets/css/forter-tokens.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  /* Portal UI: Open Sans (design-system default) for body/UI text, Poppins for headings */
+  @font-face { font-family:"Poppins"; src:url("po-assets/fonts/Poppins-Medium.ttf") format("truetype");   font-weight:500; font-display:swap; }
+  @font-face { font-family:"Poppins"; src:url("po-assets/fonts/Poppins-SemiBold.ttf") format("truetype"); font-weight:600; font-display:swap; }
+  @font-face { font-family:"Poppins"; src:url("po-assets/fonts/Poppins-Bold.ttf") format("truetype");     font-weight:700; font-display:swap; }
+  /* Proxima Nova — Forter brand body font, used on the branded welcome/persona splash */
+  @font-face { font-family:"Proxima Nova"; src:url("po-assets/fonts/ProximaNova-Regular.ttf") format("truetype"); font-weight:400; font-display:swap; }
+  @font-face { font-family:"Proxima Nova"; src:url("po-assets/fonts/ProximaNova-Bold.ttf") format("truetype");    font-weight:700; font-display:swap; }
+
+  * { box-sizing:border-box; }
+  html,body { height:100%; margin:0; }
+  body {
+    font-family:"Open Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+    color:var(--fc-color-text-primary);
+    background:var(--fc-color-surface-secondary);
+    display:flex; overflow:hidden;
+  }
+
+  /* ===== Side nav ===== */
+  .side-nav { width:var(--portal-side-nav-width); flex-shrink:0; height:100vh; background:var(--fc-color-surface-primary); border-right:1px solid var(--fc-color-border-primary); display:flex; flex-direction:column; }
+  .side-nav-header { padding:var(--fc-spacing-2); display:flex; align-items:center; gap:12px; border-bottom:1px solid var(--fc-color-border-primary); height:var(--portal-primary-top-nav-height); }
+  .brand-name { font-family:"Poppins"; font-weight:600; font-size:15px; color:var(--fc-color-text-primary); line-height:1.2; }
+  .brand-sub  { font-size:12px; color:var(--fc-color-text-secondary); }
+  .nav-scroll { flex:1; overflow-y:auto; padding:var(--fc-spacing-2); }
+  .nav-section-title { font-family:"Poppins"; font-weight:600; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--fc-color-blue-gray-600); padding:0 10px; margin:18px 0 6px; }
+  .nav-item { display:flex; align-items:center; gap:12px; height:var(--portal-section-nav-item-height); padding:0 10px; border-radius:var(--fc-radius-md); color:var(--fc-color-blue-gray-800); font-size:14px; text-decoration:none; cursor:pointer; margin-bottom:2px; transition:background .12s, color .12s; }
+  .nav-item svg { width:20px; height:20px; flex-shrink:0; stroke:currentColor; fill:none; stroke-width:1.7; }
+  .nav-item img.zbadge { width:26px; height:26px; flex-shrink:0; }
+  .nav-item .zfallback { width:26px; height:26px; flex-shrink:0; border-radius:50%; background:#1F2D45; display:inline-flex; align-items:center; justify-content:center; }
+  .nav-item .zfallback svg { width:15px; height:15px; stroke:#73ABFF; fill:none; stroke-width:1.8; }
+
+  /* ===== Payments Insights (real structure) ===== */
+  .ins-tabs { display:flex; gap:28px; border-bottom:1px solid var(--fc-color-border-primary); }
+  .ins-tab { padding:4px 0 12px; font-family:"Poppins"; font-weight:600; font-size:14px; color:var(--fc-color-text-secondary); cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px; }
+  .ins-tab.active { color:var(--fc-color-blue-gray-900); border-bottom-color:var(--fc-color-blue-gray-900); }
+  .ins-layout { display:flex; margin-top:16px; }
+  .ins-rail { width:178px; flex-shrink:0; display:flex; flex-direction:column; gap:1px; padding-right:12px; }
+  .ins-nav { font-size:13px; color:var(--fc-color-blue-gray-800); padding:8px 10px; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:space-between; }
+  .ins-nav:hover { background:var(--fc-color-surface-tertiary); }
+  .ins-nav.active { color:var(--fc-color-brand-blue-600); font-weight:600; }
+  .ins-nav .chev { color:var(--fc-color-blue-gray-500); font-size:11px; }
+  .ins-main { flex:1; min-width:0; padding-left:22px; border-left:1px solid var(--fc-color-border-primary); }
+  .ins-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; }
+  .ins-head h2 { font-family:"Poppins"; font-weight:600; font-size:20px; color:var(--fc-color-blue-gray-900); display:flex; align-items:center; gap:8px; margin:0; }
+  .ins-head-right { display:flex; align-items:center; gap:10px; color:var(--fc-color-blue-gray-700); }
+  .ins-head-right svg { width:16px; height:16px; stroke:currentColor; fill:none; stroke-width:1.8; }
+  .date-pill { display:flex; align-items:center; gap:8px; border:1px solid var(--fc-color-border-primary); border-radius:9999px; padding:6px 13px; font-size:12px; background:#fff; }
+  .date-pill b { font-family:"Poppins"; font-weight:600; }
+  .create-report { display:flex; align-items:center; gap:6px; border:1px solid var(--fc-color-border-primary); border-radius:9999px; padding:6px 14px; font-size:13px; cursor:pointer; background:#fff; }
+  .sec-label { font-family:"Poppins"; font-weight:600; font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--fc-color-blue-gray-600); margin:18px 0 10px; }
+  .metric-row { display:grid; gap:14px; }
+  .metric-row.five { grid-template-columns:repeat(5,1fr); }
+  .metric-row.over { grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:12px; }
+  .metric-card { background:#fff; border:1px solid var(--fc-color-border-primary); border-radius:12px; padding:14px 16px; position:relative; }
+  .metric-card .ml { font-size:12px; color:var(--fc-color-text-secondary); display:flex; align-items:center; gap:5px; padding-right:18px; }
+  .metric-card .ml .i { width:13px; height:13px; border-radius:50%; border:1px solid var(--fc-color-blue-gray-400); color:var(--fc-color-blue-gray-500); font-size:9px; line-height:1; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .metric-card .mv { font-family:"Poppins"; font-weight:600; font-size:23px; color:var(--fc-color-blue-gray-900); margin-top:9px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .metric-row.over .metric-card { padding:12px 14px; }
+  .metric-row.over .mv { font-size:19px; }
+  .delta { font-size:11px; font-weight:600; padding:2px 7px; border-radius:6px; }
+  .delta.up { background:#e6f8e9; color:#009a1a; } .delta.down { background:#fde6e7; color:#e32a2d; }
+  .metric-card .plus { position:absolute; top:9px; right:9px; width:20px; height:20px; border-radius:50%; background:#fff; border:1px solid var(--fc-color-gray-300); color:#ff8a0d; font-size:14px; line-height:1; display:flex; align-items:center; justify-content:center; }
+  .charts3 { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:22px; }
+  .chart-sm { background:#fff; border:1px solid var(--fc-color-border-primary); border-radius:14px; box-shadow:var(--fc-shadow-card); padding:16px; }
+  .chart-sm h4 { font-family:"Poppins"; font-weight:600; font-size:13px; color:var(--fc-color-blue-gray-900); margin:0 0 1px; }
+  .chart-sm .by { font-size:10px; color:var(--fc-color-blue-gray-500); margin-bottom:8px; }
+  .cc { position:relative; height:150px; margin-top:2px; }
+  @media (max-width:1200px){ .metric-row.five { grid-template-columns:repeat(3,1fr); } .charts3 { grid-template-columns:repeat(2,1fr); } }
+
+  /* ===== Funnel view ===== */
+  .ins-view[hidden] { display:none; }
+  .funnel-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; flex-wrap:wrap; gap:10px; }
+  .funnel-ctrls { display:flex; align-items:center; gap:10px; }
+  .fchip { display:inline-flex; align-items:center; gap:6px; border:1px solid var(--fc-color-border-primary); border-radius:9999px; padding:6px 13px; font-size:12px; color:var(--fc-color-blue-gray-700); background:#fff; cursor:pointer; }
+  .fseg { display:inline-flex; border:1px solid var(--fc-color-border-primary); border-radius:9999px; overflow:hidden; font-size:12px; }
+  .fseg span { padding:6px 13px; cursor:pointer; color:var(--fc-color-blue-gray-700); }
+  .fseg span.on { background:var(--fc-color-blue-gray-900); color:#fff; }
+  .funnel-wrap { overflow-x:auto; border:1px solid var(--fc-color-border-primary); border-radius:14px; padding:10px; background:#fff; }
+  .funnel-stage { position:relative; width:1040px; height:610px; }
+  .fcol-titles { position:absolute; top:6px; left:175px; right:0; display:flex; }
+  .fcol-title { flex:1; font-size:12px; color:var(--fc-color-blue-gray-600); text-align:center; }
+  .flinks { position:absolute; inset:0; width:1040px; height:610px; pointer-events:none; }
+  .fnode { position:absolute; transform:translateY(-50%); background:#fff; border:1px solid var(--fc-color-border-primary); border-radius:9999px; padding:5px 12px; font-size:11px; display:flex; align-items:center; gap:14px; white-space:nowrap; box-shadow:var(--fc-shadow-elevation-1); }
+  .fnode b { font-family:"Poppins"; font-weight:600; }
+  .fnode.root { border-radius:50%; width:86px; height:86px; flex-direction:column; gap:2px; justify-content:center; text-align:center; border:2px solid var(--fc-color-brand-blue-400); padding:0; transform:translateY(-50%); }
+  .fnode.root b { color:var(--fc-color-brand-blue-600); font-size:13px; }
+  .f-green { border-color:#9be7c0; } .f-green b { color:#067250; }
+  .f-red { border-color:#ffc5c6; } .f-red b { color:#a60507; }
+  .f-amber { border-color:#fad988; } .f-amber b { color:#a0791a; }
+  .f-opt { border-color:#bdd8ff; } .f-opt b { color:#0358d7; }
+  .f-grey { border-color:var(--fc-color-gray-300); } .f-grey b { color:var(--fc-color-blue-gray-700); }
+  .lshift { position:absolute; transform:translateY(-50%); font-size:9px; font-family:"Poppins"; font-weight:600; color:#0358d7; background:#dceaff; border-radius:6px; padding:2px 8px; letter-spacing:.02em; }
+  .ins-nav.sub { padding-left:24px; font-size:12.5px; color:var(--fc-color-blue-gray-700); }
+  .metric-row.six { grid-template-columns:repeat(6,1fr); }
+  .metric-row.two { grid-template-columns:repeat(2,1fr); max-width:480px; }
+  .chart-big { font-family:"Poppins"; font-weight:600; font-size:18px; color:var(--fc-color-blue-gray-900); float:right; }
+  @media (max-width:1200px){ .metric-row.six { grid-template-columns:repeat(3,1fr); } }
+
+  /* ===== Payments Transactions grid ===== */
+  .ptx-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+  .ptx-head .t { font-family:"Poppins"; font-weight:600; font-size:15px; color:var(--fc-color-blue-gray-900); }
+  .ptx-head .cv { font-size:11px; color:var(--fc-color-blue-gray-600); margin-top:2px; letter-spacing:.04em; }
+  .ptx-kpis { display:grid; grid-template-columns:repeat(5,1fr); gap:14px; margin:14px 0 16px; }
+  .ptx-kpi { background:#fff; border:1px solid var(--fc-color-border-primary); border-radius:12px; padding:14px 16px; }
+  .ptx-kpi .l { font-size:12px; color:var(--fc-color-text-secondary); }
+  .ptx-kpi .sub { font-size:11px; color:var(--fc-color-blue-gray-500); margin-top:6px; }
+  .ptx-kpi .v { font-family:"Poppins"; font-weight:600; font-size:22px; color:var(--fc-color-blue-gray-900); }
+  .tx-scroll { overflow-x:auto; }
+  .tx-scroll table.tx { min-width:1100px; }
+  .chip-sm { font-size:11px; padding:2px 8px; border-radius:9999px; background:var(--fc-color-surface-tertiary); color:var(--fc-color-blue-gray-700); }
+  .chip-sm.exempt { background:#dceaff; color:#0358d7; }
+  .nav-item:hover { background:var(--fc-color-surface-tertiary); }
+  .nav-item.active { background:var(--fc-color-brand-blue-100); color:var(--fc-color-brand-blue-700); font-family:"Poppins"; font-weight:500; }
+  .side-nav-footer { padding:var(--fc-spacing-2); border-top:1px solid var(--fc-color-border-primary); }
+  .user-chip { display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:var(--fc-radius-md); }
+  .avatar { width:32px; height:32px; border-radius:50%; background:var(--fc-color-brand-blue-600); color:#fff; display:flex; align-items:center; justify-content:center; font-family:"Poppins"; font-weight:600; font-size:13px; flex-shrink:0; }
+
+  /* ===== Main / top bar ===== */
+  .main { flex:1; height:100vh; display:flex; flex-direction:column; min-width:0; }
+  .top-bar { height:var(--portal-primary-top-nav-height); flex-shrink:0; background:var(--fc-color-surface-primary); border-bottom:1px solid var(--fc-color-border-primary); display:flex; align-items:center; justify-content:space-between; padding:0 var(--portal-top-nav-padding); gap:24px; }
+  .topbar-search { flex:1; max-width:520px; display:flex; align-items:center; gap:10px; background:var(--fc-color-surface-secondary); border:1px solid var(--fc-color-border-primary); border-radius:var(--fc-radius-xxl); padding:10px 18px; color:var(--fc-color-blue-gray-600); }
+  .topbar-search svg { width:18px; height:18px; stroke:currentColor; fill:none; stroke-width:1.8; flex-shrink:0; }
+  .topbar-search input { border:none; background:transparent; outline:none; font-family:"Open Sans"; font-size:14px; color:var(--fc-color-text-primary); width:100%; }
+  .top-actions { display:flex; align-items:center; gap:10px; }
+  .icon-btn { width:40px; height:40px; border-radius:50%; border:1px solid var(--fc-color-border-primary); background:var(--fc-color-surface-primary); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--fc-color-blue-gray-700); }
+  .icon-btn svg { width:18px; height:18px; stroke:currentColor; fill:none; stroke-width:1.8; }
+  .icon-btn:hover { background:var(--fc-color-surface-tertiary); }
+
+  /* ===== Home page ===== */
+  .home { flex:1; overflow:auto; padding:25px; }
+  .home-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
+  .home-greet { font-family:"Poppins"; font-weight:500; font-size:24px; color:var(--fc-color-blue-gray-900); margin:0; }
+  .datepicker { border:1px solid var(--fc-color-gray-300); border-radius:var(--fc-radius-md); padding:9px 14px; font-size:14px; color:var(--fc-color-text-secondary); display:flex; align-items:center; gap:8px; background:var(--fc-color-surface-primary); }
+  .datepicker svg { width:16px; height:16px; stroke:currentColor; fill:none; stroke-width:1.8; }
+
+  .grid-container {
+    display:grid;
+    grid-template-columns: repeat(2, 240px) repeat(4, 1fr);
+    grid-template-rows: 20px repeat(6, 105px);
+    gap:16px;
+    grid-template-areas:
+      'H1 H1 H2 H2 H3 H3'
+      'A A D D E G'
+      'B B D D F G'
+      'C C D D H H'
+      'CTA CTA J J K K'
+      'CTA CTA J J K K'
+      'CTA CTA J J K K';
+  }
+  .grid-header { font-family:"Poppins"; font-weight:600; font-size:12px; letter-spacing:.04em; text-transform:uppercase; color:var(--fc-color-blue-gray-600); align-self:center; margin:0; }
+  #gh1 { grid-area:H1; } #gh2 { grid-area:H2; }
+
+  .wgt { background:var(--fc-color-surface-primary); border:0.5px solid var(--fc-color-border-primary); border-radius:16px; box-shadow:0px 3px 8px 0px #4162D614; padding:16px; overflow:hidden; display:flex; flex-direction:column; transition:.25s ease; }
+  .wgt:hover { box-shadow:0 1px 3px rgba(65,98,214,.07), 0 3px 3px rgba(65,98,214,.05); }
+  .wgt-label { font-size:13px; color:var(--fc-color-text-secondary); }
+  .wgt-num { font-family:"Poppins"; font-weight:600; font-size:30px; color:var(--fc-color-blue-gray-900); line-height:1.1; margin-top:auto; }
+  .wgt-sub { font-size:12px; margin-top:2px; }
+  .up { color:var(--fc-color-green-600); } .down { color:var(--fc-color-red-600); }
+  .wgt-title { font-family:"Poppins"; font-weight:600; font-size:14px; color:var(--fc-color-blue-gray-900); margin:0 0 2px; }
+
+  /* CTA widget */
+  #cta { grid-area:CTA; background:var(--fc-color-surface-primary); border:0.5px solid var(--fc-color-border-primary); border-radius:16px; box-shadow:0px 3px 8px 0px #4162D614; padding:18px; }
+  #cta-inner { height:100%; border-radius:10px; background:linear-gradient(160deg,#eef3ff 0%, #f7f9ff 60%); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:18px; }
+  #cta-icon { width:96px; height:96px; border-radius:50%; background:radial-gradient(circle at 40% 35%, #dceaff, #bdd8ff); display:flex; align-items:center; justify-content:center; margin-bottom:14px; }
+  #cta-icon svg { width:48px; height:48px; }
+  #cta-title { font-family:"Poppins"; font-weight:500; font-size:20px; color:var(--fc-color-blue-gray-900); }
+  #cta-body { font-size:14px; color:var(--fc-color-text-secondary); margin:8px 0 18px; max-width:320px; }
+  #cta-buttons { display:flex; gap:12px; }
+  .btn { font-family:"Poppins"; font-weight:600; font-size:14px; border-radius:var(--fc-radius-xxl); padding:11px 22px; cursor:pointer; border:1px solid var(--fc-color-border-primary); background:var(--fc-color-surface-primary); color:var(--fc-color-blue-gray-800); }
+  .btn-primary { background:var(--fc-color-cta-brand-default); color:#fff; border-color:transparent; }
+  .btn-primary:hover { background:var(--fc-color-cta-brand-hovered); }
+
+  .legend { display:flex; gap:14px; font-size:12px; color:var(--fc-color-text-secondary); margin-top:6px; flex-wrap:wrap; }
+  .legend span { display:inline-flex; align-items:center; gap:5px; }
+  .dot { width:9px; height:9px; border-radius:50%; display:inline-block; }
+  .reasons { list-style:none; margin:8px 0 0; padding:0; font-size:13px; }
+  .reasons li { display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid var(--fc-color-gray-150); }
+  .reasons li:last-child { border-bottom:none; }
+  .reasons .bar { height:6px; border-radius:3px; background:var(--fc-color-brand-blue-500); }
+
+  /* ===== Page switching ===== */
+  .content-wrap { flex:1; overflow:auto; }
+  .page { padding:25px; }
+  .page[hidden] { display:none; }
+
+  /* ===== Payments dashboard ===== */
+  .subtabs { display:flex; align-items:center; gap:28px; border-bottom:1px solid var(--fc-color-border-primary); margin:6px 0 20px; }
+  .subtab { padding:0 0 12px; font-family:"Poppins"; font-weight:500; font-size:14px; color:var(--fc-color-text-secondary); cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px; }
+  .subtab.active { color:var(--fc-color-brand-blue-700); border-bottom-color:var(--fc-color-brand-blue-600); }
+  .region-pill { margin-left:auto; border:1px solid var(--fc-color-border-primary); border-radius:var(--fc-radius-xxl); padding:7px 16px; font-size:13px; color:var(--fc-color-blue-gray-800); display:flex; align-items:center; gap:8px; background:var(--fc-color-surface-primary); }
+  .kpi-card { background:var(--fc-color-surface-primary); border:1px solid var(--fc-color-border-primary); border-radius:16px; box-shadow:var(--fc-shadow-card); padding:24px 36px; display:flex; gap:64px; margin-bottom:20px; }
+  .kpi .v { font-family:"Poppins"; font-weight:600; font-size:34px; color:var(--fc-color-blue-gray-900); line-height:1.1; }
+  .kpi .l { font-size:14px; color:var(--fc-color-text-secondary); margin-top:4px; }
+  .charts { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  .chart-card { background:var(--fc-color-surface-primary); border:1px solid var(--fc-color-border-primary); border-radius:16px; box-shadow:var(--fc-shadow-card); padding:18px 20px; }
+  .chart-card h4 { font-family:"Poppins"; font-weight:600; font-size:12px; letter-spacing:.04em; text-transform:uppercase; color:var(--fc-color-blue-gray-600); margin:0 0 12px; }
+  .stub-card { background:var(--fc-color-surface-primary); border:1px solid var(--fc-color-border-primary); border-radius:16px; box-shadow:var(--fc-shadow-card); padding:48px; text-align:center; color:var(--fc-color-text-secondary); }
+
+  /* ===== Transactions grid ===== */
+  .tools-row { display:flex; align-items:center; gap:12px; margin:6px 0 16px; }
+  .smart-filter { flex:1; display:flex; align-items:center; gap:10px; background:var(--fc-color-surface-primary); border:1px solid var(--fc-color-border-primary); border-radius:var(--fc-radius-xxl); padding:11px 18px; color:var(--fc-color-blue-gray-600); }
+  .smart-filter svg { width:18px; height:18px; stroke:currentColor; fill:none; stroke-width:1.8; flex-shrink:0; }
+  .smart-filter input { border:none; outline:none; background:transparent; font-family:"Open Sans"; font-size:14px; width:100%; color:var(--fc-color-text-primary); }
+  .chip { display:inline-flex; align-items:center; gap:6px; background:var(--fc-color-brand-blue-100); color:var(--fc-color-brand-blue-700); border-radius:var(--fc-radius-xxl); padding:5px 12px; font-size:13px; }
+  .chip b { font-weight:600; }
+  .filters-btn { display:flex; align-items:center; gap:8px; border:1px solid var(--fc-color-border-primary); background:var(--fc-color-surface-primary); border-radius:var(--fc-radius-md); padding:11px 16px; font-family:"Poppins"; font-weight:500; font-size:14px; color:var(--fc-color-blue-gray-800); cursor:pointer; }
+  .filters-btn svg { width:16px; height:16px; stroke:currentColor; fill:none; stroke-width:1.8; }
+  .tx-card { background:var(--fc-color-surface-primary); border:1px solid var(--fc-color-border-primary); border-radius:16px; box-shadow:var(--fc-shadow-card); overflow:hidden; }
+  table.tx { width:100%; border-collapse:collapse; font-size:14px; }
+  table.tx thead th { text-align:left; font-family:"Poppins"; font-weight:600; font-size:12px; letter-spacing:.03em; text-transform:uppercase; color:var(--fc-color-blue-gray-600); padding:14px 18px; border-bottom:1px solid var(--fc-color-border-primary); background:var(--fc-color-surface-secondary); }
+  table.tx tbody td { padding:14px 18px; border-bottom:1px solid var(--fc-color-gray-150); color:var(--fc-color-text-primary); }
+  table.tx tbody tr:hover { background:var(--fc-color-surface-secondary); cursor:pointer; }
+  table.tx tbody tr:last-child td { border-bottom:none; }
+  .decision { display:inline-flex; align-items:center; gap:7px; font-family:"Poppins"; font-weight:500; font-size:13px; }
+  .decision .d { width:8px; height:8px; border-radius:50%; }
+  .d-approve { color:var(--fc-color-brand-green-700); } .d-approve .d { background:var(--fc-color-brand-green-600); }
+  .d-decline { color:var(--fc-color-red-600); }        .d-decline .d { background:var(--fc-color-red-500); }
+  .d-review  { color:#a0791a; }                         .d-review .d  { background:var(--fc-color-gold-500); }
+  .mono { font-variant-numeric:tabular-nums; }
+  .tx-foot { display:flex; justify-content:space-between; align-items:center; padding:14px 18px; color:var(--fc-color-text-secondary); font-size:13px; }
+  .pager { display:flex; gap:6px; }
+  .pager span { width:28px; height:28px; border-radius:var(--fc-radius-sm); display:flex; align-items:center; justify-content:center; border:1px solid var(--fc-color-border-primary); cursor:pointer; }
+  .pager span.on { background:var(--fc-color-brand-blue-600); color:#fff; border-color:transparent; }
+
+  /* ===== Transaction detail ===== */
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--fc-color-brand-blue-700); font-family:"Poppins"; font-weight:500; font-size:14px; cursor:pointer; text-decoration:none; margin-bottom:12px; }
+  .back-link svg { width:16px; height:16px; stroke:currentColor; fill:none; stroke-width:2; }
+  .detail-head { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:20px; }
+  .detail-title { font-family:"Poppins"; font-weight:600; font-size:24px; color:var(--fc-color-blue-gray-900); display:flex; align-items:center; gap:14px; }
+  .badge { font-family:"Poppins"; font-weight:600; font-size:13px; padding:5px 13px; border-radius:var(--fc-radius-xxl); display:inline-flex; align-items:center; gap:7px; }
+  .badge .d { width:8px; height:8px; border-radius:50%; }
+  .b-approve { background:var(--fc-color-brand-green-100); color:var(--fc-color-brand-green-800); } .b-approve .d { background:var(--fc-color-brand-green-600); }
+  .b-decline { background:var(--fc-color-red-100); color:var(--fc-color-red-700); }              .b-decline .d { background:var(--fc-color-red-500); }
+  .b-review  { background:var(--fc-color-gold-100); color:#a0791a; }                              .b-review .d  { background:var(--fc-color-gold-500); }
+  .detail-meta { text-align:right; color:var(--fc-color-text-secondary); font-size:13px; }
+  .detail-meta .amt { font-family:"Poppins"; font-weight:600; font-size:22px; color:var(--fc-color-blue-gray-900); }
+  .reason-row { display:flex; gap:8px; flex-wrap:wrap; margin-top:14px; }
+  .signal { font-size:12px; padding:5px 11px; border-radius:var(--fc-radius-xxl); background:var(--fc-color-surface-secondary); border:1px solid var(--fc-color-border-primary); color:var(--fc-color-blue-gray-800); }
+  .ai-card { background:linear-gradient(135deg,#eef3ff,#f7f9ff); border:1px solid var(--fc-color-brand-blue-200); border-radius:16px; padding:20px 24px; margin-bottom:20px; }
+  .ai-head { display:flex; align-items:center; gap:8px; font-family:"Poppins"; font-weight:600; font-size:13px; color:var(--fc-color-brand-blue-700); margin-bottom:8px; }
+  .ai-head svg { width:18px; height:18px; }
+  .ai-body { font-size:15px; color:var(--fc-color-blue-gray-900); line-height:1.55; }
+  .ai-input { margin-top:14px; display:flex; align-items:center; gap:10px; background:#fff; border:1px solid var(--fc-color-brand-blue-200); border-radius:var(--fc-radius-xxl); padding:10px 16px; color:var(--fc-color-blue-gray-600); font-size:14px; }
+  .reason-card { background:var(--fc-color-surface-primary); border:1px solid var(--fc-color-border-primary); border-radius:16px; box-shadow:var(--fc-shadow-card); padding:20px 24px; margin-bottom:20px; }
+  .reason-card .rl { font-family:"Poppins"; font-weight:600; font-size:12px; letter-spacing:.04em; text-transform:uppercase; color:var(--fc-color-blue-gray-600); }
+  .reason-card .rv { font-family:"Poppins"; font-weight:600; font-size:18px; color:var(--fc-color-blue-gray-900); margin-top:4px; }
+  .detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  .detail-card { background:var(--fc-color-surface-primary); border:1px solid var(--fc-color-border-primary); border-radius:16px; box-shadow:var(--fc-shadow-card); padding:20px 24px; }
+  .detail-card h4 { font-family:"Poppins"; font-weight:600; font-size:12px; letter-spacing:.04em; text-transform:uppercase; color:var(--fc-color-blue-gray-600); margin:0 0 8px; }
+  .kv { display:flex; justify-content:space-between; gap:16px; padding:9px 0; border-bottom:1px solid var(--fc-color-gray-150); font-size:14px; }
+  .kv:last-child { border-bottom:none; }
+  .kv .k { color:var(--fc-color-text-secondary); } .kv .v { color:var(--fc-color-text-primary); font-weight:500; text-align:right; }
+
+  /* ===== Claims ===== */
+  .kpi-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:20px; margin-bottom:20px; }
+  .kpi-tile { background:var(--fc-color-surface-primary); border:1px solid var(--fc-color-border-primary); border-radius:16px; box-shadow:var(--fc-shadow-card); padding:20px 22px; }
+  .kpi-tile .l { font-size:13px; color:var(--fc-color-text-secondary); }
+  .kpi-tile .v { font-family:"Poppins"; font-weight:600; font-size:30px; color:var(--fc-color-blue-gray-900); margin-top:6px; line-height:1.1; }
+  .kpi-tile .s { font-size:12px; margin-top:4px; }
+  .cs { display:inline-flex; align-items:center; gap:7px; font-family:"Poppins"; font-weight:500; font-size:13px; }
+  .cs .d { width:8px; height:8px; border-radius:50%; }
+  .cs-won { color:var(--fc-color-brand-green-700); }     .cs-won .d { background:var(--fc-color-brand-green-600); }
+  .cs-lost { color:var(--fc-color-red-600); }            .cs-lost .d { background:var(--fc-color-red-500); }
+  .cs-dispute { color:var(--fc-color-brand-blue-700); } .cs-dispute .d { background:var(--fc-color-brand-blue-600); }
+  .cs-open { color:#a0791a; }                            .cs-open .d { background:var(--fc-color-gold-500); }
+  .cs-refund { color:var(--fc-color-blue-gray-700); }    .cs-refund .d { background:var(--fc-color-blue-gray-500); }
+
+  /* ===== Guided-tour welcome / persona picker ===== */
+  /* Payment Journey detail (replicates real payment-details.tsx) */
+  .pj-card { background:#fff; border:1px solid var(--fc-color-border-primary); border-radius:14px; padding:20px 22px; margin-bottom:16px; }
+  .pj-head { display:flex; align-items:center; gap:12px; margin-bottom:18px; }
+  .pj-head .ic { width:34px; height:34px; border-radius:9px; background:var(--fc-color-brand-blue-100); color:var(--fc-color-brand-blue-600); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .pj-head h4 { font-family:"Poppins"; font-weight:600; font-size:15px; color:var(--fc-color-blue-gray-900); margin:0; }
+  .pj-head p { font-size:12px; color:var(--fc-color-text-secondary); margin:2px 0 0; }
+  .pj-status { margin-left:auto; font-family:"Poppins"; font-weight:600; font-size:12px; padding:5px 12px; border-radius:999px; display:inline-flex; align-items:center; gap:6px; }
+  .pj-status.ok { background:var(--fc-color-green-100); color:var(--fc-color-green-600); }
+  .pj-status .dot { width:7px; height:7px; border-radius:50%; background:currentColor; }
+  .pj-timeline { display:flex; align-items:flex-start; gap:4px; overflow-x:auto; padding:4px 2px 10px; }
+  .pj-ev { flex:1 0 148px; min-width:148px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:7px; padding:8px 6px; border-radius:10px; }
+  .pj-ev.hl { background:var(--fc-color-blue-gray-50); }
+  .pj-ev .ev-ic { width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:var(--fc-color-gray-100); border:2px solid var(--fc-color-border-primary); color:var(--fc-color-blue-gray-500); }
+  .pj-ev.ok .ev-ic { background:var(--fc-color-green-100); border-color:var(--fc-color-green-500); color:var(--fc-color-green-600); }
+  .pj-ev.fail .ev-ic { background:var(--fc-color-red-100); border-color:var(--fc-color-red-500); color:var(--fc-color-red-600); }
+  .pj-ev .ev-t { font-family:"Poppins"; font-weight:600; font-size:12px; color:var(--fc-color-blue-gray-900); line-height:1.25; }
+  .pj-ev .ev-sub { font-size:10px; color:var(--fc-color-blue-gray-500); font-family:"Open Sans"; }
+  .pj-ev .ev-s { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.03em; color:var(--fc-color-blue-gray-500); }
+  .pj-ev.ok .ev-s { color:var(--fc-color-green-600); }
+  .pj-ev.fail .ev-s { color:var(--fc-color-red-600); }
+  .pj-ev .ev-d { font-size:11px; color:var(--fc-color-text-secondary); line-height:1.3; }
+  .pj-ev .ev-time { font-size:10px; color:var(--fc-color-blue-gray-400); font-family:"Open Sans"; }
+  .pj-arrow { flex:0 0 auto; align-self:center; color:var(--fc-color-blue-gray-300); margin-top:16px; }
+  .pj-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:0 28px; }
+  .pj-row { display:flex; justify-content:space-between; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid var(--fc-color-border-primary); }
+  .pj-row .k { font-size:12px; color:var(--fc-color-text-secondary); }
+  .pj-row .v { font-family:"Poppins"; font-weight:600; font-size:13px; color:var(--fc-color-blue-gray-900); text-align:right; }
+  .pj-row .v.bad { color:var(--fc-color-red-600); }
+  .pj-row .v.good { color:var(--fc-color-green-600); }
+  .pj-pill { font-family:"Poppins"; font-weight:600; font-size:11px; padding:3px 10px; border-radius:999px; background:var(--fc-color-brand-blue-100); color:var(--fc-color-brand-blue-700); margin-left:auto; }
+  .pj-callout { margin-top:16px; background:var(--fc-color-brand-blue-100); border:1px solid var(--fc-color-brand-blue-200); border-radius:10px; padding:14px 16px; font-size:13px; line-height:1.5; color:var(--fc-color-blue-gray-800); display:flex; gap:10px; }
+  .pj-callout svg { flex-shrink:0; color:var(--fc-color-brand-blue-600); margin-top:1px; }
+  .pj-signals { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px; }
+  .pj-sig { display:inline-flex; align-items:center; gap:6px; background:var(--fc-color-green-100); color:var(--fc-color-green-600); border-radius:999px; padding:6px 12px; font-size:12px; font-family:"Poppins"; font-weight:600; }
+  .pj-verdict { font-family:"Poppins"; font-weight:600; font-size:14px; color:var(--fc-color-blue-gray-900); background:var(--fc-color-green-100); border:1px solid #b9ecc4; border-radius:10px; padding:12px 14px; display:flex; align-items:center; gap:8px; }
+  .pj-skip-row { display:flex; align-items:center; gap:14px; padding:12px 0; border-bottom:1px solid var(--fc-color-border-primary); font-size:13px; }
+  .pj-skip-row:last-child { border-bottom:none; }
+  .pj-skip-row .sid { font-family:"Open Sans"; color:var(--fc-color-blue-gray-700); font-size:12px; width:118px; flex-shrink:0; }
+  .pj-skip-row .sreason { color:var(--fc-color-text-secondary); flex:1; }
+  .pj-skip-row .stag { font-family:"Poppins"; font-weight:600; font-size:12px; padding:4px 11px; border-radius:999px; flex-shrink:0; }
+  .stag.recovered { background:var(--fc-color-green-100); color:var(--fc-color-green-600); }
+  .stag.skipped { background:var(--fc-color-red-100); color:var(--fc-color-red-600); }
+  .pj-twin { display:flex; gap:14px; margin-bottom:8px; }
+  .pj-twin .twin { flex:1; background:var(--fc-color-blue-gray-50); border-radius:12px; padding:16px; }
+  .twin .tl { font-size:12px; color:var(--fc-color-text-secondary); }
+  .twin .tv { font-family:"Poppins"; font-weight:700; font-size:24px; margin-top:6px; color:var(--fc-color-blue-gray-900); }
+  .twin .tv.good { color:var(--fc-color-green-600); }
+  .twin .ts { font-size:11px; color:var(--fc-color-blue-gray-500); margin-top:4px; }
+  .pj-2col { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .pj-sub { background:var(--fc-color-blue-gray-50); border-radius:10px; padding:14px 16px; }
+  .pj-sub .st { font-family:"Poppins"; font-weight:600; font-size:12px; color:var(--fc-color-blue-gray-700); margin:0 0 10px; display:flex; align-items:center; gap:7px; }
+
+  /* "See it on your numbers" calculator (end-of-flow) */
+  .calc-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px; }
+  .calc-field { display:flex; flex-direction:column; gap:6px; font-family:"Proxima Nova", Arial, sans-serif; font-size:13px; color:rgba(255,255,255,.8); }
+  .calc-input { display:flex; align-items:center; gap:6px; background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.25); border-radius:10px; padding:10px 12px; }
+  .calc-input span { color:rgba(255,255,255,.7); font-weight:600; }
+  .calc-input input { flex:1; min-width:0; background:transparent; border:none; outline:none; color:#fff; font-family:"Poppins"; font-weight:600; font-size:15px; }
+  .calc-slider { display:block; font-family:"Proxima Nova", Arial, sans-serif; font-size:13px; color:rgba(255,255,255,.8); margin-bottom:16px; }
+  .calc-slider b { color:#fff; float:right; font-family:"Poppins"; }
+  .calc-slider input[type=range] { width:100%; margin-top:10px; accent-color:#fff; }
+  .calc-result { display:flex; gap:14px; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.2); border-radius:12px; padding:16px; margin-bottom:8px; }
+  .cr-item { flex:1; }
+  .cr-l { font-size:12px; color:rgba(255,255,255,.7); }
+  .cr-v { font-family:"Poppins"; font-weight:700; font-size:22px; color:#fff; margin-top:4px; }
+  .cr-v.big { font-size:26px; }
+  .calc-note { font-size:11px; color:rgba(255,255,255,.6); margin:0 0 18px; }
+  .data-list { background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.14); border-radius:12px; padding:14px 16px; margin-bottom:18px; }
+  .dl-title { font-family:"Poppins"; font-weight:600; font-size:13px; color:#fff; margin-bottom:8px; }
+  .data-list ul { margin:0; padding-left:18px; }
+  .data-list li { font-size:13px; color:rgba(255,255,255,.82); line-height:1.65; }
+  .calc-cta { width:100%; padding:13px; border:none; border-radius:999px; background:#fff; color:var(--fc-color-brand-blue-700); font-family:"Poppins"; font-weight:600; font-size:14px; cursor:pointer; transition:background .14s; }
+  .calc-cta:hover { background:rgba(255,255,255,.88); }
+  #flow-data-back { color:rgba(255,255,255,.85); margin-bottom:14px; }
+  #flow-data-back:hover { color:#fff; }
+  .ef-block { margin-bottom:14px; }
+  .ef-label { font-family:"Proxima Nova", Arial, sans-serif; font-size:13px; color:rgba(255,255,255,.8); margin-bottom:8px; }
+  .chip-select { display:flex; flex-wrap:wrap; gap:8px; }
+  .chip-select label { display:inline-flex; align-items:center; gap:7px; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.22); border-radius:999px; padding:7px 13px; font-size:13px; color:#fff; cursor:pointer; font-family:"Proxima Nova", Arial, sans-serif; }
+  .chip-select label:has(input:checked) { background:#fff; color:var(--fc-color-brand-blue-700); border-color:#fff; font-weight:600; }
+  .chip-select input { display:none; }
+  .calc-input select, .calc-input textarea { flex:1; min-width:0; background:transparent; border:none; outline:none; color:#fff; font-family:"Poppins"; font-weight:600; font-size:14px; }
+  .calc-input select option { color:#1a2332; }
+  .calc-input.ta { align-items:flex-start; }
+  .calc-input.ta textarea { resize:vertical; min-height:50px; font-family:"Proxima Nova", Arial, sans-serif; font-weight:400; }
+
+  .welcome-overlay { position:fixed; inset:0; z-index:200; background:rgba(255,255,255,.28); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); display:flex; align-items:center; justify-content:center; padding:24px; }
+  .welcome-overlay[hidden] { display:none; }
+  .welcome-card { position:relative; overflow:hidden; background:linear-gradient(150deg, rgba(0,30,110,.82) 0%, rgba(0,55,165,.78) 40%, rgba(20,95,215,.72) 100%); backdrop-filter:blur(16px) saturate(1.2); -webkit-backdrop-filter:blur(16px) saturate(1.2); border:1px solid rgba(255,255,255,.18); border-radius:18px; box-shadow:0 24px 60px rgba(0,34,85,.28); max-width:720px; width:100%; padding:34px 40px; }
+  .welcome-card::before { content:""; position:absolute; inset:0; z-index:0; background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); pointer-events:none; }
+  .welcome-card > div { position:relative; z-index:1; }
+  .welcome-logo { display:flex; align-items:center; gap:10px; margin-bottom:20px; }
+  .welcome-card h1 { font-family:"Poppins"; font-weight:700; font-size:28px; color:#fff; margin:0 0 6px; }
+  .welcome-card .intro { font-family:"Proxima Nova", Arial, sans-serif; font-size:16px; color:rgba(255,255,255,.72); margin:0 0 26px; }
+  .welcome-card h2 { font-family:"Poppins"; font-weight:600; font-size:19px; color:#fff; margin:0 0 5px; }
+  .welcome-card .help { font-family:"Proxima Nova", Arial, sans-serif; font-size:14px; color:rgba(255,255,255,.65); margin:0 0 20px; }
+  .persona-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:14px; }
+  .persona { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.22); border-radius:14px; padding:20px 14px; text-align:center; cursor:pointer; transition:background .14s, border-color .14s, transform .14s, box-shadow .14s; }
+  .persona:hover { background:rgba(255,255,255,.26); border-color:rgba(255,255,255,.55); transform:translateY(-2px); box-shadow:0 8px 20px rgba(0,20,70,.22); }
+  .persona .pa { width:46px; height:46px; border-radius:50%; color:#fff; font-family:"Poppins"; font-weight:600; font-size:16px; display:flex; align-items:center; justify-content:center; margin:0; }
+  .persona .pt { font-family:"Poppins"; font-weight:600; font-size:14px; line-height:1.25; color:#fff; min-height:2.5em; display:flex; align-items:center; justify-content:center; }
+  .persona .ps { font-family:"Proxima Nova", Arial, sans-serif; font-size:12px; color:rgba(255,255,255,.7); margin-top:4px; line-height:1.35; }
+  #welcome-back, #welcome-back-pay { color:rgba(255,255,255,.85); }
+  #welcome-back:hover, #welcome-back-pay:hover { color:#fff; }
+  @media (max-width:880px){ .persona-grid { grid-template-columns:repeat(2,1fr); } }
+
+
+  /* ===== Coach-mark tour ===== */
+  #tour-spot { position:fixed; z-index:300; border-radius:12px; box-shadow:0 0 0 9999px rgba(15,30,60,.62); pointer-events:none; transition:top .12s ease, left .12s ease, width .12s ease, height .12s ease; border:2px solid var(--fc-color-brand-blue-500); }
+  #tour-spot[hidden], #tour-pop[hidden] { display:none; }
+  #tour-pop { position:fixed; z-index:301; width:340px; max-width:calc(100vw - 32px); background:var(--fc-color-surface-primary); border-radius:14px; box-shadow:var(--fc-shadow-elevation-3); padding:20px 22px; transition:top .12s ease, left .12s ease; }
+  #tour-pop .tp-step { font-family:"Poppins"; font-weight:600; font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--fc-color-brand-blue-600); }
+  #tour-pop h3 { font-family:"Poppins"; font-weight:700; font-size:17px; color:var(--fc-color-blue-gray-900); margin:6px 0 8px; }
+  #tour-pop p { font-size:14px; line-height:1.5; color:var(--fc-color-text-secondary); margin:0 0 18px; }
+  #tour-pop .tp-foot { display:flex; align-items:center; justify-content:space-between; }
+  #tour-pop .tp-skip { font-size:13px; color:var(--fc-color-blue-gray-600); cursor:pointer; }
+  #tour-pop .tp-btns { display:flex; gap:8px; }
+  #tour-pop .tp-btn { font-family:"Poppins"; font-weight:600; font-size:13px; border-radius:var(--fc-radius-xxl); padding:9px 18px; cursor:pointer; border:1px solid var(--fc-color-border-primary); background:var(--fc-color-surface-primary); color:var(--fc-color-blue-gray-800); }
+  #tour-pop .tp-btn.primary { background:var(--fc-color-cta-brand-default); color:#fff; border-color:transparent; }
+  #tour-pop .tp-btn.primary:hover { background:var(--fc-color-cta-brand-hovered); }
+</style>
+</head>
+<body>
+
+<!-- ===== Side nav ===== -->
+<aside class="side-nav">
+  <div class="side-nav-header">
+    <svg width="34" height="34" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
+      <path d="M0 10C0 4.477 4.477 0 10 0h12c5.523 0 10 4.477 10 10v12c0 5.523-4.477 10-10 10H10C4.477 32 0 27.523 0 22V10Z" fill="url(#fp)"/>
+      <path d="M13.354 9.672c1.64-.156 3.438.035 4.82.888 1.142.704 1.905 1.65 2.31 2.883.385 1.173.378 2.46.192 3.68-.183 1.203-.576 2.387-1.098 3.504-.569 1.22-1.304 2.396-2.136 3.477a23 23 0 0 1-2.223 2.463c-.274.236-.615.27-.62.258l-.004.012q-.51.022-1.02-.009c-.127-.022-.094-.111-.021-.2.06-.056.117-.115.176-.172l.014-.013-.005-.001c.796-.76 1.53-1.574 2.19-2.441a17.6 17.6 0 0 0 1.943-3.174c.477-1.018.841-2.094 1.02-3.188.18-1.1.208-2.267-.119-3.331-.339-1.102-.995-1.953-2.007-2.584-1.219-.76-2.811-.909-4.259-.749-1.539.17-3.067.683-4.458 1.363-.006.003-.011.004-.018.007-.336.158-.304-.042-.26-.166.046-.097.089-.195.137-.291l.025-.052c.11-.218.226-.434.347-.646l.027-.03c1.565-.737 3.286-1.277 5.017-1.443m-1.062 3.195c1.174-.178 2.479-.102 3.491.495.841.497 1.396 1.19 1.666 2.099.253.855.207 1.789.032 2.665-.167.834-.485 1.65-.892 2.41-.42.788-.955 1.548-1.551 2.23-.544.623-1.142 1.194-1.798 1.712-.587.464-1.217.882-1.88 1.24-.46.26-.753.111-.76.108-.28-.16-.54-.344-.79-.537-.193-.215.202-.39.202-.391.376-.138.743-.302 1.095-.491.516-.278 1.005-.604 1.461-.964.51-.403.976-.847 1.398-1.331.464-.531.879-1.12 1.207-1.732.316-.592.563-1.226.693-1.874.136-.681.171-1.407-.025-2.071-.21-.706-.642-1.246-1.296-1.632-.787-.464-1.801-.522-2.714-.384-1.143.175-2.26.661-3.218 1.287-.61.4-1.175.864-1.686 1.373-.01.008-.021.016-.032.027-.208.202-.236-.214-.239-.337l-.001-.015c.034-.338.082-.679.143-1.021.022-.084.08-.236.23-.383.36-.292.734-.571 1.125-.826 1.232-.805 2.669-1.431 4.141-1.655M11.232 7.5c2.634-.668 6.122-1.062 8.319.148 3.03 1.667 4.07 4.54 3.988 7.797-.073 2.863-1.123 5.76-2.665 8.257-.163.256-.525.688-.59.766-.42.35-.866.672-1.332.964-.234.133-.11-.182-.112-.184 1.714-2.634 2.962-5.736 3.113-8.805.152-3.107-.69-6-3.609-7.626-1.992-1.109-5.482-.808-8.331.005-.006.001-.012.001-.019.002-.32.09-.083-.225-.043-.276.235-.26.478-.507.726-.743.204-.187.459-.278.555-.308M11.66 15.868c.653-.096 1.379-.056 1.942.265.467.266.776.639.926 1.126.14.46.115.96.018 1.43-.093.448-.27.886-.496 1.295-.234.423-.532.83-.863 1.196-.303.334-.636.642-1.001.92-.327.25-.678.474-1.047.665-.342.179-.704.327-1.078.436-.355.105-.715.175-1.086.194-.357.018-.736-.014-1.074-.113-.064-.018-.127-.043-.189-.066-.242-.093-.465-.222-.654-.39-.293-.262-.486-.598-.585-.963-.118-.433-.087-1.033.021-1.472.011-.046.025-.09.037-.134.081-.29.183-.545.323-.828.169-.34.376-.668.612-.974.51-.66 1.161-1.24 1.889-1.7.685-.432 1.485-.767 2.305-.887m.282 1.53c-.375-.204-.86-.23-1.295-.169-.546.077-1.079.291-1.536.567-.485.292-.92.66-1.26 1.081-.157.195-.294.403-.407.62-.108.207-.184.389-.241.611-.073.279-.093.661-.015.936.066.232.195.446.39.612.158.135.351.232.563.291.225.063.477.083.715.071.248-.012.487-.055.724-.122.25-.07.491-.164.72-.277.245-.122.479-.265.697-.423.243-.177.465-.373.667-.585.221-.233.419-.493.575-.763.15-.26.269-.538.331-.822.065-.3.081-.62-.013-.911-.1-.31-.306-.548-.617-.718m-1.664 1.116c.125-.003.252.02.356.085.117.072.196.174.233.306.035.126.029.263.005.392-.024.122-.069.241-.125.353-.058.115-.134.226-.217.325-.076.091-.159.176-.25.252-.082.068-.17.13-.262.182-.086.049-.178.09-.272.119-.089.028-.178.046-.27.052-.087.004-.18-.005-.263-.031-.08-.025-.151-.067-.211-.125-.073-.072-.122-.163-.147-.262-.029-.118-.022-.282.005-.402.022-.095.05-.174.09-.262.043-.093.096-.183.155-.266.13-.18.293-.339.476-.464.172-.118.373-.21.578-.243.04-.006.081-.01.122-.011" fill="#fff"/>
+      <defs><linearGradient id="fp" x1="30.5" y1="1" x2="0" y2="31" gradientUnits="userSpaceOnUse"><stop stop-color="#5B58EA"/><stop offset="1" stop-color="#1F75F6"/></linearGradient></defs>
+    </svg>
+    <div>
+      <div class="brand-name">Forter</div>
+      <div class="brand-sub">Demo Merchant</div>
+    </div>
+  </div>
+
+  <nav class="nav-scroll">
+    <!-- Real top-level zones (code order). Per-merchant gating to be added later. -->
+    <a class="nav-item active" data-page="Home"><img class="zbadge" src="po-assets/img/zones/home.svg" alt=""> Home</a>
+    <a class="nav-item" data-page="Transactions"><img class="zbadge" src="po-assets/img/zones/transactions.svg" alt=""> Transactions</a>
+    <a class="nav-item" data-page="Claims"><img class="zbadge" src="po-assets/img/zones/claims.svg" alt=""> Claims</a>
+    <a class="nav-item" data-page="Decision Touchpoints"><img class="zbadge" src="po-assets/img/zones/decision_touchpoints.svg" alt=""> Decision Touchpoints</a>
+    <a class="nav-item" data-page="Payments"><img class="zbadge" src="po-assets/img/zones/payments.svg" alt=""> Payments</a>
+    <a class="nav-item" data-page="Compensation"><img class="zbadge" src="po-assets/img/zones/unified_compensation.svg" alt=""> Compensation</a>
+    <a class="nav-item" data-page="Identities"><img class="zbadge" src="po-assets/img/zones/identities.svg" alt=""> Identities</a>
+    <a class="nav-item" data-page="Identity Protection"><img class="zbadge" src="po-assets/img/zones/ato_protection.svg" alt=""> Identity Protection</a>
+    <a class="nav-item" data-page="AI Agent"><img class="zbadge" src="po-assets/img/zones/agents.svg" alt=""> AI Agent</a>
+    <a class="nav-item" data-page="Live Insights"><img class="zbadge" src="po-assets/img/zones/live_js_insights.svg" alt=""> Live Insights</a>
+    <a class="nav-item" data-page="Explore"><img class="zbadge" src="po-assets/img/zones/decision_touchpoints.svg" alt=""> Explore</a>
+    <a class="nav-item" data-page="Intelligence Hub"><img class="zbadge" src="po-assets/img/zones/intelligence_hub.svg" alt=""> Intelligence Hub</a>
+    <a class="nav-item" data-page="Agentic Orchestration"><span class="zfallback"><svg viewBox="0 0 24 24"><circle cx="5" cy="6" r="2"/><circle cx="19" cy="6" r="2"/><circle cx="12" cy="18" r="2"/><path d="M6.5 7.5L11 16M17.5 7.5L13 16M7 6h10"/></svg></span> Agentic Orchestration</a>
+
+    <div style="height:1px;background:var(--fc-color-border-primary);margin:12px 4px"></div>
+
+    <a class="nav-item" data-page="Lists"><span class="zfallback"><svg viewBox="0 0 24 24"><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/></svg></span> Lists</a>
+    <a class="nav-item" data-page="Policies"><img class="zbadge" src="po-assets/img/zones/policies.svg" alt=""> Policies</a>
+    <a class="nav-item" data-page="Report Center"><img class="zbadge" src="po-assets/img/zones/report_center.svg" alt=""> Report Center</a>
+    <a class="nav-item" data-page="Forter Data Studio"><img class="zbadge" src="po-assets/img/zones/forter_data_studio.svg" alt=""> Forter Data Studio</a>
+    <a class="nav-item" data-page="Integration Center"><img class="zbadge" src="po-assets/img/zones/integration_center.svg" alt=""> Integration Center</a>
+  </nav>
+
+  <div class="side-nav-footer">
+    <a class="nav-item" data-page="Help Center"><img class="zbadge" src="po-assets/img/zones/help.svg" alt=""> Help Center</a>
+    <a class="nav-item" data-page="Settings"><img class="zbadge" src="po-assets/img/zones/settings.svg" alt=""> Settings</a>
+    <div class="user-chip">
+      <div class="avatar" id="user-initials">AC</div>
+      <div style="min-width:0">
+        <div style="font-family:Poppins;font-weight:600;font-size:13px" id="user-name">Avishek</div>
+        <div style="font-size:12px;color:var(--fc-color-text-secondary)" id="user-email">demo@forter.com</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- ===== Main ===== -->
+<div class="main">
+  <header class="top-bar">
+    <div class="topbar-search">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+      <input placeholder="Search transactions, orders, emails…">
+    </div>
+    <div class="top-actions">
+      <button class="icon-btn" title="Notifications"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg></button>
+      <button class="icon-btn" title="Help"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 4.5 1.5c0 1.5-2 2-2 3"/><path d="M12 17h.01"/></svg></button>
+    </div>
+  </header>
+
+  <div class="content-wrap">
+
+  <!-- ===== Home (landing) page — mock data ===== -->
+  <section id="page-Home" class="page">
+    <div class="home-top">
+      <h1 class="home-greet" id="greet">Good morning, Avishek.</h1>
+      <div class="datepicker">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>
+        Last 30 days
+      </div>
+    </div>
+
+    <div class="grid-container">
+      <h3 class="grid-header" id="gh1">Items to Review</h3>
+      <h3 class="grid-header" id="gh2">Performance Overview</h3>
+
+      <!-- Items to Review -->
+      <div class="wgt" style="grid-area:A"><div class="wgt-label">Transactions to review</div><div class="wgt-num">1,284</div><div class="wgt-sub up">▲ 6% vs. previous</div></div>
+      <div class="wgt" style="grid-area:B"><div class="wgt-label">Pending claims</div><div class="wgt-num">56</div><div class="wgt-sub">12 due today</div></div>
+      <div class="wgt" style="grid-area:C"><div class="wgt-label">Open alerts</div><div class="wgt-num">9</div><div class="wgt-sub down">3 high priority</div></div>
+
+      <!-- D: big performance chart -->
+      <div class="wgt" style="grid-area:D">
+        <p class="wgt-title">Approval Rate</p>
+        <div style="display:flex;align-items:baseline;gap:10px">
+          <span class="wgt-num" style="margin-top:0">94.2%</span>
+          <span class="wgt-sub up">▲ 1.3 pts</span>
+        </div>
+        <svg viewBox="0 0 520 170" preserveAspectRatio="none" style="width:100%;flex:1;margin-top:8px">
+          <defs><linearGradient id="g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1f75f6" stop-opacity="0.18"/><stop offset="1" stop-color="#1f75f6" stop-opacity="0"/></linearGradient></defs>
+          <path d="M0,120 L40,110 L80,118 L120,95 L160,100 L200,80 L240,86 L280,64 L320,70 L360,52 L400,58 L440,40 L480,46 L520,34 L520,170 L0,170 Z" fill="url(#g1)"/>
+          <path d="M0,120 L40,110 L80,118 L120,95 L160,100 L200,80 L240,86 L280,64 L320,70 L360,52 L400,58 L440,40 L480,46 L520,34" fill="none" stroke="#1f75f6" stroke-width="2.5"/>
+        </svg>
+      </div>
+
+      <!-- E,F: KPIs -->
+      <div class="wgt" style="grid-area:E"><div class="wgt-label">Auth Rate</div><div class="wgt-num">90.13%</div><div class="wgt-sub up">▲ 0.8 pts</div></div>
+      <div class="wgt" style="grid-area:F"><div class="wgt-label">Chargeback Rate</div><div class="wgt-num">0.42%</div><div class="wgt-sub up">▼ 0.05 pts</div></div>
+
+      <!-- G: decision mix donut -->
+      <div class="wgt" style="grid-area:G">
+        <p class="wgt-title">Decision mix</p>
+        <div style="display:flex;align-items:center;justify-content:center;flex:1">
+          <svg width="120" height="120" viewBox="0 0 36 36">
+            <circle cx="18" cy="18" r="15.9" fill="none" stroke="#e9ebef" stroke-width="4"/>
+            <circle cx="18" cy="18" r="15.9" fill="none" stroke="#00ba7f" stroke-width="4" stroke-dasharray="88 12" stroke-dashoffset="25" transform="rotate(-90 18 18)"/>
+            <circle cx="18" cy="18" r="15.9" fill="none" stroke="#1f75f6" stroke-width="4" stroke-dasharray="7 93" stroke-dashoffset="-63" transform="rotate(-90 18 18)"/>
+            <circle cx="18" cy="18" r="15.9" fill="none" stroke="#ff5959" stroke-width="4" stroke-dasharray="5 95" stroke-dashoffset="-70" transform="rotate(-90 18 18)"/>
+          </svg>
+        </div>
+        <div class="legend"><span><i class="dot" style="background:#00ba7f"></i>Approve 88%</span><span><i class="dot" style="background:#1f75f6"></i>Review 7%</span><span><i class="dot" style="background:#ff5959"></i>Decline 5%</span></div>
+      </div>
+
+      <!-- H: 3DS success rate wide -->
+      <div class="wgt" style="grid-area:H">
+        <p class="wgt-title">3DS Success Rate</p>
+        <div style="display:flex;align-items:center;gap:16px;flex:1">
+          <span class="wgt-num" style="margin-top:0">85.32%</span>
+          <svg viewBox="0 0 300 60" preserveAspectRatio="none" style="flex:1;height:48px">
+            <g fill="#1f75f6">
+              <rect x="0" y="28" width="22" height="32" rx="2"/><rect x="34" y="20" width="22" height="40" rx="2"/><rect x="68" y="24" width="22" height="36" rx="2"/><rect x="102" y="12" width="22" height="48" rx="2"/><rect x="136" y="18" width="22" height="42" rx="2"/><rect x="170" y="8" width="22" height="52" rx="2"/><rect x="204" y="14" width="22" height="46" rx="2"/><rect x="238" y="4" width="22" height="56" rx="2"/><rect x="272" y="10" width="22" height="50" rx="2"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div id="cta">
+        <div id="cta-inner">
+          <div id="cta-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#1f75f6" stroke-width="1.6"><path d="M4 19V5M4 19h16M8 16v-5M12 16V8M16 16v-3"/><circle cx="19" cy="5" r="2" fill="#1f75f6" stroke="none"/></svg>
+          </div>
+          <div id="cta-title">All Insights In One Place</div>
+          <div id="cta-body">Please explore and tell us what you think.</div>
+          <div id="cta-buttons">
+            <button class="btn">Share a feedback</button>
+            <button class="btn btn-primary">Explore Dashboard</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- J: transactions over time -->
+      <div class="wgt" style="grid-area:J">
+        <p class="wgt-title">Transactions over time</p>
+        <svg viewBox="0 0 480 230" preserveAspectRatio="none" style="width:100%;flex:1;margin-top:8px">
+          <g fill="#90bdff">
+            <rect x="6" y="120" width="28" height="110" rx="3"/><rect x="46" y="90" width="28" height="140" rx="3"/><rect x="86" y="140" width="28" height="90" rx="3"/><rect x="126" y="70" width="28" height="160" rx="3"/><rect x="166" y="100" width="28" height="130" rx="3"/><rect x="206" y="60" width="28" height="170" rx="3"/><rect x="246" y="84" width="28" height="146" rx="3"/><rect x="286" y="46" width="28" height="184" rx="3"/><rect x="326" y="72" width="28" height="158" rx="3"/><rect x="366" y="40" width="28" height="190" rx="3"/><rect x="406" y="64" width="28" height="166" rx="3"/><rect x="446" y="30" width="28" height="200" rx="3"/>
+          </g>
+        </svg>
+      </div>
+
+      <!-- K: top decline reasons -->
+      <div class="wgt" style="grid-area:K">
+        <p class="wgt-title">Top decline reasons</p>
+        <ul class="reasons">
+          <li><span>Insufficient funds</span><span style="display:flex;align-items:center;gap:8px"><i class="bar" style="width:90px"></i>34%</span></li>
+          <li><span>Do not honor</span><span style="display:flex;align-items:center;gap:8px"><i class="bar" style="width:64px"></i>24%</span></li>
+          <li><span>Suspected fraud</span><span style="display:flex;align-items:center;gap:8px"><i class="bar" style="width:46px"></i>17%</span></li>
+          <li><span>Expired card</span><span style="display:flex;align-items:center;gap:8px"><i class="bar" style="width:32px"></i>12%</span></li>
+          <li><span>Other</span><span style="display:flex;align-items:center;gap:8px"><i class="bar" style="width:34px"></i>13%</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Payments zone — mock data, modeled on the real 3DS dashboard ===== -->
+  <section id="page-Payments" class="page" hidden>
+    <div class="ins-tabs">
+      <span class="ins-tab active">Insights</span>
+      <span class="ins-tab">Transactions</span>
+    </div>
+
+    <div id="pay-insights">
+    <div class="ins-layout">
+      <aside class="ins-rail">
+        <a class="ins-nav active">Overview</a>
+        <a class="ins-nav">Funnel</a>
+        <a class="ins-nav">Complete Rate</a>
+        <a class="ins-nav">Bank Authorization</a>
+        <a class="ins-nav">EU (PSD2) <span class="chev">▾</span></a>
+        <a class="ins-nav sub">EU - Overview</a>
+        <a class="ins-nav sub">EU - Funnel</a>
+        <a class="ins-nav sub">Intent Recovery</a>
+        <a class="ins-nav">US <span class="chev">▾</span></a>
+        <a class="ins-nav">ROW <span class="chev">▾</span></a>
+        <a class="ins-nav">Global <span class="chev">▾</span></a>
+        <a class="ins-nav">Payments Flow Charts <span class="chev">▾</span></a>
+        <a class="ins-nav">Internal Dashboards <span class="chev">▾</span></a>
+      </aside>
+
+      <div class="ins-main">
+        <div id="ins-view-overview" class="ins-view">
+        <div class="ins-head">
+          <h2><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg> Overview</h2>
+          <div class="ins-head-right">
+            <svg viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+            <div class="date-pill"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg><b>30 Days</b> 09 Oct 2025 – 07 Nov 2025</div>
+            <div class="create-report"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v12H8l-4 4z"/></svg> Create Report</div>
+          </div>
+        </div>
+
+        <div class="sec-label">Success Metrics</div>
+        <div class="metric-row five">
+          <div class="metric-card" id="pm-auth"><span class="plus">+</span><div class="ml">Auth Rate <span class="i">i</span></div><div class="mv">87.78% <span class="delta up">0.88%</span></div></div>
+          <div class="metric-card"><span class="plus">+</span><div class="ml">Complete Rate <span class="i">i</span></div><div class="mv">79.89% <span class="delta up">0.21%</span></div></div>
+          <div class="metric-card" id="pm-revuplift"><span class="plus">+</span><div class="ml">Revenue Uplift <span class="i">i</span></div><div class="mv">$576.79K <span class="delta down">6.84%</span></div></div>
+          <div class="metric-card"><span class="plus">+</span><div class="ml">Liability Shift <span class="i">i</span></div><div class="mv">$8.19M <span class="delta down">0.51%</span></div></div>
+          <div class="metric-card" id="pm-friction"><span class="plus">+</span><div class="ml">% Frictionless <span class="i">i</span></div><div class="mv">11.78% <span class="delta up">2.41%</span></div></div>
+        </div>
+
+        <div class="sec-label">Overview</div>
+        <div class="metric-row over">
+          <div class="metric-card" id="pm-3ds"><div class="ml">Total sent to 3DS <span class="i">i</span></div><div class="mv">19.90% <span class="delta down">7.43%</span></div></div>
+          <div class="metric-card"><div class="ml">Revenue uplift (3DS) <span class="i">i</span></div><div class="mv">$79.19K <span class="delta down">14.28%</span></div></div>
+          <div class="metric-card"><div class="ml">Sent to 3DS — Policy <span class="i">i</span></div><div class="mv">0.82% <span class="delta up">16.45%</span></div></div>
+          <div class="metric-card"><div class="ml">Sent to 3DS — Regulation <span class="i">i</span></div><div class="mv">3.05% <span class="delta down">3.54%</span></div></div>
+          <div class="metric-card"><div class="ml">Sent to 3DS — Risk <span class="i">i</span></div><div class="mv">0.45% <span class="delta up">20.68%</span></div></div>
+          <div class="metric-card"><div class="ml">Borderline 3DS Completion <span class="i">i</span></div><div class="mv">32.17% <span class="delta down">7.17%</span></div></div>
+          <div class="metric-card"><div class="ml">3DS success rate <span class="i">i</span></div><div class="mv">81.50% <span class="delta up">0.35%</span></div></div>
+          <div class="metric-card"><div class="ml">3DS executed by Forter <span class="i">i</span></div><div class="mv">20.36K <span class="delta up">5.85%</span></div></div>
+        </div>
+
+        <div class="charts3">
+          <div class="chart-sm"><h4>Complete and auth rates</h4><div class="by">By #</div><div class="cc"><canvas id="pc1"></canvas></div></div>
+          <div class="chart-sm"><h4>Complete and Auth Rates (3DS vs non 3DS)</h4><div class="by">By #</div><div class="cc"><canvas id="pc2"></canvas></div></div>
+          <div class="chart-sm"><h4>Liability shift rate (successful 3DS / completed)</h4><div class="by">By $</div><div class="cc"><canvas id="pc3"></canvas></div></div>
+          <div class="chart-sm"><h4>3DS Result Distribution</h4><div class="by">By #</div><div class="cc"><canvas id="pc4"></canvas></div></div>
+          <div class="chart-sm"><h4>3DS Recommendation Reason Split</h4><div class="by">By #</div><div class="cc"><canvas id="pc5"></canvas></div></div>
+          <div class="chart-sm"><h4>Transactions completed successfully with 3DS by reason</h4><div class="by">By #</div><div class="cc"><canvas id="pc6"></canvas></div></div>
+        </div>
+        </div><!-- /ins-view-overview -->
+
+        <!-- ===== Funnel view (real routing tree) ===== -->
+        <div id="ins-view-funnel" class="ins-view" hidden>
+          <div class="funnel-head">
+            <h2 style="font-family:'Poppins';font-weight:600;font-size:20px;color:var(--fc-color-blue-gray-900);margin:0;display:flex;align-items:center;gap:8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg> Funnel</h2>
+            <div class="funnel-ctrls">
+              <span class="fchip">⤳ Normalized</span>
+              <span class="fchip">⤳ By Intent</span>
+              <span class="fseg"><span class="on"># Count</span><span>$ Sum</span></span>
+              <div class="date-pill"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg><b>7 Days</b> 01 Nov 2025 – 07 Nov 2025</div>
+            </div>
+          </div>
+
+          <div class="funnel-wrap">
+            <div class="funnel-stage">
+              <div class="fcol-titles">
+                <div class="fcol-title">Fraud Decision</div>
+                <div class="fcol-title">Payment Optimization</div>
+                <div class="fcol-title">3DS Status</div>
+                <div class="fcol-title">Authorization Status</div>
+              </div>
+
+              <svg class="flinks" viewBox="0 0 1040 610" preserveAspectRatio="none">
+                <g fill="none" stroke="#cad0d9" stroke-width="1.5">
+                  <!-- root -> fraud decision -->
+                  <path d="M90,305 C140,305 130,300 175,300"/>
+                  <path d="M90,305 C140,400 150,455 175,455"/>
+                  <path d="M90,305 C140,500 150,520 175,520"/>
+                  <path d="M90,305 C140,540 150,565 175,565"/>
+                  <!-- approve -> payment optimization -->
+                  <path d="M300,300 C340,300 330,90 380,90"/>
+                  <path d="M300,300 C340,260 350,220 380,220"/>
+                  <path d="M300,300 C340,315 350,330 380,330"/>
+                  <path d="M300,300 C340,370 350,410 380,410"/>
+                  <!-- borderline -> 3ds -->
+                  <path d="M300,455 C340,455 350,480 380,480"/>
+                  <!-- 3ds(opt) -> 3ds status -->
+                  <path d="M470,330 C540,330 580,300 620,300"/>
+                  <path d="M470,330 C540,335 580,340 620,340"/>
+                  <!-- borderline 3ds -> status -->
+                  <path d="M470,480 C540,480 580,475 620,475"/>
+                  <path d="M470,480 C540,500 580,515 620,515"/>
+                  <!-- payment-opt -> authorization -->
+                  <path d="M470,90 C700,90 760,90 820,90"/>
+                  <path d="M470,220 C700,220 760,225 820,225"/>
+                  <!-- 3ds successful -> authorization (liability shift) -->
+                  <path d="M720,300 C760,300 780,310 820,310"/>
+                  <!-- direct auth -> authorization -->
+                  <path d="M470,410 C700,410 760,415 820,415"/>
+                  <!-- borderline 3ds successful -> authorization -->
+                  <path d="M720,475 C760,475 780,483 820,483"/>
+                </g>
+              </svg>
+
+              <!-- root -->
+              <div class="fnode root" style="left:2px;top:305px">All Transactions<b>108.4K</b></div>
+
+              <!-- Fraud Decision -->
+              <div class="fnode f-green" style="left:175px;top:300px">Approve <b>97.50K</b></div>
+              <div class="fnode f-amber" style="left:175px;top:455px">Borderline <b>2.717K</b></div>
+              <div class="fnode f-red"   style="left:175px;top:520px">Hard Decline <b>7.400K</b></div>
+              <div class="fnode f-red"   style="left:175px;top:565px">Policy Decline <b>0</b></div>
+
+              <!-- Payment Optimization -->
+              <div class="fnode f-opt" style="left:380px;top:90px">MC DTI <b>0</b></div>
+              <div class="fnode f-opt" style="left:380px;top:220px">Issuer Optimization <b>4.256K</b></div>
+              <div class="fnode f-opt" style="left:380px;top:330px">3DS <b>10.58K</b></div>
+              <div class="fnode f-opt" style="left:380px;top:410px">Direct Authorization <b>82.66K</b></div>
+              <div class="fnode f-opt" style="left:380px;top:480px">3DS <b>2.717K</b></div>
+
+              <!-- 3DS Status -->
+              <div class="fnode f-green" style="left:620px;top:300px">Successful <b>8.681K</b></div>
+              <div class="fnode f-red"   style="left:620px;top:340px">Unsuccessful <b>1.899K</b></div>
+              <div class="fnode f-green" style="left:620px;top:475px">Successful <b>2.196K</b></div>
+              <div class="fnode f-red"   style="left:620px;top:515px">Unsuccessful <b>521</b></div>
+
+              <!-- Authorization Status -->
+              <div class="fnode f-green" style="left:840px;top:80px">Bank Authorized <b>0</b></div>
+              <div class="fnode f-red"   style="left:840px;top:110px">Bank Declined <b>0</b></div>
+              <div class="fnode f-green" style="left:840px;top:210px">Bank Authorized <b>4.018K</b></div>
+              <div class="fnode f-red"   style="left:840px;top:240px">Bank Declined <b>238</b></div>
+              <div class="lshift" style="left:870px;top:286px">Liability Shift</div>
+              <div class="fnode f-green" style="left:840px;top:306px">Bank Authorized <b>7.890K</b></div>
+              <div class="fnode f-red"   style="left:840px;top:336px">Bank Declined <b>791</b></div>
+              <div class="fnode f-green" style="left:840px;top:405px">Bank Authorized <b>72.29K</b></div>
+              <div class="fnode f-red"   style="left:840px;top:435px">Bank Declined <b>10.37K</b></div>
+              <div class="lshift" style="left:870px;top:459px">Liability Shift</div>
+              <div class="fnode f-green" style="left:840px;top:479px">Bank Authorized <b>1.765K</b></div>
+              <div class="fnode f-red"   style="left:840px;top:509px">Bank Declined <b>431</b></div>
+              <div class="fnode f-grey"  style="left:840px;top:575px">Missing Data <b>812</b></div>
+            </div>
+          </div>
+        </div><!-- /ins-view-funnel -->
+
+        <!-- ===== EU - Overview (PSD2) ===== -->
+        <div id="ins-view-eu-overview" class="ins-view" hidden>
+          <div class="ins-head">
+            <h2><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg> EU - Overview</h2>
+            <div class="ins-head-right">
+              <svg viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+              <div class="date-pill"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg><b>30 Days</b> 09 Oct 2025 – 07 Nov 2025</div>
+              <div class="create-report"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v12H8l-4 4z"/></svg> Create Report</div>
+            </div>
+          </div>
+          <div class="metric-row two" style="margin-bottom:4px">
+            <div class="metric-card"><span class="plus">+</span><div class="ml">PSD2 Traffic from Global <span class="i">i</span></div><div class="mv">19.64% <span class="delta down">2.89%</span></div></div>
+            <div class="metric-card" id="pm-psd2exempt"><div class="ml">PSD2 Exemption Rate <span class="i">i</span></div><div class="mv">83.09% <span class="delta up">0.99%</span></div></div>
+          </div>
+          <div class="sec-label">Success Metrics</div>
+          <div class="metric-row six">
+            <div class="metric-card" id="pm-psd2auth"><div class="ml">PSD2 Auth Rate <span class="i">i</span></div><div class="mv">90.27% <span class="delta down">0.35%</span></div></div>
+            <div class="metric-card"><div class="ml">PSD2 Complete Rate <span class="i">i</span></div><div class="mv">83.46% <span class="delta down">0.4%</span></div></div>
+            <div class="metric-card"><div class="ml">PSD2 Successful <span class="i">i</span></div><div class="mv">68.95% <span class="delta down">1.87%</span></div></div>
+            <div class="metric-card"><div class="ml">% Frictionless <span class="i">i</span></div><div class="mv">1.34% <span class="delta up">3.36%</span></div></div>
+            <div class="metric-card"><div class="ml">Liability Shift <span class="i">i</span></div><div class="mv">$7.44M <span class="delta up">0.05%</span></div></div>
+            <div class="metric-card" id="pm-recintent"><div class="ml">Recovered by Intent <span class="i">i</span></div><div class="mv">$1.66M <span class="delta down">3.98%</span></div></div>
+          </div>
+          <div class="sec-label">Overview</div>
+          <div class="metric-row over">
+            <div class="metric-card"><div class="ml">% Frictionless out <span class="i">i</span></div><div class="mv">8.24% <span class="delta up">4.3%</span></div></div>
+            <div class="metric-card"><div class="ml">PSD2 Exemption <span class="i">i</span></div><div class="mv">73.73% <span class="delta down">1.44%</span></div></div>
+          </div>
+          <div class="charts3">
+            <div class="chart-sm"><h4>PSD2 traffic split</h4><div class="by">By #</div>
+              <div style="display:flex;justify-content:center;padding:6px 0"><svg width="120" height="120" viewBox="0 0 36 36"><circle cx="18" cy="18" r="15.9" fill="none" stroke="#20e8d3" stroke-width="5" stroke-dasharray="52 48" stroke-dashoffset="25" transform="rotate(-90 18 18)"/><circle cx="18" cy="18" r="15.9" fill="none" stroke="#1f75f6" stroke-width="5" stroke-dasharray="28 72" stroke-dashoffset="-27" transform="rotate(-90 18 18)"/><circle cx="18" cy="18" r="15.9" fill="none" stroke="#d232f1" stroke-width="5" stroke-dasharray="20 80" stroke-dashoffset="-55" transform="rotate(-90 18 18)"/></svg></div>
+              <div class="legend"><span><i class="dot" style="background:#20e8d3"></i>Completed w/ 3DS</span><span><i class="dot" style="background:#1f75f6"></i>Completed (Exemption)</span><span><i class="dot" style="background:#d232f1"></i>Not Completed</span></div>
+            </div>
+            <div class="chart-sm"><h4>PSD2 traffic split over time</h4><div class="by">By #</div>
+              <svg viewBox="0 0 360 130" preserveAspectRatio="none" style="width:100%;height:130px"><g>
+                <g fill="#20e8d3"><rect x="6" y="55" width="14" height="75"/><rect x="34" y="55" width="14" height="75"/><rect x="62" y="55" width="14" height="75"/><rect x="90" y="55" width="14" height="75"/><rect x="118" y="55" width="14" height="75"/><rect x="146" y="55" width="14" height="75"/><rect x="174" y="55" width="14" height="75"/><rect x="202" y="55" width="14" height="75"/><rect x="230" y="55" width="14" height="75"/><rect x="258" y="55" width="14" height="75"/><rect x="286" y="55" width="14" height="75"/><rect x="314" y="55" width="14" height="75"/></g>
+                <g fill="#1f75f6"><rect x="6" y="22" width="14" height="33"/><rect x="34" y="22" width="14" height="33"/><rect x="62" y="24" width="14" height="31"/><rect x="90" y="20" width="14" height="35"/><rect x="118" y="22" width="14" height="33"/><rect x="146" y="24" width="14" height="31"/><rect x="174" y="20" width="14" height="35"/><rect x="202" y="22" width="14" height="33"/><rect x="230" y="23" width="14" height="32"/><rect x="258" y="21" width="14" height="34"/><rect x="286" y="22" width="14" height="33"/><rect x="314" y="20" width="14" height="35"/></g>
+                <g fill="#d232f1"><rect x="6" y="10" width="14" height="12"/><rect x="34" y="10" width="14" height="12"/><rect x="62" y="12" width="14" height="12"/><rect x="90" y="8" width="14" height="12"/><rect x="118" y="10" width="14" height="12"/><rect x="146" y="12" width="14" height="12"/><rect x="174" y="8" width="14" height="12"/><rect x="202" y="10" width="14" height="12"/><rect x="230" y="11" width="14" height="12"/><rect x="258" y="9" width="14" height="12"/><rect x="286" y="10" width="14" height="12"/><rect x="314" y="8" width="14" height="12"/></g>
+              </g></svg>
+              <div class="legend"><span><i class="dot" style="background:#20e8d3"></i>Completed w/ 3DS</span><span><i class="dot" style="background:#1f75f6"></i>Completed (Exclusion)</span><span><i class="dot" style="background:#d232f1"></i>Not Completed</span></div>
+            </div>
+            <div class="chart-sm"><h4>PSD2 authorization and complete rate</h4><div class="by">By #</div>
+              <svg viewBox="0 0 360 130" preserveAspectRatio="none" style="width:100%;height:130px">
+                <path d="M0,40 C60,32 90,50 150,42 C210,34 270,46 360,38" fill="none" stroke="#20e8d3" stroke-width="2"/>
+                <path d="M0,80 C60,72 90,92 150,82 C210,72 270,88 360,80" fill="none" stroke="#1f75f6" stroke-width="2"/>
+              </svg>
+              <div class="legend"><span><i class="dot" style="background:#20e8d3"></i>PSD2 Auth Rate</span><span><i class="dot" style="background:#1f75f6"></i>PSD2 Complete Rate</span></div>
+            </div>
+            <div class="chart-sm"><h4>PSD2 Exemption rate split by tier <span class="chart-big">67.49%</span></h4><div class="by">By #</div>
+              <svg viewBox="0 0 360 130" preserveAspectRatio="none" style="width:100%;height:130px">
+                <path d="M0,30 C30,110 60,20 90,100 C120,40 150,115 180,30 C210,100 240,25 270,110 C300,40 330,90 360,50" fill="none" stroke="#5b58ea" stroke-width="1.6"/>
+                <path d="M0,70 C60,62 120,78 180,68 C240,60 300,74 360,66" fill="none" stroke="#20e8d3" stroke-width="2"/>
+                <path d="M0,80 C60,76 120,86 180,80 C240,74 300,84 360,78" fill="none" stroke="#1f75f6" stroke-width="1.6"/>
+              </svg>
+              <div class="legend"><span><i class="dot" style="background:#20e8d3"></i>0–30 EUR</span><span><i class="dot" style="background:#1f75f6"></i>31–100 EUR</span><span><i class="dot" style="background:#5b58ea"></i>500+ EUR</span></div>
+            </div>
+            <div class="chart-sm"><h4>PSD2 3DS / Exemptions Auth &amp; Complete rate</h4><div class="by">By #</div>
+              <svg viewBox="0 0 360 130" preserveAspectRatio="none" style="width:100%;height:130px">
+                <path d="M0,35 C60,30 120,42 180,36 C240,30 300,40 360,34" fill="none" stroke="#5b58ea" stroke-width="2"/>
+                <path d="M0,55 C60,50 120,62 180,56 C240,50 300,60 360,54" fill="none" stroke="#1f75f6" stroke-width="2"/>
+                <path d="M0,95 C60,88 120,100 180,92 C240,84 300,98 360,90" fill="none" stroke="#20e8d3" stroke-width="2"/>
+              </svg>
+              <div class="legend"><span><i class="dot" style="background:#20e8d3"></i>3DS Auth</span><span><i class="dot" style="background:#1f75f6"></i>3DS Complete</span><span><i class="dot" style="background:#5b58ea"></i>Exemptions Auth</span></div>
+            </div>
+            <div class="chart-sm"><h4>PSD2 3DS success rate <span class="chart-big">80.22%</span></h4><div class="by">By #</div>
+              <svg viewBox="0 0 360 130" preserveAspectRatio="none" style="width:100%;height:130px">
+                <path d="M0,40 C40,35 60,50 90,30 C120,15 140,60 180,90 C210,55 240,30 270,45 C300,55 330,40 360,48" fill="none" stroke="#20e8d3" stroke-width="2"/>
+              </svg>
+              <div class="legend"><span><i class="dot" style="background:#20e8d3"></i>Success Rate</span></div>
+            </div>
+            <div class="chart-sm"><h4>PSD2 Authorization rate per country</h4><div class="by">By #</div>
+              <svg viewBox="0 0 360 130" preserveAspectRatio="none" style="width:100%;height:130px">
+                <rect x="6"   y="35" width="38" height="95" fill="#20e8d3"/><rect x="56"  y="38" width="38" height="92" fill="#3ab9ff"/><rect x="106" y="48" width="38" height="82" fill="#1f75f6"/><rect x="156" y="34" width="38" height="96" fill="#5b58ea"/><rect x="206" y="36" width="38" height="94" fill="#9219bd"/><rect x="256" y="42" width="38" height="88" fill="#d232f1"/><rect x="306" y="55" width="38" height="75" fill="#ff3da6"/>
+              </svg>
+              <div class="by">UK · Intl · France · Germany · Spain · Netherlands · Italy</div>
+            </div>
+            <div class="chart-sm"><h4>PSD2 Complete rate per country</h4><div class="by">By #</div>
+              <svg viewBox="0 0 360 130" preserveAspectRatio="none" style="width:100%;height:130px">
+                <rect x="6"   y="40" width="38" height="90" fill="#20e8d3"/><rect x="56"  y="46" width="38" height="84" fill="#3ab9ff"/><rect x="106" y="60" width="38" height="70" fill="#1f75f6"/><rect x="156" y="42" width="38" height="88" fill="#5b58ea"/><rect x="206" y="44" width="38" height="86" fill="#9219bd"/><rect x="256" y="52" width="38" height="78" fill="#d232f1"/><rect x="306" y="66" width="38" height="64" fill="#ff3da6"/>
+              </svg>
+              <div class="by">UK · Intl · France · Germany · Spain · Netherlands · Italy</div>
+            </div>
+            <div class="chart-sm"><h4>PSD2 Exemption rate per country</h4><div class="by">By #</div>
+              <svg viewBox="0 0 360 130" preserveAspectRatio="none" style="width:100%;height:130px">
+                <rect x="6"   y="60" width="38" height="70" fill="#20e8d3"/><rect x="56"  y="62" width="38" height="68" fill="#3ab9ff"/><rect x="106" y="92" width="38" height="38" fill="#1f75f6"/><rect x="156" y="36" width="38" height="94" fill="#5b58ea"/><rect x="206" y="38" width="38" height="92" fill="#9219bd"/><rect x="256" y="52" width="38" height="78" fill="#d232f1"/><rect x="306" y="64" width="38" height="66" fill="#ff3da6"/>
+              </svg>
+              <div class="by">UK · Intl · France · Germany · Spain · Netherlands · Italy</div>
+            </div>
+          </div>
+        </div><!-- /ins-view-eu-overview -->
+
+        <!-- ===== EU - Funnel ===== -->
+        <div id="ins-view-eu-funnel" class="ins-view" hidden>
+          <div class="funnel-head">
+            <h2 style="font-family:'Poppins';font-weight:600;font-size:20px;color:var(--fc-color-blue-gray-900);margin:0;display:flex;align-items:center;gap:8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg> EU - Funnel</h2>
+            <div class="funnel-ctrls">
+              <span class="fchip">⤳ Normalized</span><span class="fchip">⤳ By Intent</span>
+              <span class="fseg"><span class="on"># Count</span><span>$ Sum</span></span>
+              <div class="date-pill"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg><b>7 Days</b> 01 Nov 2025 – 07 Nov 2025</div>
+            </div>
+          </div>
+          <div class="funnel-wrap">
+            <div class="funnel-stage">
+              <div class="fcol-titles">
+                <div class="fcol-title">Fraud Decision</div>
+                <div class="fcol-title">PSD2 Compliance</div>
+                <div class="fcol-title">3DS Status</div>
+                <div class="fcol-title">Authorization Status</div>
+              </div>
+              <svg class="flinks" viewBox="0 0 1040 610" preserveAspectRatio="none"><g fill="none" stroke="#cad0d9" stroke-width="1.5">
+                <path d="M90,305 C140,305 130,300 175,300"/><path d="M90,305 C140,440 150,470 175,470"/><path d="M90,305 C140,500 150,520 175,520"/><path d="M90,305 C140,540 150,565 175,565"/>
+                <path d="M300,300 C340,300 350,150 380,150"/><path d="M300,300 C340,310 350,330 380,330"/>
+                <path d="M470,150 C700,150 760,150 820,150"/>
+                <path d="M470,330 C540,330 580,300 620,300"/><path d="M470,330 C540,340 580,360 620,360"/><path d="M470,330 C540,380 580,410 620,410"/>
+                <path d="M720,300 C760,300 780,305 820,305"/><path d="M720,360 C760,360 780,365 820,365"/>
+                <path d="M300,565 C340,565 760,525 820,525"/>
+              </g></svg>
+              <div class="fnode root" style="left:2px;top:305px">PSD2 Transactions<b>27.33K</b></div>
+              <div class="fnode f-green" style="left:175px;top:300px">Approve <b>26.56K</b></div>
+              <div class="fnode f-red"   style="left:175px;top:470px">Hard Decline <b>632</b></div>
+              <div class="fnode f-red"   style="left:175px;top:520px">Policy Decline <b>0</b></div>
+              <div class="fnode f-amber" style="left:175px;top:565px">Unknown <b>406</b></div>
+              <div class="fnode f-opt" style="left:380px;top:150px">Exemption/Exclusion <b>16.81K</b></div>
+              <div class="fnode f-opt" style="left:380px;top:330px">3DS <b>9.343K</b></div>
+              <div class="fnode f-green" style="left:620px;top:300px">Frictionless <b>672</b></div>
+              <div class="fnode f-amber" style="left:620px;top:360px">Challenge <b>7.103K</b></div>
+              <div class="fnode f-red"   style="left:620px;top:410px">Unsuccessful <b>1.568K</b></div>
+              <div class="fnode f-green" style="left:840px;top:138px">Bank Authorized <b>15.11K</b></div>
+              <div class="fnode f-red"   style="left:840px;top:168px">Bank Declined <b>1.693K</b></div>
+              <div class="lshift" style="left:870px;top:286px">Liability Shift</div>
+              <div class="fnode f-green" style="left:840px;top:306px">Bank Authorized <b>6.594K</b></div>
+              <div class="fnode f-red"   style="left:840px;top:366px">Bank Declined <b>578</b></div>
+              <div class="fnode f-green" style="left:840px;top:512px">Bank Authorized <b>324</b></div>
+              <div class="fnode f-red"   style="left:840px;top:542px">Bank Declined <b>82</b></div>
+              <div class="fnode f-grey"  style="left:840px;top:580px">Missing Data <b>143</b></div>
+            </div>
+          </div>
+        </div><!-- /ins-view-eu-funnel -->
+
+        <!-- ===== Intent Recovery ===== -->
+        <div id="ins-view-intent-recovery" class="ins-view" hidden>
+          <div class="ins-head">
+            <h2><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg> Intent Recovery</h2>
+            <div class="ins-head-right">
+              <svg viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+              <div class="date-pill"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg><b>30 Days</b> 09 Oct 2025 – 07 Nov 2025</div>
+              <div class="create-report"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v12H8l-4 4z"/></svg> Create Report</div>
+            </div>
+          </div>
+          <div class="metric-row five">
+            <div class="metric-card"><div class="ml">Payments successful <span class="i">i</span></div><div class="mv">88.91% <span class="delta down">0.49%</span></div></div>
+            <div class="metric-card"><div class="ml">Complete rate <span class="i">i</span></div><div class="mv">97.04% <span class="delta down">0.25%</span></div></div>
+            <div class="metric-card"><div class="ml">Recovery rate <span class="i">i</span></div><div class="mv">90.88% <span class="delta down">0.62%</span></div></div>
+            <div class="metric-card" id="pm-recforter"><div class="ml">Recovered by Forter <span class="i">i</span></div><div class="mv">$1.65M <span class="delta down">4.34%</span></div></div>
+            <div class="metric-card"><div class="ml">Avg. # attempts <span class="i">i</span></div><div class="mv">1.13 <span class="delta up">0.38%</span></div></div>
+          </div>
+          <div class="charts3">
+            <div class="chart-sm"><h4>Payment Intent analysis over time</h4><div class="by">By #</div>
+              <svg viewBox="0 0 360 130" preserveAspectRatio="none" style="width:100%;height:130px"><g fill="#20e8d3">
+                <rect x="8" y="20" width="22" height="110"/><rect x="40" y="20" width="22" height="110"/><rect x="72" y="20" width="22" height="110"/><rect x="104" y="20" width="22" height="110"/><rect x="136" y="20" width="22" height="110"/><rect x="168" y="20" width="22" height="110"/><rect x="200" y="20" width="22" height="110"/><rect x="232" y="20" width="22" height="110"/><rect x="264" y="20" width="22" height="110"/><rect x="296" y="20" width="22" height="110"/><rect x="328" y="20" width="22" height="110"/>
+              </g><g fill="#1f75f6"><rect x="8" y="14" width="22" height="6"/><rect x="40" y="14" width="22" height="6"/><rect x="72" y="13" width="22" height="7"/><rect x="104" y="14" width="22" height="6"/><rect x="136" y="13" width="22" height="7"/><rect x="168" y="14" width="22" height="6"/><rect x="200" y="13" width="22" height="7"/><rect x="232" y="14" width="22" height="6"/><rect x="264" y="14" width="22" height="6"/><rect x="296" y="13" width="22" height="7"/><rect x="328" y="14" width="22" height="6"/></g></svg>
+              <div class="legend"><span><i class="dot" style="background:#20e8d3"></i>Success on 1st attempt</span><span><i class="dot" style="background:#1f75f6"></i>Success after multiple</span></div>
+            </div>
+            <div class="chart-sm"><h4>First Attempt Success Rate</h4><div class="by">By #</div>
+              <svg viewBox="0 0 360 130" preserveAspectRatio="none" style="width:100%;height:130px"><path d="M0,40 C30,35 50,30 80,40 C110,52 120,110 150,70 C180,40 210,55 250,45 C290,36 320,52 360,60" fill="none" stroke="#20e8d3" stroke-width="2"/></svg>
+              <div class="legend"><span><i class="dot" style="background:#20e8d3"></i>Success On 1st Attempt</span></div>
+            </div>
+            <div class="chart-sm"><h4>Recovery rate (success after failure)</h4><div class="by">By #</div>
+              <svg viewBox="0 0 360 130" preserveAspectRatio="none" style="width:100%;height:130px"><path d="M0,55 C30,40 50,70 80,45 C110,30 130,95 160,55 C190,30 220,60 250,42 C290,30 320,65 360,55" fill="none" stroke="#20e8d3" stroke-width="2"/></svg>
+              <div class="legend"><span><i class="dot" style="background:#20e8d3"></i>Recovery Rate</span></div>
+            </div>
+          </div>
+          <div class="chart-sm" style="margin-top:16px">
+            <h4>Failed exemption attempts analysis</h4><div class="by">By #</div>
+            <div style="display:flex;align-items:stretch;gap:0;padding:8px 0;font-size:12px">
+              <div style="flex:0 0 200px;display:flex;flex-direction:column;justify-content:center">
+                <div style="font-family:'Poppins';font-weight:700;font-size:22px;color:var(--fc-color-blue-gray-900)">5.4K</div>
+                <div style="color:var(--fc-color-text-secondary)">Exemption Failed (1st attempt)</div>
+                <div style="height:14px;background:#117a8b;border-radius:4px;margin-top:10px;width:90%"></div>
+              </div>
+              <svg width="120" viewBox="0 0 120 160" preserveAspectRatio="none" style="height:160px"><g fill="none" stroke-width="2">
+                <path d="M0,80 C60,80 60,18 120,18" stroke="#65f4c7"/><path d="M0,80 C60,80 60,55 120,55" stroke="#fad988"/><path d="M0,80 C60,80 60,82 120,82" stroke="#65f4c7"/><path d="M0,80 C60,80 60,108 120,108" stroke="#ffc5c6"/><path d="M0,80 C60,80 60,132 120,132" stroke="#cad0d9"/>
+              </g></svg>
+              <div style="flex:1;display:flex;flex-direction:column;justify-content:space-between;padding:4px 0">
+                <div><b style="font-family:'Poppins'">3.2K</b> &nbsp;<span style="color:var(--fc-color-text-secondary)">3DS Success (Forter)</span></div>
+                <div><b style="font-family:'Poppins'">1K</b> &nbsp;<span style="color:var(--fc-color-text-secondary)">Failed no reattempt</span></div>
+                <div><b style="font-family:'Poppins'">761</b> &nbsp;<span style="color:var(--fc-color-text-secondary)">Success reattempt</span></div>
+                <div><b style="font-family:'Poppins'">250</b> &nbsp;<span style="color:var(--fc-color-text-secondary)">Failed Reattempt</span></div>
+                <div><b style="font-family:'Poppins'">130</b> &nbsp;<span style="color:var(--fc-color-text-secondary)">No auth result</span></div>
+              </div>
+            </div>
+          </div>
+        </div><!-- /ins-view-intent-recovery -->
+      </div>
+    </div>
+    </div><!-- /pay-insights -->
+
+    <!-- ===== Payments → Transactions tab (real grid) ===== -->
+    <div id="pay-transactions" hidden>
+      <div class="ptx-head">
+        <div>
+          <div class="t">All Transactions – Cards Only</div>
+          <div class="cv">CUSTOM VIEWS</div>
+        </div>
+        <div class="ins-head-right">
+          <div class="date-pill"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg><b>30 Days</b> 09 Oct 2025 – 07 Nov 2025</div>
+        </div>
+      </div>
+
+      <div class="tools-row">
+        <div class="smart-filter">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l2 5 5 2-5 2-2 5-2-5-5-2 5-2z"/></svg>
+          <input placeholder="Search with Smart Filters — e.g. “Approved transactions that were authorized by the bank”, also by ID or email">
+        </div>
+      </div>
+
+      <div class="ptx-kpis">
+        <div class="ptx-kpi"><div class="l">Transactions</div><div class="sub">$67,506,929</div><div class="v">500,237</div></div>
+        <div class="ptx-kpi"><div class="l">Approved Transactions</div><div class="sub">$49,604,601</div><div class="v">398,380</div></div>
+        <div class="ptx-kpi"><div class="l">Total Fraud Decline</div><div class="sub">$73,010,250</div><div class="v">532,908</div></div>
+        <div class="ptx-kpi"><div class="l">Forter Approved &amp; Bank Declined</div><div class="sub">$8,445,035</div><div class="v">53,888</div></div>
+        <div class="ptx-kpi"><div class="l">Completed Rate</div><div class="sub">73.53% by $</div><div class="v">79.89%</div></div>
+      </div>
+
+      <div class="tx-card">
+        <div class="tx-scroll">
+          <table class="tx">
+            <thead><tr>
+              <th>Trans ID</th><th>Processor Response Text</th><th>Processor Response Code</th><th>Acquirer Name</th><th>3DS</th><th>Pre-Auth</th><th>Intent ID</th><th>Recommendation</th>
+            </tr></thead>
+            <tbody id="ptx-body"></tbody>
+          </table>
+        </div>
+        <div class="tx-foot">
+          <span>1 – 10 of 500,237</span>
+          <div style="display:flex;gap:16px;align-items:center">
+            <button class="filters-btn" style="padding:7px 14px"><svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg> Export</button>
+            <button class="filters-btn" style="padding:7px 14px"><svg viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h10"/></svg> Create Widget</button>
+            <div class="pager"><span class="on">1</span><span>2</span><span>3</span><span>…</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Payment Journey detail (drill-down from Payments Transactions) ===== -->
+  <section id="page-PayDetail" class="page" hidden>
+    <a class="back-link" id="pay-back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg> Back to Payments</a>
+    <div class="detail-title">Payment <span class="mono" style="font-size:18px">pay_ord_2361</span> <span class="badge b-approve"><i></i> Recovered</span></div>
+    <div class="detail-meta" style="margin:8px 0 22px">
+      <span class="amt">$480.00</span> &nbsp;·&nbsp; Visa •••• 1142 &nbsp;·&nbsp; GB &nbsp;·&nbsp; Authorized on 2nd attempt
+    </div>
+
+    <!-- Payment Journey timeline -->
+    <div class="pj-card">
+      <div class="pj-head">
+        <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+        <div><h4>Payment Journey</h4><p>Timeline of payment events and status changes</p></div>
+        <span class="pj-status ok"><span class="dot"></span>Succeeded</span>
+      </div>
+      <div class="pj-timeline">
+        <div class="pj-ev">
+          <span class="ev-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M2 10h20"/></svg></span>
+          <div class="ev-t">Payment Initiated</div>
+          <div class="ev-d">Payment of $480.00 initiated</div>
+          <div class="ev-time">12:31:04</div>
+        </div>
+        <span class="pj-arrow"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        <div class="pj-ev ok">
+          <span class="ev-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/></svg></span>
+          <div class="ev-t">3DS Authentication</div>
+          <div class="ev-s">Successful</div>
+          <div class="ev-d">Authentication successful</div>
+          <div class="ev-time">12:31:09</div>
+        </div>
+        <span class="pj-arrow"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        <div class="pj-ev fail" id="pj-fail">
+          <span class="ev-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M15 9l-6 6M9 9l6 6"/></svg></span>
+          <div class="ev-t">Payment Attempt<br><span class="ev-sub">Adyen #_1</span></div>
+          <div class="ev-s">Authorization failed</div>
+          <div class="ev-d">Issuer declined, Do Not Honor (05)</div>
+          <div class="ev-time">12:41:22</div>
+        </div>
+        <span class="pj-arrow"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        <div class="pj-ev ok" id="pj-retry">
+          <span class="ev-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>
+          <div class="ev-t">Payment Attempt<br><span class="ev-sub">Stripe #_2</span></div>
+          <div class="ev-s">Succeeded</div>
+          <div class="ev-d">Authorized on retry</div>
+          <div class="ev-time">12:46:03</div>
+        </div>
+        <span class="pj-arrow"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        <div class="pj-ev ok">
+          <span class="ev-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>
+          <div class="ev-t">Capture</div>
+          <div class="ev-s">Succeeded</div>
+          <div class="ev-d">Captured $480.00</div>
+          <div class="ev-time">12:51:03</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Identity verdict: WHY Forter trusted this customer -->
+    <div class="pj-card" id="pj-identity">
+      <div class="pj-head">
+        <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 2a5 5 0 0 0-5 5c0 2 1 3.5 1 6a4 4 0 0 0 8 0c0-2.5 1-4 1-6a5 5 0 0 0-5-5z"/><path d="M9 21h6"/></svg></span>
+        <div><h4>Why Forter recovered this one</h4><p>Forter checked this shopper against its identity network before retrying</p></div>
+        <span class="pj-status ok"><span class="dot"></span>Trusted</span>
+      </div>
+      <div class="pj-signals">
+        <span class="pj-sig">Seen across 1,400+ merchants</span>
+        <span class="pj-sig">47 prior clean orders</span>
+        <span class="pj-sig">Trusted device</span>
+        <span class="pj-sig">Known good email</span>
+        <span class="pj-sig">0 chargebacks</span>
+      </div>
+      <div class="pj-verdict">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--fc-color-green-600)" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+        Verdict: legitimate customer, safe to recover. Forter retries customers it trusts, not declines.
+      </div>
+    </div>
+
+    <!-- The road not taken: selectivity proves it is not a blind retry -->
+    <div class="pj-card" id="pj-skipped">
+      <div class="pj-head">
+        <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3v6a6 6 0 0 0 6 6 6 6 0 0 1 6 6v0"/><path d="M18 3v6a6 6 0 0 1-6 6"/></svg></span>
+        <div><h4>Forter doesn’t retry every decline</h4><p>In the same window it chose not to retry two it judged risky</p></div>
+      </div>
+      <div class="pj-skip-row">
+        <span class="sid mono">pay_ord_2361</span>
+        <span class="sreason">Trusted customer, long clean history</span>
+        <span class="stag recovered">Retried, recovered</span>
+      </div>
+      <div class="pj-skip-row">
+        <span class="sid mono">pay_ord_2349</span>
+        <span class="sreason">New device, billing/IP geolocation mismatch</span>
+        <span class="stag skipped">Not retried</span>
+      </div>
+      <div class="pj-skip-row">
+        <span class="sid mono">pay_ord_2353</span>
+        <span class="sreason">Disposable email, 6 attempts in the last hour</span>
+        <span class="stag skipped">Not retried</span>
+      </div>
+      <p class="calc-note" style="color:var(--fc-color-text-secondary); margin:14px 0 0">Recovering the trusted declines while leaving the risky ones alone is the difference between intelligent recovery and a blanket retry.</p>
+    </div>
+
+    <!-- Routing & Recovery (Predictive Routing) -->
+    <div class="pj-card" id="pj-recovery">
+      <div class="pj-head">
+        <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4v6h6"/><path d="M20 20v-6h-6"/><path d="M20 4a9 9 0 0 0-15 4M4 20a9 9 0 0 0 15-4"/></svg></span>
+        <div><h4>Routing &amp; Recovery</h4><p>How Forter turned this decline into an authorized sale</p></div>
+        <span class="pj-pill">Predictive Routing</span>
+      </div>
+      <div class="pj-grid">
+        <div class="pj-row"><span class="k">First processor</span><span class="v">Adyen</span></div>
+        <div class="pj-row"><span class="k">First decline reason</span><span class="v bad">Do Not Honor (05)</span></div>
+        <div class="pj-row"><span class="k">Forter signal</span><span class="v good">Trusted customer · low fraud risk</span></div>
+        <div class="pj-row"><span class="k">Retry processor</span><span class="v">Stripe</span></div>
+        <div class="pj-row"><span class="k">Routing reason</span><span class="v">Authorization-rate optimization</span></div>
+        <div class="pj-row"><span class="k">Retry decision</span><span class="v">Auto-retried by Forter</span></div>
+        <div class="pj-row"><span class="k">Outcome</span><span class="v good">Authorized on retry</span></div>
+      </div>
+      <div class="pj-callout">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg>
+        <span>The first attempt was a soft decline (<b>Do Not Honor</b>), but Forter’s identity network already recognised this as a <b>trusted customer</b> rather than fraud. Instead of stopping at the decline, it re-presented the payment on a better performing processor and recovered the sale. A blind retry would gamble on every decline, whereas Forter pursues only the ones it knows are worth winning, so your <b>authorization rate</b> improves without inviting fraud back in.</span>
+      </div>
+    </div>
+
+    <!-- Precision proof: auth up, fraud flat -->
+    <div class="pj-card" id="pj-precision">
+      <div class="pj-head">
+        <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg></span>
+        <div><h4>Recovery without added risk</h4><p>What selective recovery does to your two numbers that matter</p></div>
+      </div>
+      <div class="pj-twin">
+        <div class="twin"><div class="tl">Authorization rate</div><div class="tv good">↑ +2.1 pts</div><div class="ts">across recovered volume</div></div>
+        <div class="twin"><div class="tl">Chargeback rate</div><div class="tv">Unchanged</div><div class="ts">fraud held flat</div></div>
+      </div>
+      <p class="calc-note" style="color:var(--fc-color-text-secondary); margin:8px 0 0">More approvals with no added fraud. That precision is what a blanket retry cannot give you.</p>
+    </div>
+
+    <!-- 3DS Authentication (real payment-details.tsx section) -->
+    <div class="pj-card">
+      <div class="pj-head">
+        <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg></span>
+        <div><h4>3DS Authentication</h4><p>Secure payment verification and authentication flow</p></div>
+        <span class="pj-status ok"><span class="dot"></span>Successful</span>
+      </div>
+      <div class="pj-2col">
+        <div class="pj-sub">
+          <p class="st"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--fc-color-purple-500,#5b58ea)" stroke-width="1.8"><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/></svg> Exemption Applied</p>
+          <div class="pj-row"><span class="k">Type</span><span class="v">Low value transaction</span></div>
+          <div class="pj-row" style="border-bottom:none"><span class="k">Reason</span><span class="v" style="font-weight:500;font-size:12px">Amount below 3DS threshold</span></div>
+        </div>
+        <div class="pj-sub">
+          <p class="st"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--fc-color-green-600,#009a1a)" stroke-width="1.8"><path d="M5 12h14M13 6l6 6-6 6"/></svg> Liability Shift</p>
+          <div class="pj-row"><span class="k">Shifted to</span><span class="v">Issuer</span></div>
+          <div class="pj-row" style="border-bottom:none"><span class="k">Provider</span><span class="v">Stripe · 2.0</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Transactions zone — mock data grid ===== -->
+  <section id="page-Transactions" class="page" hidden>
+    <div class="home-top">
+      <h1 class="home-greet">Transactions</h1>
+      <div class="datepicker">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>
+        Last 30 days
+      </div>
+    </div>
+
+    <div class="tools-row">
+      <div class="smart-filter">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+        <input placeholder="Search with Smart Filters — e.g. “declined transactions over $500 last week”">
+      </div>
+      <span class="chip"><b>Decision:</b> All <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></span>
+      <button class="filters-btn"><svg viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/></svg> Filters</button>
+    </div>
+
+    <div class="tx-card">
+      <table class="tx">
+        <thead>
+          <tr>
+            <th>Forter Decision</th><th>Order ID</th><th>Date</th><th>Customer</th><th>Email</th><th>Amount</th><th>Payment Method</th><th>Country</th>
+          </tr>
+        </thead>
+        <tbody id="tx-body"></tbody>
+      </table>
+      <div class="tx-foot">
+        <span id="tx-count">Showing 1–12 of 4,832 transactions</span>
+        <div class="pager"><span class="on">1</span><span>2</span><span>3</span><span>…</span><span>403</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Transaction detail (opened from a grid row) ===== -->
+  <section id="page-TxDetail" class="page" hidden>
+    <a class="back-link" id="tx-back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg> Back to Transactions</a>
+    <div class="detail-head">
+      <div>
+        <div class="detail-title"><span class="mono" id="d-orderid">—</span><span class="badge" id="d-badge"><i class="d"></i><span id="d-badge-text">—</span></span></div>
+        <div style="color:var(--fc-color-text-secondary);font-size:14px;margin-top:6px" id="d-sub">—</div>
+      </div>
+      <div class="detail-meta">
+        <div class="amt" id="d-amount">—</div>
+        <div id="d-date">—</div>
+      </div>
+    </div>
+
+    <!-- Decision reason -->
+    <div class="reason-card">
+      <div class="rl">Decision Reason</div>
+      <div class="rv" id="d-reason">—</div>
+      <div class="reason-row" id="d-signals"></div>
+    </div>
+
+    <!-- AI decision summary -->
+    <div class="ai-card">
+      <div class="ai-head">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#1f75f6" stroke-width="1.8"><path d="M12 3l2 5 5 2-5 2-2 5-2-5-5-2 5-2z"/></svg>
+        Forter AI · Decision Insights
+      </div>
+      <div class="ai-body" id="d-ai">—</div>
+      <div class="ai-input">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Ask me something about this transaction
+      </div>
+    </div>
+
+    <!-- Detail cards -->
+    <div class="detail-grid">
+      <div class="detail-card">
+        <h4>General</h4>
+        <div class="kv"><span class="k">Business ID</span><span class="v mono" id="d-bizid">—</span></div>
+        <div class="kv"><span class="k">Status</span><span class="v" id="d-status">—</span></div>
+        <div class="kv"><span class="k">Channel</span><span class="v">Web</span></div>
+        <div class="kv"><span class="k">Updated</span><span class="v" id="d-updated">—</span></div>
+      </div>
+      <div class="detail-card">
+        <h4>Account</h4>
+        <div class="kv"><span class="k">Email</span><span class="v" id="d-acc-email">—</span></div>
+        <div class="kv"><span class="k">Created</span><span class="v" id="d-acc-created">—</span></div>
+        <div class="kv"><span class="k">Completed Orders (#)</span><span class="v" id="d-acc-orders">—</span></div>
+        <div class="kv"><span class="k">Completed Orders ($)</span><span class="v" id="d-acc-volume">—</span></div>
+        <div class="kv"><span class="k">Chargebacks</span><span class="v" id="d-acc-cb">—</span></div>
+        <div class="kv"><span class="k">Devices</span><span class="v" id="d-acc-devices">—</span></div>
+      </div>
+      <div class="detail-card">
+        <h4>Billing</h4>
+        <div class="kv"><span class="k">Name</span><span class="v" id="d-bill-name">—</span></div>
+        <div class="kv"><span class="k">Country</span><span class="v" id="d-bill-country">—</span></div>
+        <div class="kv"><span class="k">Address match</span><span class="v" id="d-avs">—</span></div>
+      </div>
+      <div class="detail-card">
+        <h4>Payment</h4>
+        <div class="kv"><span class="k">Method</span><span class="v" id="d-pay-method">—</span></div>
+        <div class="kv"><span class="k">CVV Result</span><span class="v" id="d-cvv">—</span></div>
+        <div class="kv"><span class="k">AVS Result</span><span class="v" id="d-avs2">—</span></div>
+        <div class="kv"><span class="k">Gateway Transaction ID</span><span class="v mono" id="d-gw">—</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Claims zone — mock data ===== -->
+  <section id="page-Claims" class="page" hidden>
+    <div class="home-top">
+      <h1 class="home-greet">Claims</h1>
+      <div class="datepicker">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>
+        Last 30 days
+      </div>
+    </div>
+
+    <div class="subtabs">
+      <div class="subtab active">Claims</div>
+      <div class="subtab">Claims Insights</div>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi-tile"><div class="l">Win Rate</div><div class="v">73.4%</div><div class="s up">▲ 2.1 pts</div></div>
+      <div class="kpi-tile"><div class="l">Recovered (30d)</div><div class="v">$342K</div><div class="s up">▲ 8%</div></div>
+      <div class="kpi-tile"><div class="l">In Dispute</div><div class="v">128</div><div class="s">$214K at stake</div></div>
+      <div class="kpi-tile"><div class="l">Open Claims</div><div class="v">56</div><div class="s down">12 due this week</div></div>
+    </div>
+
+    <div class="tx-card">
+      <table class="tx">
+        <thead>
+          <tr><th>Claim Status</th><th>Order ID</th><th>Date</th><th>Reason</th><th>Amount</th><th>Dispute Recommendation</th><th>Settlement Date</th></tr>
+        </thead>
+        <tbody id="claims-body"></tbody>
+      </table>
+      <div class="tx-foot">
+        <span>Showing 1–10 of 1,206 claims</span>
+        <div class="pager"><span class="on">1</span><span>2</span><span>3</span><span>…</span><span>121</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Intelligence Hub — Agentic activity (mock data) ===== -->
+  <section id="page-Intelligence Hub" class="page" hidden>
+    <div class="home-top">
+      <h1 class="home-greet">Intelligence Hub</h1>
+      <div class="datepicker">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>
+        Last 30 days
+      </div>
+    </div>
+    <div class="subtabs">
+      <div class="subtab active">AI Activity</div>
+      <div class="subtab">Live Insights</div>
+      <div class="region-pill">All Models
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi-tile"><div class="l">Agent Activity Volume</div><div class="v">48.2K</div><div class="s up">▲ 12% PoP</div></div>
+      <div class="kpi-tile"><div class="l">AI Referrals Volume</div><div class="v">132K</div><div class="s up">▲ 28% PoP</div></div>
+      <div class="kpi-tile"><div class="l">Total Agent Revenue</div><div class="v">$1.2M</div><div class="s up">▲ 9% PoP</div></div>
+      <div class="kpi-tile"><div class="l">AI Referral Revenue</div><div class="v">$3.4M</div><div class="s up">▲ 22% PoP</div></div>
+    </div>
+
+    <div class="charts">
+      <div class="chart-card">
+        <h4>Traffic &amp; Revenue Trends</h4>
+        <svg viewBox="0 0 480 150" preserveAspectRatio="none" style="width:100%;height:150px">
+          <line x1="0" y1="120" x2="480" y2="120" stroke="#e9ebef"/><line x1="0" y1="80" x2="480" y2="80" stroke="#eff0f3"/><line x1="0" y1="40" x2="480" y2="40" stroke="#eff0f3"/>
+          <path d="M0,118 L60,110 L120,112 L180,95 L240,88 L300,70 L360,72 L420,55 L480,42" fill="none" stroke="#1f75f6" stroke-width="2.5"/>
+          <path d="M0,124 L60,120 L120,110 L180,108 L240,90 L300,86 L360,66 L420,58 L480,40" fill="none" stroke="#5b58ea" stroke-width="2.5"/>
+        </svg>
+        <div class="legend"><span><i class="dot" style="background:#1f75f6"></i>Agent volume</span><span><i class="dot" style="background:#5b58ea"></i>AI referral volume</span></div>
+      </div>
+      <div class="chart-card">
+        <h4>Top Chatbots Referrals</h4>
+        <ul class="reasons">
+          <li><span>ChatGPT</span><span style="display:flex;align-items:center;gap:8px"><i class="bar" style="width:96px"></i>42%</span></li>
+          <li><span>Google Shopping</span><span style="display:flex;align-items:center;gap:8px"><i class="bar" style="width:50px"></i>21%</span></li>
+          <li><span>Perplexity</span><span style="display:flex;align-items:center;gap:8px"><i class="bar" style="width:38px"></i>16%</span></li>
+          <li><span>Claude</span><span style="display:flex;align-items:center;gap:8px"><i class="bar" style="width:28px"></i>12%</span></li>
+          <li><span>Gemini</span><span style="display:flex;align-items:center;gap:8px"><i class="bar" style="width:21px"></i>9%</span></li>
+        </ul>
+      </div>
+      <div class="chart-card">
+        <h4>Daily Agent Activity</h4>
+        <svg viewBox="0 0 480 150" preserveAspectRatio="none" style="width:100%;height:150px">
+          <g fill="#90bdff"><rect x="6" y="100" width="26" height="50" rx="3"/><rect x="44" y="78" width="26" height="72" rx="3"/><rect x="82" y="92" width="26" height="58" rx="3"/><rect x="120" y="60" width="26" height="90" rx="3"/><rect x="158" y="74" width="26" height="76" rx="3"/><rect x="196" y="46" width="26" height="104" rx="3"/><rect x="234" y="64" width="26" height="86" rx="3"/><rect x="272" y="38" width="26" height="112" rx="3"/><rect x="310" y="56" width="26" height="94" rx="3"/><rect x="348" y="30" width="26" height="120" rx="3"/><rect x="386" y="50" width="26" height="100" rx="3"/><rect x="424" y="24" width="26" height="126" rx="3"/></g>
+        </svg>
+      </div>
+      <div class="chart-card">
+        <h4>Engagement by Source Type</h4>
+        <div style="display:flex;align-items:center;justify-content:center;flex:1;padding:8px 0">
+          <svg width="120" height="120" viewBox="0 0 36 36">
+            <circle cx="18" cy="18" r="15.9" fill="none" stroke="#e9ebef" stroke-width="4"/>
+            <circle cx="18" cy="18" r="15.9" fill="none" stroke="#5b58ea" stroke-width="4" stroke-dasharray="64 36" stroke-dashoffset="25" transform="rotate(-90 18 18)"/>
+            <circle cx="18" cy="18" r="15.9" fill="none" stroke="#1f75f6" stroke-width="4" stroke-dasharray="26 74" stroke-dashoffset="-39" transform="rotate(-90 18 18)"/>
+            <circle cx="18" cy="18" r="15.9" fill="none" stroke="#20e8d3" stroke-width="4" stroke-dasharray="10 90" stroke-dashoffset="-65" transform="rotate(-90 18 18)"/>
+          </svg>
+        </div>
+        <div class="legend"><span><i class="dot" style="background:#5b58ea"></i>AI referrals 64%</span><span><i class="dot" style="background:#1f75f6"></i>Agents 26%</span><span><i class="dot" style="background:#20e8d3"></i>Other 10%</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== AI Agent zone (mock data) ===== -->
+  <section id="page-AI Agent" class="page" hidden>
+    <div class="home-top">
+      <h1 class="home-greet">AI Agent</h1>
+      <div class="datepicker">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>
+        Last 30 days
+      </div>
+    </div>
+    <div class="subtabs">
+      <div class="subtab active">AI Agent</div>
+      <div class="subtab">AI Insights</div>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi-tile"><div class="l">Total Agent Activity</div><div class="v">48.2K</div><div class="s up">▲ 12% PoP</div></div>
+      <div class="kpi-tile"><div class="l">Agent Conversion</div><div class="v">31.4%</div><div class="s up">▲ 3.2 pts</div></div>
+      <div class="kpi-tile"><div class="l">Agent Approved AOV</div><div class="v">$214</div><div class="s up">▲ 5%</div></div>
+      <div class="kpi-tile"><div class="l">Agent Median Txn</div><div class="v">$96</div><div class="s">vs. $74 site median</div></div>
+    </div>
+
+    <div class="charts">
+      <div class="chart-card">
+        <h4>Agent Volume Over Time</h4>
+        <svg viewBox="0 0 480 150" preserveAspectRatio="none" style="width:100%;height:150px">
+          <defs><linearGradient id="ag" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1f75f6" stop-opacity="0.18"/><stop offset="1" stop-color="#1f75f6" stop-opacity="0"/></linearGradient></defs>
+          <path d="M0,120 L60,112 L120,114 L180,96 L240,90 L300,72 L360,74 L420,56 L480,44 L480,150 L0,150 Z" fill="url(#ag)"/>
+          <path d="M0,120 L60,112 L120,114 L180,96 L240,90 L300,72 L360,74 L420,56 L480,44" fill="none" stroke="#1f75f6" stroke-width="2.5"/>
+        </svg>
+      </div>
+      <div class="chart-card">
+        <h4>Top Countries — Agent Traffic</h4>
+        <ul class="reasons">
+          <li><span>United States</span><span style="display:flex;align-items:center;gap:8px"><i class="bar" style="width:92px"></i>38%</span></li>
+          <li><span>United Kingdom</span><span style="display:flex;align-items:center;gap:8px"><i class="bar" style="width:46px"></i>19%</span></li>
+          <li><span>Germany</span><span style="display:flex;align-items:center;gap:8px"><i class="bar" style="width:34px"></i>14%</span></li>
+          <li><span>Japan</span><span style="display:flex;align-items:center;gap:8px"><i class="bar" style="width:26px"></i>11%</span></li>
+          <li><span>Canada</span><span style="display:flex;align-items:center;gap:8px"><i class="bar" style="width:20px"></i>8%</span></li>
+        </ul>
+      </div>
+      <div class="chart-card">
+        <h4>Agent Activity & Referral Conversion</h4>
+        <svg viewBox="0 0 480 150" preserveAspectRatio="none" style="width:100%;height:150px">
+          <g fill="#1de8a8"><rect x="20" y="40" width="60" height="110" rx="3"/><rect x="120" y="70" width="60" height="80" rx="3"/></g>
+          <g fill="#90bdff"><rect x="240" y="30" width="60" height="120" rx="3"/><rect x="340" y="78" width="60" height="72" rx="3"/></g>
+        </svg>
+        <div class="legend"><span><i class="dot" style="background:#1de8a8"></i>Agent orders</span><span><i class="dot" style="background:#90bdff"></i>Referral orders</span></div>
+      </div>
+      <div class="chart-card">
+        <h4>Detected Agent Types</h4>
+        <ul class="reasons">
+          <li><span>Operator (OpenAI)</span><span style="display:flex;align-items:center;gap:8px"><i class="bar" style="width:80px"></i>34%</span></li>
+          <li><span>Perplexity</span><span style="display:flex;align-items:center;gap:8px"><i class="bar" style="width:58px"></i>24%</span></li>
+          <li><span>Claude</span><span style="display:flex;align-items:center;gap:8px"><i class="bar" style="width:44px"></i>18%</span></li>
+          <li><span>Gemini</span><span style="display:flex;align-items:center;gap:8px"><i class="bar" style="width:36px"></i>15%</span></li>
+          <li><span>Other</span><span style="display:flex;align-items:center;gap:8px"><i class="bar" style="width:22px"></i>9%</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Stub for zones not yet built ===== -->
+  <section id="page-stub" class="page" hidden>
+    <div class="home-top"><h1 class="home-greet" id="stub-title">Zone</h1></div>
+    <div class="stub-card">This zone isn’t built in the demo yet. Tell me which one to build next and I’ll add it.</div>
+  </section>
+
+  </div>
+</div>
+
+<!-- ===== Coach-mark tour elements ===== -->
+<div id="tour-spot" hidden></div>
+<div id="tour-pop" hidden>
+  <div class="tp-step" id="tp-step">Step 1</div>
+  <h3 id="tp-title">—</h3>
+  <p id="tp-body">—</p>
+  <div class="tp-foot">
+    <span class="tp-skip" id="tp-skip">Skip tour</span>
+    <div class="tp-btns">
+      <button class="tp-btn" id="tp-back">Back</button>
+      <button class="tp-btn primary" id="tp-next">Next</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Guided-tour welcome / persona picker ===== -->
+<div class="welcome-overlay" id="welcome-overlay">
+  <div class="welcome-card">
+    <div id="welcome-header">
+    <div class="welcome-logo">
+      <img src="po-assets/img/forter-logo-white.svg" alt="Forter" style="height:26px">
+    </div>
+    <h1 id="welcome-h1">Hi Avishek</h1>
+    <p class="intro">Let’s solve your problems, one at a time.</p>
+    </div><!-- /welcome-header -->
+    <div id="welcome-step1">
+    <h2>Which team are you on?</h2>
+    <p class="help">Pick your team and we’ll tailor the experience to the work you actually do.</p>
+    <div class="persona-grid">
+      <div class="persona" data-team="Fraud &amp; Risk" data-target="Transactions">
+        <div class="pa" style="background:#1f75f6"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg></div>
+        <div class="pt">Fraud &amp; Risk</div>
+      </div>
+      <div class="persona" data-team="Payments" data-target="Payments">
+        <div class="pa" style="background:#5b58ea"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M2 10h20"/><path d="M6 15h4"/></svg></div>
+        <div class="pt">Payments</div>
+      </div>
+      <div class="persona" data-team="Digital &amp; eCommerce" data-target="Intelligence Hub">
+        <div class="pa" style="background:#23c4b4"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h2l2.4 12.4a1.5 1.5 0 0 0 1.5 1.2h8.7a1.5 1.5 0 0 0 1.5-1.2L21 8H6"/><circle cx="9" cy="20.5" r="1.3"/><circle cx="18" cy="20.5" r="1.3"/></svg></div>
+        <div class="pt">Digital &amp; eCommerce</div>
+      </div>
+      <div class="persona" data-team="Customer Care" data-target="Claims">
+        <div class="pa" style="background:#f6ba27"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13v-1a8 8 0 0 1 16 0v1"/><path d="M4 13h2.5a1 1 0 0 1 1 1v3.5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V13z"/><path d="M20 13h-2.5a1 1 0 0 0-1 1v3.5a1 1 0 0 0 1 1H19a1 1 0 0 0 1-1V13z"/><path d="M20 17.5v1a2.5 2.5 0 0 1-2.5 2.5H13"/></svg></div>
+        <div class="pt">Customer Care</div>
+      </div>
+      <div class="persona" data-team="Executive" data-target="Home">
+        <div class="pa" style="background:#00ba7f"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M7 16l4-5 3 3 5-7"/></svg></div>
+        <div class="pt">Executive</div>
+      </div>
+    </div>
+    </div><!-- /welcome-step1 -->
+
+    <div id="welcome-step2" hidden>
+      <a class="back-link" id="welcome-back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg> Back to teams</a>
+      <h2>What do you want to achieve?</h2>
+      <p class="help">Pick a goal and we’ll route you to the right screen and walk you through it.</p>
+      <div class="persona-grid" style="grid-template-columns:repeat(4,1fr)">
+        <div class="persona" data-target="Payments">
+          <div class="pa" style="background:#1f75f6"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M3 17l6-6 4 4 7-8"/><path d="M14 7h6v6"/></svg></div>
+          <div class="pt">Grow revenue at checkout</div>
+          <div class="ps">Recover sales lost to wrong declines</div>
+        </div>
+        <div class="persona" data-target="Transactions" data-tour="roas">
+          <div class="pa" style="background:#00ba7f"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></div>
+          <div class="pt">Maximize return on acquisition spend</div>
+          <div class="ps">Stop declining customers you paid to acquire</div>
+        </div>
+        <div class="persona" data-target="Intelligence Hub">
+          <div class="pa" style="background:#23c4b4"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 3l2 5 5 2-5 2-2 5-2-5-5-2 5-2z"/></svg></div>
+          <div class="pt">Win the AI shopping channel</div>
+          <div class="ps">Convert agentic &amp; AI-referred demand</div>
+        </div>
+        <div class="persona" data-target="Payments">
+          <div class="pa" style="background:#5b58ea"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M13 2L3 14h7l-1 8 10-12h-7z"/></svg></div>
+          <div class="pt">Cut checkout friction &amp; abandonment</div>
+          <div class="ps">Smart 3DS, fewer drop-offs</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="welcome-step-pay" hidden>
+      <a class="back-link" id="welcome-back-pay"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg> Back to teams</a>
+      <h2>I want Forter to…</h2>
+      <p class="help">Which problem, solved now, moves your growth most? We’ll show you exactly how Forter unlocks it.</p>
+      <div class="persona-grid" style="grid-template-columns:repeat(3,1fr)">
+        <div class="persona" data-paygoal="auth">
+          <div class="pa" style="background:#1f75f6"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M3 17l6-6 4 4 7-8"/><path d="M14 7h6v6"/></svg></div>
+          <div class="pt">Lift my authorization rate</div>
+          <div class="ps">Recover revenue from good customers the bank wrongly declines</div>
+        </div>
+        <div class="persona" data-paygoal="cost">
+          <div class="pa" style="background:#5b58ea"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+          <div class="pt">Reduce my payment costs</div>
+          <div class="ps">Smarter 3DS and exemptions that protect margin without hurting conversion</div>
+        </div>
+        <div class="persona" data-paygoal="psd2">
+          <div class="pa" style="background:#00ba7f"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg></div>
+          <div class="pt">Maximize conversion under PSD2</div>
+          <div class="ps">Beat blanket-3DS with exemptions and recover failed payments</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== End-of-flow next-step card (shown when a Payments tour completes) ===== -->
+<div class="welcome-overlay" id="flow-end" hidden>
+  <div class="welcome-card" style="max-width:680px; max-height:92vh; overflow-y:auto">
+    <div>
+      <div class="welcome-logo">
+        <img src="po-assets/img/forter-logo-white.svg" alt="Forter" style="height:24px">
+      </div>
+      <div id="flow-end-main">
+      <h1 id="flow-end-h1" style="font-size:25px">Your authorization rate, unlocked.</h1>
+      <p class="intro" id="flow-end-sub" style="margin-bottom:24px">You’ve seen how Forter recovers declined sales. Where to next?</p>
+      <div class="persona-grid" id="flow-end-opts" style="grid-template-columns:repeat(2,1fr)">
+        <div class="persona" id="flow-opt-data">
+          <div class="pa" style="background:#1f75f6"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9"><rect x="2.5" y="4" width="19" height="13" rx="2"/><path d="M9 21h6M12 17v4"/></svg></div>
+          <div class="pt">Request a personalised version</div>
+          <div class="ps">Your own version of the tool, built on your data</div>
+        </div>
+        <div class="persona" id="flow-opt-more">
+          <div class="pa" style="background:#00ba7f"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></div>
+          <div class="pt">Solve another problem</div>
+          <div class="ps">Back to your Payments goals</div>
+        </div>
+      </div>
+      <p id="flow-end-confirm" class="help" style="display:none; margin:8px 0 0; font-size:15px; color:#fff"></p>
+      <a id="flow-end-dismiss" style="display:inline-block; margin-top:20px; color:rgba(255,255,255,.85); cursor:pointer; font-size:14px">Keep exploring on my own →</a>
+      </div><!-- /flow-end-main -->
+
+      <div id="flow-end-data" hidden>
+        <a class="back-link" id="flow-data-back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg> Back</a>
+        <div id="env-step1">
+          <h1 style="font-size:23px">Your personalised version</h1>
+          <p class="intro" style="font-size:15px; margin-bottom:6px">We’ll build you your own version of Forter, the same experience you have just seen, running on your transactions.</p>
+          <p style="font-size:13px; color:rgba(255,255,255,.7); margin:0 0 24px">Teams like yours typically recover 2–3 points of authorization rate.</p>
+          <button class="calc-cta" id="env-request">Request my version</button>
+        </div>
+        <div id="env-step2" hidden>
+          <h1 style="font-size:23px">Build your personalised version</h1>
+          <p class="intro" style="font-size:15px; margin-bottom:18px">A few quick details so your Forter team can tailor the tool to you. <span id="env-sender" style="color:rgba(255,255,255,.6)"></span></p>
+          <form id="env-form">
+            <div class="calc-grid">
+              <label class="calc-field">Company
+                <div class="calc-input"><input id="ef-company" type="text" placeholder="Company name"></div>
+              </label>
+              <label class="calc-field">Monthly card volume
+                <div class="calc-input"><select id="ef-volume">
+                  <option value="">Select…</option>
+                  <option>Under $1M</option><option>$1M – $10M</option><option>$10M – $50M</option><option>$50M – $250M</option><option>$250M+</option>
+                </select></div>
+              </label>
+            </div>
+            <div class="ef-block">
+              <div class="ef-label">Processors / gateways in use</div>
+              <div class="chip-select" id="ef-processors">
+                <label><input type="checkbox" value="Adyen">Adyen</label>
+                <label><input type="checkbox" value="Stripe">Stripe</label>
+                <label><input type="checkbox" value="Braintree">Braintree</label>
+                <label><input type="checkbox" value="Checkout.com">Checkout.com</label>
+                <label><input type="checkbox" value="Worldpay">Worldpay</label>
+                <label><input type="checkbox" value="Other">Other</label>
+              </div>
+            </div>
+            <div class="ef-block">
+              <div class="ef-label">Primary regions</div>
+              <div class="chip-select" id="ef-regions">
+                <label><input type="checkbox" value="North America">North America</label>
+                <label><input type="checkbox" value="Europe / UK (PSD2)">Europe / UK (PSD2)</label>
+                <label><input type="checkbox" value="APAC">APAC</label>
+                <label><input type="checkbox" value="LATAM">LATAM</label>
+              </div>
+            </div>
+            <label class="calc-field" style="margin-bottom:14px">Current 3DS approach
+              <div class="calc-input"><select id="ef-3ds">
+                <option value="">Select…</option>
+                <option>Blanket 3DS on most traffic</option><option>Selective / risk-based</option><option>Minimal / none</option><option>Not sure</option>
+              </select></div>
+            </label>
+            <label class="calc-field" style="margin-bottom:16px">Anything specific you want to see? <span style="color:rgba(255,255,255,.5)">(optional)</span>
+              <div class="calc-input ta"><textarea id="ef-notes" placeholder="e.g. our auth rate dips in the EU…"></textarea></div>
+            </label>
+            <button type="submit" class="calc-cta" id="env-submit">Request my version</button>
+          </form>
+          <p class="calc-note" style="margin-top:10px">We’ll arrange a secure transaction sample with you directly, so no sensitive data is collected on this screen.</p>
+          <div id="env-done" hidden>
+            <div class="pj-callout" style="background:rgba(255,255,255,.14); border-color:rgba(255,255,255,.25); color:#fff">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M20 6L9 17l-5-5"/></svg>
+              <span id="env-confirm"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  /* Frosted-background mode (?bg=1): used as the blurred preview behind the welcome overlay */
+  (function () {
+    try {
+      if (new URLSearchParams(location.search).has('bg')) {
+        const o = document.getElementById('welcome-overlay');
+        if (o) o.hidden = true;
+      }
+    } catch (e) {}
+  })();
+
+  /* Greet by time of day + name from the login form (set on try-now.html) */
+  (function () {
+    let name = 'Avishek', email = '';
+    try { name = sessionStorage.getItem('demoName') || name; email = sessionStorage.getItem('demoEmail') || ''; } catch (e) {}
+    const first = (name || 'there').trim().split(/\s+/)[0];
+    const h = new Date().getHours();
+    const tod = h < 12 ? 'morning' : h < 18 ? 'afternoon' : h < 22 ? 'evening' : 'night';
+    document.getElementById('greet').textContent = 'Good ' + tod + ', ' + first + '.';
+    document.getElementById('welcome-h1').textContent = 'Hi ' + first;
+    document.getElementById('user-name').textContent = first;
+    if (email) document.getElementById('user-email').textContent = email;
+    const parts = (name || '').trim().split(/\s+/);
+    if (parts[0]) document.getElementById('user-initials').textContent = (parts[0][0] || '') + (parts[1] ? parts[1][0] : '');
+  })();
+
+  /* Nav click → active state + page switching */
+  const builtPages = { 'Home': 'page-Home', 'Payments': 'page-Payments', 'PayDetail': 'page-PayDetail', 'Transactions': 'page-Transactions', 'TxDetail': 'page-TxDetail', 'Claims': 'page-Claims', 'Intelligence Hub': 'page-Intelligence Hub', 'AI Agent': 'page-AI Agent' };
+
+  /* Mock claims */
+  const CLAIMS = [
+    ['won','Won','981201-4a7e','May 28','Fraud','$1,240.00','Dispute','Jun 10'],
+    ['dispute','In Dispute','981199-2c10','May 30','Service','$420.00','Dispute','—'],
+    ['lost','Lost','981180-9f33','May 22','Processing Error','$89.00','Don’t dispute','Jun 2'],
+    ['open','Open','981244-7b21','Jun 3','Fraud','$3,150.00','Dispute','—'],
+    ['won','Won','981150-1d8c','May 18','Fraud','$640.00','Dispute','Jun 1'],
+    ['dispute','In Dispute','981233-5e90','Jun 1','General','$215.00','Auto-disputed','—'],
+    ['refund','Refund','981177-8a44','May 21','Service','$74.50','Don’t dispute','May 29'],
+    ['won','Won','981120-3c67','May 15','Fraud','$2,080.00','Dispute','May 27'],
+    ['open','Open','981250-6f12','Jun 4','Processing Error','$132.00','Dispute','—'],
+    ['lost','Lost','981142-0b59','May 17','Fraud','$910.00','Dispute','May 30'],
+  ];
+  (function renderClaims(){
+    const body = document.getElementById('claims-body');
+    if (!body) return;
+    body.innerHTML = CLAIMS.map(c => `
+      <tr>
+        <td><span class="cs cs-${c[0]}"><i class="d"></i>${c[1]}</span></td>
+        <td class="mono">${c[2]}</td>
+        <td>${c[3]}</td>
+        <td>${c[4]}</td>
+        <td class="mono">${c[5]}</td>
+        <td>${c[6]}</td>
+        <td>${c[7]}</td>
+      </tr>`).join('');
+  })();
+
+  /* Mock transactions */
+  const TX = [
+    ['decline','Decline','981751-aa01','Jun 6, 14:30','Sarah Hanna','sarah.h@gmail.com','$312.00','Visa •••• 1142','GB','recoverable'],
+    ['approve','Approve','981750-0c14','Jun 6, 14:22','Maya Chen','m.chen@gmail.com','$248.00','Visa •••• 4242','US'],
+    ['decline','Decline','981749-7af2','Jun 6, 14:18','Liam Walsh','liam.w@outlook.com','$1,890.00','Mastercard •••• 5511','GB'],
+    ['approve','Approve','981748-2b9c','Jun 6, 14:05','Sofia Rossi','sofia.r@icloud.com','$74.50','Amex •••• 1007','IT'],
+    ['review','Review','981747-ee31','Jun 6, 13:51','Noah Kim','noah.kim@gmail.com','$540.00','Visa •••• 8890','KR'],
+    ['approve','Approve','981746-44a0','Jun 6, 13:40','Emma Dubois','emma.d@gmail.com','$129.99','PayPal','FR'],
+    ['approve','Approve','981745-91fd','Jun 6, 13:32','Lucas Müller','l.muller@web.de','$312.00','Mastercard •••• 2031','DE'],
+    ['decline','Decline','981744-0c7b','Jun 6, 13:20','Olivia Brown','olivia.b@yahoo.com','$2,450.00','Visa •••• 7765','US'],
+    ['approve','Approve','981743-3d2e','Jun 6, 13:11','Hiroshi Sato','h.sato@gmail.com','$88.00','JCB •••• 3398','JP'],
+    ['approve','Approve','981742-5a18','Jun 6, 12:58','Ava Johnson','ava.j@gmail.com','$415.75','Apple Pay','US'],
+    ['review','Review','981741-bc60','Jun 6, 12:44','Mateo García','mateo.g@gmail.com','$999.00','Visa •••• 6612','ES'],
+    ['approve','Approve','981740-7e93','Jun 6, 12:30','Chloe Martin','chloe.m@gmail.com','$59.00','Mastercard •••• 4480','CA'],
+    ['decline','Decline','981739-1f45','Jun 6, 12:19','James Wilson','j.wilson@gmail.com','$3,120.00','Amex •••• 9921','US'],
+  ];
+  (function renderTx(){
+    const body = document.getElementById('tx-body');
+    if (!body) return;
+    body.innerHTML = TX.map((r,i) => `
+      <tr onclick="openTx(${i})" ${r[9] === 'recoverable' ? 'id="recover-row"' : ''}>
+        <td><span class="decision d-${r[0]}"><i class="d"></i>${r[1]}</span></td>
+        <td class="mono">${r[2]}</td>
+        <td>${r[3]}</td>
+        <td>${r[4]}</td>
+        <td>${r[5]}</td>
+        <td class="mono">${r[6]}</td>
+        <td>${r[7]}</td>
+        <td>${r[8]}</td>
+      </tr>`).join('');
+  })();
+
+  /* Decision-specific detail content */
+  const TX_DETAIL = {
+    approve: {
+      reason: 'Trusted returning customer',
+      signals: ['Verified device', 'Billing/shipping match', 'Low order velocity', 'CVV match', 'Known good email'],
+      cvv:'Match', avs:'Full match', addr:'Match',
+      orders:'47', volume:'$8,420', cb:'0', devices:'2', created:'Mar 2021',
+      ai: 'This customer has a long, clean history with 47 completed orders and no chargebacks. The device, email, and billing details all match prior trusted activity, and order velocity is normal. Forter approved with high confidence.'
+    },
+    decline: {
+      reason: 'Suspected fraud, stolen payment method',
+      signals: ['New device', 'Geolocation mismatch', 'High velocity (6 orders/1h)', 'CVV mismatch', 'Disposable email'],
+      cvv:'Mismatch', avs:'No match', addr:'Mismatch',
+      orders:'0', volume:'$0', cb:'2', devices:'5', created:'Today',
+      ai: 'This order shows strong fraud indicators: a brand-new device, billing/IP geolocation mismatch, and 6 attempts in the last hour across multiple cards. The CVV failed and the email is newly created. Forter declined to protect against a likely stolen card.'
+    },
+    review: {
+      reason: 'Borderline, manual review recommended',
+      signals: ['New customer', 'High order value', '3DS recommended', 'Partial address match'],
+      cvv:'Match', avs:'Partial', addr:'Partial',
+      orders:'1', volume:'$540', cb:'0', devices:'1', created:'2 weeks ago',
+      ai: 'This is a high-value order from a relatively new customer. Signals are mixed: the CVV matches but the shipping address is new. Forter recommends a 3DS step-up or manual review before fulfilling.'
+    },
+    recoverable: {
+      reason: 'Declined by a legacy rule, but this is a trusted customer',
+      signals: ['47 prior orders', '$8,420 lifetime spend', 'Verified device', 'CVV match', 'Known good email'],
+      cvv:'Match', avs:'Full match', addr:'Match',
+      orders:'47', volume:'$8,420', cb:'0', devices:'2', created:'Mar 2021',
+      ai: 'This order was blocked by a static rule (high value with a new shipping address). But Forter’s identity network recognizes this as a trusted customer with 47 clean orders and $8,420 in lifetime spend. This is not fraud, it is recoverable revenue. The ad spend you paid to acquire this customer was wasted on a false decline. Forter would approve it.'
+    }
+  };
+
+  function openTx(i) {
+    const r = TX[i]; if (!r) return;
+    const kind = r[0]; const key = r[9] === 'recoverable' ? 'recoverable' : kind; const cfg = TX_DETAIL[key];
+    document.getElementById('d-orderid').textContent = r[2];
+    const badge = document.getElementById('d-badge');
+    badge.className = 'badge b-' + kind;
+    document.getElementById('d-badge-text').textContent = r[1] === 'Approve' ? 'Approved' : r[1] === 'Decline' ? 'Declined' : 'Review';
+    document.getElementById('d-sub').textContent = r[4] + ' · ' + r[8];
+    document.getElementById('d-amount').textContent = r[6];
+    document.getElementById('d-date').textContent = r[2] ? r[3] : '';
+    document.getElementById('d-reason').textContent = cfg.reason;
+    document.getElementById('d-signals').innerHTML = cfg.signals.map(s => `<span class="signal">${s}</span>`).join('');
+    document.getElementById('d-ai').textContent = cfg.ai;
+    document.getElementById('d-bizid').textContent = r[2];
+    document.getElementById('d-status').textContent = 'Completed';
+    document.getElementById('d-updated').textContent = r[3];
+    document.getElementById('d-acc-email').textContent = r[5];
+    document.getElementById('d-acc-created').textContent = cfg.created;
+    document.getElementById('d-acc-orders').textContent = cfg.orders;
+    document.getElementById('d-acc-volume').textContent = cfg.volume;
+    document.getElementById('d-acc-cb').textContent = cfg.cb;
+    document.getElementById('d-acc-devices').textContent = cfg.devices;
+    document.getElementById('d-bill-name').textContent = r[4];
+    document.getElementById('d-bill-country').textContent = r[8];
+    document.getElementById('d-avs').textContent = cfg.addr;
+    document.getElementById('d-pay-method').textContent = r[7];
+    document.getElementById('d-cvv').textContent = cfg.cvv;
+    document.getElementById('d-avs2').textContent = cfg.avs;
+    document.getElementById('d-gw').textContent = 'gw_' + r[2].replace('-', '');
+    showPage('TxDetail');
+  }
+  const txBack = document.getElementById('tx-back');
+  if (txBack) txBack.addEventListener('click', () => {
+    document.querySelectorAll('.nav-item').forEach(x => x.classList.remove('active'));
+    document.querySelector('.nav-item[data-page="Transactions"]').classList.add('active');
+    showPage('Transactions');
+  });
+  function showPage(name) {
+    document.querySelectorAll('.page').forEach(p => p.hidden = true);
+    const id = builtPages[name];
+    if (id) {
+      document.getElementById(id).hidden = false;
+    } else {
+      document.getElementById('stub-title').textContent = name;
+      document.getElementById('page-stub').hidden = false;
+    }
+    document.querySelector('.content-wrap').scrollTop = 0;
+    if (name === 'Payments') setTimeout(renderPaymentsCharts, 40);
+  }
+  document.querySelectorAll('.nav-item').forEach(n => n.addEventListener('click', () => {
+    document.querySelectorAll('.nav-item').forEach(x => x.classList.remove('active'));
+    n.classList.add('active');
+    showPage(n.dataset.page);
+  }));
+
+  /* Persona picker → route to the team's primary zone */
+  function activateNav(page) {
+    document.querySelectorAll('.nav-item').forEach(x => x.classList.remove('active'));
+    const item = document.querySelector('.nav-item[data-page="' + page + '"]');
+    if (item) item.classList.add('active');
+  }
+  document.querySelectorAll('.persona').forEach(p => p.addEventListener('click', () => {
+    if (p.dataset.paygoal) return; // Payments goal cards have their own handler
+    const target = p.dataset.target;
+    const team = p.dataset.team;
+    // Digital & eCommerce → show the goal-selection step instead of routing
+    if (team === 'Digital & eCommerce') {
+      try { sessionStorage.setItem('demoTeam', team); } catch (e) {}
+      document.getElementById('welcome-header').hidden = true;
+      document.getElementById('welcome-step1').hidden = true;
+      document.getElementById('welcome-step2').hidden = false;
+      return;
+    }
+    // Payments → show the "I want Forter to…" consultative goal step
+    if (team === 'Payments') {
+      try { sessionStorage.setItem('demoTeam', team); } catch (e) {}
+      document.getElementById('welcome-header').hidden = true;
+      document.getElementById('welcome-step1').hidden = true;
+      document.getElementById('welcome-step-pay').hidden = false;
+      return;
+    }
+    if (team) { try { sessionStorage.setItem('demoTeam', team); } catch (e) {} }
+    document.getElementById('welcome-overlay').hidden = true;
+    activateNav(target);
+    showPage(target);
+    if (p.dataset.tour === 'roas') { setTimeout(() => startTour(ROAS_TOUR), 350); }
+  }));
+
+  /* Back from goal step to team step */
+  document.getElementById('welcome-back').addEventListener('click', () => {
+    document.getElementById('welcome-step2').hidden = true;
+    document.getElementById('welcome-header').hidden = false;
+    document.getElementById('welcome-step1').hidden = false;
+  });
+  document.getElementById('welcome-back-pay').addEventListener('click', () => {
+    document.getElementById('welcome-step-pay').hidden = true;
+    document.getElementById('welcome-header').hidden = false;
+    document.getElementById('welcome-step1').hidden = false;
+  });
+
+  /* Programmatically switch a Payments Insights view (used by guided tours) */
+  function switchInsView(label) {
+    const id = INS_VIEW_MAP[label] || 'ins-view-overview';
+    document.querySelectorAll('#page-Payments .ins-view').forEach(v => { v.hidden = (v.id !== id); });
+    document.querySelectorAll('.ins-nav').forEach(x => {
+      x.classList.toggle('active', x.textContent.trim().replace(/\s*▾$/, '').trim() === label);
+    });
+  }
+
+  /* Payments goal → route to the Payments zone and start the matching guided tour */
+  document.querySelectorAll('[data-paygoal]').forEach(g => g.addEventListener('click', () => {
+    const goal = g.dataset.paygoal;
+    try { sessionStorage.setItem('demoPayGoal', goal); } catch (e) {}
+    document.getElementById('welcome-overlay').hidden = true;
+    activateNav('Payments');
+    showPage('Payments');
+    showPayInsights();
+    switchInsView('Overview');
+    const map = { auth: PAY_AUTH_TOUR, cost: PAY_COST_TOUR, psd2: PAY_PSD2_TOUR };
+    lastPayGoal = goal;
+    setTimeout(() => { startTour(map[goal], showFlowEnd); }, 450);
+  }));
+
+  /* End-of-flow next-step card */
+  let lastPayGoal = 'auth';
+  const FLOW_END_TITLES = {
+    auth: 'Your authorization rate, unlocked.',
+    cost: 'Your payment costs, under control.',
+    psd2: 'PSD2 conversion, maximised.'
+  };
+  const FLOW_END_SUBS = {
+    auth: 'You’ve seen how Forter recovers declined sales. Where to next?',
+    cost: 'You’ve seen how Forter cuts friction and fees. Where to next?',
+    psd2: 'You’ve seen how Forter wins conversion under PSD2. Where to next?'
+  };
+  function showFlowEnd() {
+    document.getElementById('flow-end-h1').textContent = FLOW_END_TITLES[lastPayGoal] || 'Nicely done.';
+    document.getElementById('flow-end-sub').textContent = FLOW_END_SUBS[lastPayGoal] || 'Where to next?';
+    document.getElementById('flow-end-main').hidden = false;
+    document.getElementById('flow-end-data').hidden = true;
+    document.getElementById('flow-end').hidden = false;
+  }
+  /* "Request a personalised version" → commit first, then justify the data ask */
+  document.getElementById('flow-opt-data').addEventListener('click', () => {
+    document.getElementById('flow-end-main').hidden = true;
+    document.getElementById('flow-end-data').hidden = false;
+    document.getElementById('env-step1').hidden = false;
+    document.getElementById('env-step2').hidden = true;
+  });
+  document.getElementById('flow-data-back').addEventListener('click', () => {
+    document.getElementById('flow-end-data').hidden = true;
+    document.getElementById('flow-end-main').hidden = false;
+  });
+  document.getElementById('env-request').addEventListener('click', () => {
+    let name = '', email = '';
+    try { name = sessionStorage.getItem('demoName') || ''; email = sessionStorage.getItem('demoEmail') || ''; } catch (e) {}
+    const sender = [name, email].filter(Boolean).join(' · ');
+    document.getElementById('env-sender').textContent = sender ? 'Sending as ' + sender + '.' : '';
+    document.getElementById('env-step1').hidden = true;
+    document.getElementById('env-step2').hidden = false;
+    document.getElementById('env-form').hidden = false;
+    document.getElementById('env-done').hidden = true;
+  });
+  document.getElementById('env-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    let email = '';
+    try { email = sessionStorage.getItem('demoEmail') || ''; } catch (e2) {}
+    document.getElementById('env-confirm').textContent =
+      'Thanks, your request is in. Your Forter team will reach out' + (email ? ' at ' + email : '') + ' to arrange the transaction sample and build your version.';
+    document.getElementById('env-form').hidden = true;
+    document.querySelector('#env-step2 .calc-note').style.display = 'none';
+    document.getElementById('env-done').hidden = false;
+  });
+  document.getElementById('flow-opt-more').addEventListener('click', () => {
+    document.getElementById('flow-end').hidden = true;
+    document.getElementById('welcome-header').hidden = true;
+    document.getElementById('welcome-step1').hidden = true;
+    document.getElementById('welcome-step2').hidden = true;
+    document.getElementById('welcome-step-pay').hidden = false;
+    document.getElementById('welcome-overlay').hidden = false;
+  });
+  document.getElementById('flow-end-dismiss').addEventListener('click', () => {
+    document.getElementById('flow-end').hidden = true;
+  });
+
+  /* ===== Coach-mark tour engine ===== */
+  const ROAS_TOUR = [
+    {
+      target: '#tx-body',
+      title: 'Not every decline is fraud',
+      body: 'This is your transaction stream. Most fraud tools stop at “Declined”, but some of these are good customers a rigid rule wrongly blocked.'
+    },
+    {
+      target: '#recover-row',
+      title: 'Open a declined order',
+      body: 'Let’s open this declined transaction and look at who you actually turned away.'
+    },
+    {
+      target: '.reason-card',
+      title: 'You declined a loyal customer',
+      body: 'A legacy rule blocked this order (high value with a new address). But this shopper has 47 clean orders and $8,420 in lifetime spend, not fraud.',
+      before: () => { openTx(0); },
+      delay: 160
+    },
+    {
+      target: '.ai-card',
+      title: 'Forter would have approved them',
+      body: 'Forter’s identity network recognizes this trusted customer and approves them, recovering the sale and the acquisition spend behind it.'
+    },
+    {
+      center: true,
+      title: 'That’s your return on acquisition spend',
+      body: 'Every good customer wrongly declined is wasted CAC and lost revenue. Approving them recovers revenue you already paid to acquire.'
+    }
+  ];
+
+  /* ===== Payments persona tours ===== */
+
+  /* Goal 1 (primary): Lift authorization rate → recover revenue from false declines */
+  const PAY_AUTH_TOUR = [
+    {
+      target: '#pm-auth',
+      title: 'Your authorization rate',
+      body: 'This is the share of legitimate sales that successfully complete. It is one of the highest-leverage numbers your team owns, because even a one to two point improvement converts straight into recovered revenue.',
+      before: () => switchInsView('Overview'),
+      delay: 100
+    },
+    {
+      target: '#pm-revuplift',
+      title: 'Revenue you have already recovered',
+      body: 'This reflects the uplift from borderline transactions a static setup would have declined. Forter recognised these customers as legitimate and let them through, so it is realised revenue rather than a projection.'
+    },
+    {
+      target: '#ins-view-funnel',
+      title: 'Where authorization is being lost',
+      body: 'The funnel shows every drop-off between attempt and authorization. The Bank Declined branch is where legitimate sales slip away, so let us open one together.',
+      before: () => switchInsView('Funnel'),
+      delay: 130
+    },
+    {
+      target: '#pay-recover-row',
+      title: 'A closer look at one decline',
+      body: 'Here is a card payment the issuer declined. It is worth seeing what Forter does next, so go ahead and open it.',
+      before: () => { showPage('Payments'); showPayTransactions(); },
+      delay: 160
+    },
+    {
+      target: '#pj-fail',
+      title: 'The first attempt was declined',
+      body: 'The issuer returned Do Not Honor, a soft decline on a legitimate customer. In most setups the sale would simply stop here.',
+      before: () => openPayTx(),
+      delay: 180
+    },
+    {
+      target: '#pj-identity',
+      title: 'Forter retries customers, not declines',
+      body: 'Before reattempting, Forter checked this shopper against its identity network and recognised a trusted customer with a long, clean history. That judgement, rather than a blind reattempt, is what makes recovery safe.'
+    },
+    {
+      target: '#pj-retry',
+      title: 'Forter recovered the sale',
+      body: 'Recognising a trusted customer, Forter re-presented the payment on a better performing processor, and it authorised on the second attempt.'
+    },
+    {
+      target: '#pj-skipped',
+      title: 'It also knows when not to retry',
+      body: 'In the same window Forter declined to retry two other declines it judged risky. Recovering the trusted ones while leaving the risky ones alone is what separates intelligent recovery from a blanket retry.'
+    },
+    {
+      target: '#pj-precision',
+      title: 'More approvals, no added fraud',
+      body: 'Because recovery is selective, your authorization rate rises while your chargeback rate holds flat. That precision is the part a generic retry tool cannot give you.'
+    },
+    {
+      target: '#pm-revuplift',
+      title: 'The same effect across your volume',
+      body: 'That single recovered sale, repeated across every issuer decline Forter rescues, adds up to the $576.79K in recovered revenue shown here this period. This is your authorization rate working as growth.',
+      before: () => { showPage('Payments'); showPayInsights(); switchInsView('Overview'); },
+      delay: 180
+    }
+  ];
+
+  /* Goal 2: Reduce payment costs without hurting conversion */
+  const PAY_COST_TOUR = [
+    {
+      target: '#pm-3ds',
+      title: 'Every 3DS step-up carries a cost',
+      body: 'Sending a transaction to 3DS adds both fees and friction. Forter routes fewer transactions to 3DS, down 7.4 percent here, by stepping up only when it is genuinely needed.',
+      before: () => switchInsView('Overview'),
+      delay: 100
+    },
+    {
+      target: '#pm-friction',
+      title: 'More approvals with no added friction',
+      body: 'Frictionless approvals cost you nothing and convert best. Forter moves more of your volume through this path instead of expensive step-ups.'
+    },
+    {
+      target: '#pm-psd2exempt',
+      title: 'Exemptions in place of unnecessary 3DS',
+      body: 'In regulated markets Forter claims TRA exemptions wherever it safely can, so you avoid unnecessary 3DS fees while remaining fully compliant.',
+      before: () => switchInsView('EU - Overview'),
+      delay: 130
+    },
+    {
+      center: true,
+      title: 'Lower cost with the same conversion',
+      body: 'Fewer step-ups, more exemptions, and more frictionless approvals protect your margin without leaving sales on the table.'
+    }
+  ];
+
+  /* Goal 3: Maximize conversion under PSD2 */
+  const PAY_PSD2_TOUR = [
+    {
+      target: '#pm-psd2exempt',
+      title: 'Beyond blanket 3DS',
+      body: 'Most processors send everything to 3DS under PSD2. Forter claims exemptions on the large majority, 83 percent here, so low-risk customers never see friction.',
+      before: () => switchInsView('EU - Overview'),
+      delay: 100
+    },
+    {
+      target: '#pm-psd2auth',
+      title: 'Higher authorization, still compliant',
+      body: 'By exempting the right traffic, your PSD2 authorization rate stays high without breaking the regulation.'
+    },
+    {
+      target: '#pm-recintent',
+      title: 'Recovering the payments that still fail',
+      body: 'When a payment does fail, Forter works to recover customer intent automatically, so that revenue is not simply written off.'
+    },
+    {
+      target: '#pm-recforter',
+      title: 'Real money recovered',
+      body: 'Intent Recovery retries failed payments intelligently and recovers them, $1.65M here that would otherwise have been lost.',
+      before: () => switchInsView('Intent Recovery'),
+      delay: 130
+    },
+    {
+      center: true,
+      title: 'Maximum conversion with full compliance',
+      body: 'Exemptions keep friction away from low-risk customers and Intent Recovery rescues the rest, so PSD2 stops costing you sales.'
+    }
+  ];
+
+  let tourSteps = null, tourIdx = 0, tourOnComplete = null;
+  const spot = document.getElementById('tour-spot');
+  const pop = document.getElementById('tour-pop');
+
+  function startTour(steps, onComplete) { tourSteps = steps; tourIdx = 0; tourOnComplete = onComplete || null; renderTourStep(); }
+  function endTour() { spot.hidden = true; pop.hidden = true; tourSteps = null; tourOnComplete = null; }
+
+  function placeTour(step) {
+    if (step.center || !step.target) {
+      spot.hidden = true;
+      pop.hidden = false;
+      pop.style.top = '50%'; pop.style.left = '50%'; pop.style.transform = 'translate(-50%,-50%)';
+      return;
+    }
+    const el = document.querySelector(step.target);
+    if (!el) { // fallback to center
+      spot.hidden = true; pop.hidden = false;
+      pop.style.top = '50%'; pop.style.left = '50%'; pop.style.transform = 'translate(-50%,-50%)';
+      return;
+    }
+    el.scrollIntoView({ block: 'center', behavior: 'auto' });
+    setTimeout(() => {
+      const r = el.getBoundingClientRect();
+      const pad = 6;
+      spot.hidden = false;
+      spot.style.top = (r.top - pad) + 'px';
+      spot.style.left = (r.left - pad) + 'px';
+      spot.style.width = (r.width + pad * 2) + 'px';
+      spot.style.height = (r.height + pad * 2) + 'px';
+      pop.hidden = false;
+      pop.style.transform = 'none';
+      // measure the real popover size so the buttons never get cut off
+      const popH = pop.offsetHeight || 240;
+      const popW = pop.offsetWidth || 340;
+      const vw = window.innerWidth, vh = window.innerHeight;
+      const m = 16; // viewport margin
+      let top, left;
+      if (r.bottom + 14 + popH <= vh - m) {
+        // below the target
+        top = r.bottom + 14; left = r.left;
+      } else if (r.top - 14 - popH >= m) {
+        // above the target
+        top = r.top - popH - 14; left = r.left;
+      } else {
+        // target too tall for above/below — place beside it
+        top = r.top;
+        left = (r.right + 14 + popW <= vw - m) ? r.right + 14 : r.left - popW - 14;
+      }
+      // clamp fully inside the viewport
+      top = Math.min(Math.max(top, m), vh - popH - m);
+      left = Math.min(Math.max(left, m), vw - popW - m);
+      pop.style.top = top + 'px';
+      pop.style.left = left + 'px';
+    }, 40);
+  }
+
+  function renderTourStep() {
+    const step = tourSteps[tourIdx];
+    if (step.before) step.before();
+    document.getElementById('tp-step').textContent = 'Step ' + (tourIdx + 1) + ' of ' + tourSteps.length;
+    document.getElementById('tp-title').textContent = step.title;
+    document.getElementById('tp-body').textContent = step.body;
+    document.getElementById('tp-back').style.visibility = tourIdx === 0 ? 'hidden' : 'visible';
+    document.getElementById('tp-next').textContent = tourIdx === tourSteps.length - 1 ? 'Done' : 'Next';
+    setTimeout(() => placeTour(step), step.delay || 0);
+  }
+
+  document.getElementById('tp-next').addEventListener('click', () => {
+    if (tourIdx >= tourSteps.length - 1) { const cb = tourOnComplete; endTour(); if (cb) cb(); return; }
+    tourIdx++; renderTourStep();
+  });
+  document.getElementById('tp-back').addEventListener('click', () => {
+    if (tourIdx > 0) { tourIdx--; renderTourStep(); }
+  });
+  document.getElementById('tp-skip').addEventListener('click', endTour);
+  window.addEventListener('resize', () => { if (tourSteps) placeTour(tourSteps[tourIdx]); });
+
+  /* Sub-tabs (visual only) — scoped to each tab's own row */
+  document.querySelectorAll('.subtab').forEach(t => t.addEventListener('click', () => {
+    t.parentElement.querySelectorAll('.subtab').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+  }));
+
+  /* Payments → Transactions grid rows */
+  const PTX = [
+    ['e6488149f099886976e6','Gateway Success','Exemption','9c403d4e-2d10-48e3-9557-7bf612394597','Exemption – Transaction risk analysis'],
+    ['c8fc970b9795c475fc38','Authentication required','Exemption','3d38c5ba-51bf-4bc4-8e1b-a85b4143210b','Exemption – Transaction risk analysis'],
+    ['7418621c430f57823ab9','Gateway Success','No 3DS','59718b2b-7152-412b-9ece-bb04af476075','N/A'],
+    ['ad41a2183482384934a4','Gateway Success','No 3DS','849423b6-9a59-4093-be35-acdbbd1766db','N/A'],
+    ['cd0ac869dd59318923f5','Gateway Success','No 3DS','0f00672a-aa4b-4dad-88f1-7a7498daeb1b','N/A'],
+    ['731d4fb95f34149fc527','Insufficient Funds','No 3DS','554fd726-17a4-4dc7-b751-90795cb96c5a','N/A'],
+    ['4af5f9857b5721a32544','Insufficient Funds','No 3DS','28cc8aff-14a3-433d-a421-fd6f5204c59e','N/A'],
+    ['47f71aab5a618399c7cb','Withdrawal amount exceeded','No 3DS','e0c811a4-3dfb-41af-b4d0-d2d0b8fa753a','N/A'],
+    ['2184389601d00732836b','Gateway Success','No 3DS','59c51932-509b-45f4-a849-773b9e3d7af6','N/A'],
+    ['5eab6d1ab24f22cab0db','Gateway Success','No 3DS','2d6dbc0d-203f-42bb-bd11-c622a38cb90d','N/A'],
+  ];
+  (function renderPtx(){
+    const body = document.getElementById('ptx-body'); if (!body) return;
+    const recoverRow = `
+      <tr id="pay-recover-row" onclick="openPayTx()" style="cursor:pointer">
+        <td class="mono">pay_ord_2361</td>
+        <td><span style="color:var(--fc-color-green-600);font-weight:600">Approved on retry</span> <span style="color:var(--fc-color-blue-gray-500)">· Do Not Honor (05)</span></td>
+        <td>05 → 00</td>
+        <td>Adyen → Stripe</td>
+        <td><span class="chip-sm">3DS</span></td>
+        <td>Yes</td>
+        <td class="mono" style="font-size:12px">a1f2c3d4-5b6e-47a8-9c01-2d3e4f5a6b7c</td>
+        <td><span class="chip-sm exempt">Recovered · Predictive Routing</span></td>
+      </tr>`;
+    body.innerHTML = recoverRow + PTX.map(r => `
+      <tr>
+        <td class="mono">${r[0]}</td>
+        <td>${r[1]}</td>
+        <td>N/A</td>
+        <td>N/A</td>
+        <td><span class="chip-sm ${r[2] === 'Exemption' ? 'exempt' : ''}">${r[2]}</span></td>
+        <td>Yes</td>
+        <td class="mono" style="font-size:12px">${r[3]}</td>
+        <td>${r[4]}</td>
+      </tr>`).join('');
+  })();
+
+  /* Payments Transactions drill-down → Payment Journey detail */
+  function showPayTransactions() {
+    document.querySelectorAll('#page-Payments .ins-tab').forEach(t => {
+      t.classList.toggle('active', t.textContent.trim() === 'Transactions');
+    });
+    document.getElementById('pay-insights').hidden = true;
+    document.getElementById('pay-transactions').hidden = false;
+  }
+  function showPayInsights() {
+    document.querySelectorAll('#page-Payments .ins-tab').forEach(t => {
+      t.classList.toggle('active', t.textContent.trim() === 'Insights');
+    });
+    document.getElementById('pay-transactions').hidden = true;
+    document.getElementById('pay-insights').hidden = false;
+  }
+  function openPayTx() { showPage('PayDetail'); }
+  const payBack = document.getElementById('pay-back');
+  if (payBack) payBack.addEventListener('click', () => {
+    activateNav('Payments');
+    showPage('Payments');
+    showPayTransactions();
+  });
+
+  /* ===== Payments Overview charts (Chart.js — same engine the portal uses) ===== */
+  let _pcDone = false;
+  function renderPaymentsCharts() {
+    if (_pcDone || typeof Chart === 'undefined' || !document.getElementById('pc1')) return;
+    _pcDone = true;
+    const L = ['Oct 9','Oct 12','Oct 15','Oct 18','Oct 21','Oct 24','Oct 27','Oct 30','Nov 2','Nov 5'];
+    const CY='#20e8d3', BL='#1f75f6', IN='#5b58ea', GO='#f6ba27', RD='#ff5959', LB='#73ceff';
+    Chart.defaults.font.family = "'Open Sans', sans-serif";
+    Chart.defaults.font.size = 10;
+    Chart.defaults.color = '#7f92b9';
+    const line = (a,b)=>({ tension:.35, pointRadius:0, borderWidth:2, fill:false });
+    const baseLine = (yMin,yMax)=>({
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{ position:'bottom', labels:{ usePointStyle:true, pointStyle:'circle', boxWidth:6, boxHeight:6, padding:12, font:{size:10} } } },
+      scales:{ x:{ grid:{display:false}, ticks:{maxRotation:0, font:{size:9}} }, y:{ min:yMin, max:yMax, grid:{color:'#eff0f3'}, ticks:{font:{size:9}, callback:v=>v+'%'} } },
+      elements:{ line:{ tension:.35 }, point:{ radius:0 } }
+    });
+    const baseBar = (stacked)=>({
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{ position:'bottom', labels:{ usePointStyle:true, pointStyle:'circle', boxWidth:6, boxHeight:6, padding:12, font:{size:10} } } },
+      scales:{ x:{ stacked, grid:{display:false}, ticks:{maxRotation:0, font:{size:9}} }, y:{ stacked, grid:{color:'#eff0f3'}, ticks:{font:{size:9}} } }
+    });
+    new Chart('pc1', { type:'line', data:{ labels:L, datasets:[
+      {label:'Complete Rate', data:[78.4,80.1,79.2,81.3,80.6,82.1,80.9,82.8,79.7,79.89], borderColor:CY, ...line()},
+      {label:'Auth Rate', data:[86.2,88.1,87.0,89.2,88.0,90.1,88.7,87.9,87.4,87.78], borderColor:BL, ...line()},
+    ]}, options:baseLine(70,95) });
+    new Chart('pc2', { type:'line', data:{ labels:L, datasets:[
+      {label:'Complete (No 3DS)', data:[81,83,82,84,83,85,84,86,83,84], borderColor:CY, ...line()},
+      {label:'Complete (3DS)', data:[76,78,77,79,78,80,79,81,78,79], borderColor:BL, ...line()},
+      {label:'Auth Rate', data:[88,90,89,91,90,92,90,89,88,89], borderColor:IN, ...line()},
+    ]}, options:baseLine(70,95) });
+    new Chart('pc3', { type:'bar', data:{ labels:L, datasets:[
+      {label:'Frictionless', data:[14,16,13,17,15,18,14,16,15,17], backgroundColor:CY, stack:'s'},
+      {label:'Challenge', data:[5,4,6,4,5,4,6,5,4,5], backgroundColor:LB, stack:'s'},
+    ]}, options:baseBar(true) });
+    new Chart('pc4', { type:'bar', data:{ labels:L, datasets:[
+      {label:'3DS Successful', data:[78,80,77,81,79,82,80,81,79,80], backgroundColor:CY, stack:'s'},
+      {label:'3DS Abandoned', data:[16,14,17,13,15,12,14,13,15,14], backgroundColor:IN, stack:'s'},
+      {label:'3DS Failed', data:[6,6,6,6,6,6,6,6,6,6], backgroundColor:RD, stack:'s'},
+    ]}, options:baseBar(true) });
+    new Chart('pc5', { type:'line', data:{ labels:L, datasets:[
+      {label:'Policy', data:[42,45,40,47,44,48,43,46,44,45], borderColor:CY, ...line()},
+      {label:'Risk', data:[24,22,26,21,24,20,23,22,24,23], borderColor:BL, ...line()},
+      {label:'Regulation', data:[12,13,11,14,12,13,12,13,12,12], borderColor:GO, ...line()},
+      {label:'Auth Uplift', data:[6,5,7,5,6,5,6,5,6,6], borderColor:IN, ...line()},
+    ]}, options:baseLine(0,55) });
+    new Chart('pc6', { type:'line', data:{ labels:L, datasets:[
+      {label:'Policy', data:[1.4,1.7,1.2,1.8,1.3,1.6,1.4,1.7,1.5,1.4].map(x=>x*1000), borderColor:BL, ...line()},
+      {label:'Risk', data:[0.6,0.8,0.5,0.9,0.6,0.7,0.6,0.8,0.7,0.6].map(x=>x*1000), borderColor:CY, ...line()},
+      {label:'Regulation', data:[0.2,0.3,0.2,0.3,0.2,0.3,0.2,0.3,0.2,0.2].map(x=>x*1000), borderColor:GO, ...line()},
+    ]}, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'bottom', labels:{ usePointStyle:true, pointStyle:'circle', boxWidth:6, boxHeight:6, padding:12, font:{size:10} } } }, scales:{ x:{ grid:{display:false}, ticks:{font:{size:9}} }, y:{ grid:{color:'#eff0f3'}, ticks:{font:{size:9}} } } } });
+  }
+
+  /* Payments Insights | Transactions tabs */
+  document.querySelectorAll('.ins-tab').forEach(t => t.addEventListener('click', () => {
+    t.parentElement.querySelectorAll('.ins-tab').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    const isTx = t.textContent.trim() === 'Transactions';
+    document.getElementById('pay-insights').hidden = isTx;
+    document.getElementById('pay-transactions').hidden = !isTx;
+  }));
+  const INS_VIEW_MAP = {
+    'Overview': 'ins-view-overview',
+    'Funnel': 'ins-view-funnel',
+    'EU - Overview': 'ins-view-eu-overview',
+    'EU - Funnel': 'ins-view-eu-funnel',
+    'Intent Recovery': 'ins-view-intent-recovery',
+  };
+  document.querySelectorAll('.ins-nav').forEach(n => n.addEventListener('click', () => {
+    document.querySelectorAll('.ins-nav').forEach(x => x.classList.remove('active'));
+    n.classList.add('active');
+    const label = n.textContent.trim().replace(/\s*▾$/, '').trim();
+    const id = INS_VIEW_MAP[label] || 'ins-view-overview';   // unbuilt items default to Overview
+    document.querySelectorAll('#page-Payments .ins-view').forEach(v => { v.hidden = (v.id !== id); });
+  }));
+</script>
+</body>
+</html>

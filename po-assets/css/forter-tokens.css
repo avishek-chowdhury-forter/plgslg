@@ -1,0 +1,77 @@
+/* Forter design tokens — extracted from the portal repo (.ai/conventions/design-tokens.md).
+   Use these everywhere instead of hardcoded values so the demo matches the real product. */
+:root {
+  /* Brand blue (primary brand color) */
+  --fc-color-brand-blue-900:#002255; --fc-color-brand-blue-800:#0043a9; --fc-color-brand-blue-700:#0358d7;
+  --fc-color-brand-blue-600:#1f75f6; --fc-color-brand-blue-500:#4e95ff; --fc-color-brand-blue-400:#73abff;
+  --fc-color-brand-blue-300:#90bdff; --fc-color-brand-blue-200:#bdd8ff; --fc-color-brand-blue-100:#dceaff;
+
+  /* Brand green */
+  --fc-color-brand-green-900:#044732; --fc-color-brand-green-800:#067250; --fc-color-brand-green-700:#009d6c;
+  --fc-color-brand-green-600:#00ba7f; --fc-color-brand-green-500:#00d894; --fc-color-brand-green-400:#1de8a8;
+  --fc-color-brand-green-300:#65f4c7; --fc-color-brand-green-200:#b5f8e2; --fc-color-brand-green-100:#e5fef6;
+
+  /* Blue (info) */
+  --fc-color-blue-900:#002255; --fc-color-blue-800:#004f7a; --fc-color-blue-700:#006ca6; --fc-color-blue-600:#0088d3;
+  --fc-color-blue-500:#00a5ff; --fc-color-blue-400:#3ab9ff; --fc-color-blue-300:#73ceff; --fc-color-blue-200:#ade2ff; --fc-color-blue-100:#e6f6ff;
+
+  /* Blue-gray (text / chrome) */
+  --fc-color-blue-gray-950:#1e283d; --fc-color-blue-gray-900:#1f314f; --fc-color-blue-gray-850:#2b3e5f;
+  --fc-color-blue-gray-800:#384a6c; --fc-color-blue-gray-750:#495b80; --fc-color-blue-gray-700:#596c95;
+  --fc-color-blue-gray-650:#6c7fa7; --fc-color-blue-gray-600:#7f92b9; --fc-color-blue-gray-550:#8699c1;
+  --fc-color-blue-gray-500:#8d9fc9; --fc-color-blue-gray-450:#97aad2; --fc-color-blue-gray-400:#a2b4db;
+  --fc-color-blue-gray-350:#b1c1e6; --fc-color-blue-gray-300:#bfcef0; --fc-color-blue-gray-250:#cdd8f2;
+  --fc-color-blue-gray-200:#dae2f5; --fc-color-blue-gray-150:#e4eaf8; --fc-color-blue-gray-100:#f2f5fc; --fc-color-blue-gray-50:#f6f8fd;
+
+  /* Gray */
+  --fc-color-gray-1000:#000000; --fc-color-gray-950:#151515; --fc-color-gray-900:#24282e; --fc-color-gray-850:#333b47;
+  --fc-color-gray-800:#526178; --fc-color-gray-750:#6c7c92; --fc-color-gray-700:#8696ac; --fc-color-gray-650:#92a1b6;
+  --fc-color-gray-600:#9fadc0; --fc-color-gray-550:#aab6c6; --fc-color-gray-500:#b5becc; --fc-color-gray-450:#bfc7d2;
+  --fc-color-gray-400:#cad0d9; --fc-color-gray-350:#d2d7df; --fc-color-gray-300:#dadee4; --fc-color-gray-250:#e1e4e9;
+  --fc-color-gray-200:#e9ebef; --fc-color-gray-150:#eff0f3; --fc-color-gray-100:#f4f5f7; --fc-color-gray-50:#fbfcfc; --fc-color-gray-0:#ffffff;
+
+  /* Status */
+  --fc-color-red-600:#e32a2d; --fc-color-red-500:#ff5959; --fc-color-red-100:#fde6e7;
+  --fc-color-green-600:#009a1a; --fc-color-green-500:#00ba1f; --fc-color-green-100:#e6f8e9;
+  --fc-color-gold-500:#f6ba27; --fc-color-orange-500:#ff8a0d;
+  --fc-color-indigo-600:#4542e3; --fc-color-indigo-500:#5b58ea;
+  --fc-color-turquoise-500:#20e8d3;
+
+  /* Semantic surfaces / borders / text */
+  --fc-color-surface-primary: var(--fc-color-gray-0);
+  --fc-color-surface-secondary: var(--fc-color-gray-50);
+  --fc-color-surface-tertiary: var(--fc-color-gray-100);
+  --fc-color-surface-brand: var(--fc-color-brand-blue-600);
+  --fc-color-border-primary: var(--fc-color-blue-gray-200);
+  --fc-color-border-secondary: var(--fc-color-blue-gray-300);
+  --fc-color-border-brand: var(--fc-color-brand-blue-600);
+  --fc-color-text-primary: var(--fc-color-gray-900);
+  --fc-color-text-secondary: var(--fc-color-gray-700);
+  --fc-color-text-brand: var(--fc-color-brand-blue-600);
+
+  /* CTA */
+  --fc-color-cta-brand-default: var(--fc-color-brand-blue-500);
+  --fc-color-cta-brand-hovered: var(--fc-color-brand-blue-600);
+
+  /* Spacing */
+  --fc-spacing-0-5:4px; --fc-spacing-1:8px; --fc-spacing-2:16px; --fc-spacing-2-5:20px;
+  --fc-spacing-3:24px; --fc-spacing-4:32px; --fc-spacing-5:40px; --fc-spacing-6:48px; --fc-spacing-7:56px;
+
+  /* Radius */
+  --fc-radius-sm:4px; --fc-radius-md:8px; --fc-radius-lg:16px; --fc-radius-xl:24px; --fc-radius-xxl:32px; --fc-radius-circular:100%;
+
+  /* Shadows */
+  --fc-shadow-card:0 6px 10px 0 rgba(65,98,214,0.02), 0 1px 6px 0px rgba(65,98,214,0.05);
+  --fc-shadow-drawer:-14px 0px 25px 0px rgba(65,98,214,0.05), -7px 0px 30px 0px rgba(65,98,214,0.07);
+  --fc-shadow-elevation-1:0px 0px 3px 0px #0022552E;
+  --fc-shadow-elevation-2:0px 2px 7px 0px #00225526;
+  --fc-shadow-elevation-3:rgba(65,98,214,0.08) 0px 3px 8px 0px;
+  --fc-shadow-focus:0 0 0 2px var(--fc-color-blue-300);
+
+  /* Layout (from navigation.style.css) */
+  --portal-primary-top-nav-height:84px;
+  --portal-secondary-top-nav-height:60px;
+  --portal-side-nav-width:240px;
+  --portal-top-nav-padding:24px;
+  --portal-section-nav-item-height:40px;
+}
