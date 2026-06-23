@@ -369,6 +369,10 @@
   .cr-v { font-family:"Poppins"; font-weight:700; font-size:22px; color:#fff; margin-top:4px; }
   .cr-v.big { font-size:26px; }
   .calc-note { font-size:11px; color:rgba(255,255,255,.6); margin:0 0 18px; }
+  .env-rep { display:flex; align-items:center; gap:16px; margin-top:14px; padding:16px 18px; background:rgba(255,255,255,.10); border:1px solid rgba(255,255,255,.18); border-radius:14px; }
+  .env-rep-photo { width:72px; height:72px; border-radius:50%; object-fit:cover; object-position:center top; flex:0 0 auto; border:2px solid rgba(255,255,255,.35); }
+  .env-rep-fallback { width:72px; height:72px; border-radius:50%; flex:0 0 auto; align-items:center; justify-content:center; background:rgba(255,255,255,.22); color:#fff; font-family:"Poppins"; font-weight:600; font-size:22px; border:2px solid rgba(255,255,255,.35); }
+  #env-confirm { color:#fff; font-size:14px; line-height:1.5; }
   .data-list { background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.14); border-radius:12px; padding:14px 16px; margin-bottom:18px; }
   .dl-title { font-family:"Poppins"; font-weight:600; font-size:13px; color:#fff; margin-bottom:8px; }
   .data-list ul { margin:0; padding-left:18px; }
@@ -450,6 +454,24 @@
   #tour-spot { position:fixed; z-index:300; border-radius:12px; box-shadow:0 0 0 9999px rgba(15,30,60,.62); pointer-events:none; transition:top .12s ease, left .12s ease, width .12s ease, height .12s ease; border:2px solid var(--fc-color-brand-blue-500); }
   #tour-spot[hidden], #tour-pop[hidden] { display:none; }
   #tour-pop { position:fixed; z-index:301; width:340px; max-width:calc(100vw - 32px); background:var(--fc-color-surface-primary); border-radius:14px; box-shadow:var(--fc-shadow-elevation-3); padding:20px 22px; transition:top .12s ease, left .12s ease; }
+  #tour-pop .tp-min { position:absolute; top:12px; right:12px; width:26px; height:26px; border:none; background:var(--fc-color-surface-tertiary); border-radius:7px; color:var(--fc-color-blue-gray-700); cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0; }
+  #tour-pop .tp-min svg { width:15px; height:15px; }
+  #tour-pop .tp-min:hover { background:var(--fc-color-blue-gray-200); }
+  /* Floating demo dock */
+  #demo-dock { position:fixed; bottom:22px; right:22px; z-index:190; display:flex; flex-direction:column; align-items:flex-end; gap:12px; }
+  #demo-dock[hidden] { display:none; }
+  #dock-resume { display:inline-flex; align-items:center; gap:8px; font-family:"Poppins"; font-weight:600; font-size:13px; color:#fff; background:var(--fc-color-brand-blue-600); border:none; border-radius:9999px; padding:11px 18px; cursor:pointer; box-shadow:0 8px 20px rgba(0,34,85,.25); }
+  #dock-resume[hidden] { display:none; }
+  #dock-resume svg { width:14px; height:14px; }
+  #dock-resume:hover { background:var(--fc-color-brand-blue-700); }
+  .dock-goals { display:flex; align-items:center; gap:10px; background:var(--fc-color-surface-primary); border:1px solid var(--fc-color-border-primary); border-radius:9999px; padding:8px 14px 8px 16px; box-shadow:var(--fc-shadow-elevation-2); }
+  .dock-label { font-family:"Poppins"; font-weight:600; font-size:12px; color:var(--fc-color-blue-gray-700); }
+  .dock-goal { width:34px; height:34px; border-radius:50%; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:transform .12s; }
+  .dock-goal:hover { transform:translateY(-2px); }
+  .dock-goal svg { width:17px; height:17px; }
+  .dock-goal[data-dgoal="auth"] { background:#1f75f6; } .dock-goal[data-dgoal="cost"] { background:#5b58ea; } .dock-goal[data-dgoal="psd2"] { background:#00ba7f; }
+  .dock-div { width:1px; height:22px; background:var(--fc-color-border-primary); }
+  .dock-finish { background:var(--fc-color-blue-gray-800); }
   #tour-pop .tp-step { font-family:"Poppins"; font-weight:600; font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--fc-color-brand-blue-600); }
   #tour-pop h3 { font-family:"Poppins"; font-weight:700; font-size:17px; color:var(--fc-color-blue-gray-900); margin:6px 0 8px; }
   #tour-pop p { font-size:14px; line-height:1.5; color:var(--fc-color-text-secondary); margin:0 0 18px; }
@@ -472,7 +494,7 @@
       <defs><linearGradient id="fp" x1="30.5" y1="1" x2="0" y2="31" gradientUnits="userSpaceOnUse"><stop stop-color="#5B58EA"/><stop offset="1" stop-color="#1F75F6"/></linearGradient></defs>
     </svg>
     <div>
-      <div class="brand-name">Demo Apparel Vertical</div>
+      <div class="brand-name" id="brand-name">Demo</div>
       <div class="brand-sub">Production</div>
     </div>
   </div>
@@ -1865,6 +1887,7 @@
 <!-- ===== Coach-mark tour elements ===== -->
 <div id="tour-spot" hidden></div>
 <div id="tour-pop" hidden>
+  <button class="tp-min" id="tp-min" title="Explore freely — keep the walk-through handy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 18h14"/></svg></button>
   <div class="tp-step" id="tp-step">Step 1</div>
   <h3 id="tp-title">—</h3>
   <p id="tp-body">—</p>
@@ -1874,6 +1897,19 @@
       <button class="tp-btn" id="tp-back">Back</button>
       <button class="tp-btn primary" id="tp-next">Next</button>
     </div>
+  </div>
+</div>
+
+<!-- Floating demo dock: jump between journeys + resume a minimized walk-through -->
+<div id="demo-dock" hidden>
+  <button id="dock-resume" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 5v14l11-7z"/></svg> Continue walk-through</button>
+  <div class="dock-goals">
+    <span class="dock-label">Explore another goal</span>
+    <button class="dock-goal" data-dgoal="auth" title="Lift authorization rate"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M3 17l6-6 4 4 7-8"/><path d="M14 7h6v6"/></svg></button>
+    <button class="dock-goal" data-dgoal="cost" title="Reduce payment costs"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></button>
+    <button class="dock-goal" data-dgoal="psd2" title="Maximize conversion under PSD2"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg></button>
+    <span class="dock-div"></span>
+    <button class="dock-goal dock-finish" id="dock-finish" title="Finish — see next steps"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M5 4v16"/><path d="M5 5h11l-2 3 2 3H5"/></svg></button>
   </div>
 </div>
 
@@ -1981,8 +2017,8 @@
       <div class="persona-grid" id="flow-end-opts" style="grid-template-columns:repeat(2,1fr)">
         <div class="persona" id="flow-opt-data">
           <div class="pa" style="background:#1f75f6"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9"><rect x="2.5" y="4" width="19" height="13" rx="2"/><path d="M9 21h6M12 17v4"/></svg></div>
-          <div class="pt">Request a personalised version</div>
-          <div class="ps">Your own version of the tool, built on your data</div>
+          <div class="pt">Build my business case</div>
+          <div class="ps">See the impact modelled on your own numbers</div>
         </div>
         <div class="persona" id="flow-opt-more">
           <div class="pa" style="background:#00ba7f"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></div>
@@ -1996,15 +2032,10 @@
 
       <div id="flow-end-data" hidden>
         <a class="back-link" id="flow-data-back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg> Back</a>
-        <div id="env-step1">
-          <h1 style="font-size:23px">Your personalised version</h1>
-          <p class="intro" style="font-size:15px; margin-bottom:6px">We’ll build you your own version of Forter, the same experience you have just seen, running on your transactions.</p>
-          <p style="font-size:13px; color:rgba(255,255,255,.7); margin:0 0 24px">Teams like yours typically recover 2–3 points of authorization rate.</p>
-          <button class="calc-cta" id="env-request">Request my version</button>
-        </div>
-        <div id="env-step2" hidden>
-          <h1 style="font-size:23px">Build your personalised version</h1>
-          <p class="intro" style="font-size:15px; margin-bottom:18px">A few quick details so your Forter team can tailor the tool to you. <span id="env-sender" style="color:rgba(255,255,255,.6)"></span></p>
+        <div id="env-step2">
+          <h1 style="font-size:23px">Build my business case</h1>
+          <p class="intro" style="font-size:15px; margin-bottom:6px">Forter’s Business Value team will model the impact on your own numbers, the same experience you just saw, with your data.</p>
+          <p style="font-size:13px; color:rgba(255,255,255,.7); margin:0 0 18px">Teams like yours typically recover 2–3 points of authorization rate. <span id="env-sender" style="color:rgba(255,255,255,.55)"></span></p>
           <form id="env-form">
             <div class="calc-grid">
               <label class="calc-field">Company
@@ -2046,12 +2077,14 @@
             <label class="calc-field" style="margin-bottom:16px">Anything specific you want to see? <span style="color:rgba(255,255,255,.5)">(optional)</span>
               <div class="calc-input ta"><textarea id="ef-notes" placeholder="e.g. our auth rate dips in the EU…"></textarea></div>
             </label>
-            <button type="submit" class="calc-cta" id="env-submit">Request my version</button>
+            <button type="submit" class="calc-cta" id="env-submit">Build my case</button>
           </form>
           <p class="calc-note" style="margin-top:10px">We’ll arrange a secure transaction sample with you directly, so no sensitive data is collected on this screen.</p>
           <div id="env-done" hidden>
-            <div class="pj-callout" style="background:rgba(255,255,255,.14); border-color:rgba(255,255,255,.25); color:#fff">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M20 6L9 17l-5-5"/></svg>
+            <div class="env-rep">
+              <img class="env-rep-photo" src="po-assets/img/cristian.svg" alt="Cristian Alfiero"
+                   onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+              <div class="env-rep-fallback" style="display:none">CA</div>
               <span id="env-confirm"></span>
             </div>
           </div>
@@ -2082,6 +2115,7 @@
     document.getElementById('greet').textContent = 'Good ' + tod + ', ' + first + '.';
     document.getElementById('welcome-h1').textContent = 'Hi ' + first;
     document.getElementById('user-name').textContent = first;
+    document.getElementById('brand-name').textContent = first + "'s Demo";
     if (email) document.getElementById('user-email').textContent = email;
     const parts = (name || '').trim().split(/\s+/);
     if (parts[0]) document.getElementById('user-initials').textContent = (parts[0][0] || '') + (parts[1] ? parts[1][0] : '');
@@ -2291,19 +2325,23 @@
     });
   }
 
-  /* Payments goal → route to the Payments zone and start the matching guided tour */
-  document.querySelectorAll('[data-paygoal]').forEach(g => g.addEventListener('click', () => {
-    const goal = g.dataset.paygoal;
+  /* Route into a Payments goal + start its guided tour (used by goal cards and the dock) */
+  function startPayGoal(goal) {
+    const map = { auth: PAY_AUTH_TOUR, cost: PAY_COST_TOUR, psd2: PAY_PSD2_TOUR };
+    if (!map[goal]) return;
     try { sessionStorage.setItem('demoPayGoal', goal); } catch (e) {}
+    lastPayGoal = goal;
     document.getElementById('welcome-overlay').hidden = true;
+    document.getElementById('flow-end').hidden = true;
+    document.getElementById('dock-resume').hidden = true;
     activateNav('Payments');
     showPage('Payments');
     showPayInsights();
     switchInsView('Overview');
-    const map = { auth: PAY_AUTH_TOUR, cost: PAY_COST_TOUR, psd2: PAY_PSD2_TOUR };
-    lastPayGoal = goal;
+    document.getElementById('demo-dock').hidden = false;
     setTimeout(() => { startTour(map[goal], showFlowEnd); }, 450);
-  }));
+  }
+  document.querySelectorAll('[data-paygoal]').forEach(g => g.addEventListener('click', () => startPayGoal(g.dataset.paygoal)));
 
   /* End-of-flow next-step card */
   let lastPayGoal = 'auth';
@@ -2324,33 +2362,28 @@
     document.getElementById('flow-end-data').hidden = true;
     document.getElementById('flow-end').hidden = false;
   }
-  /* "Request a personalised version" → commit first, then justify the data ask */
+  /* "Build my business case" → open the form directly (no double-ask) */
   document.getElementById('flow-opt-data').addEventListener('click', () => {
-    document.getElementById('flow-end-main').hidden = true;
-    document.getElementById('flow-end-data').hidden = false;
-    document.getElementById('env-step1').hidden = false;
-    document.getElementById('env-step2').hidden = true;
-  });
-  document.getElementById('flow-data-back').addEventListener('click', () => {
-    document.getElementById('flow-end-data').hidden = true;
-    document.getElementById('flow-end-main').hidden = false;
-  });
-  document.getElementById('env-request').addEventListener('click', () => {
     let name = '', email = '';
     try { name = sessionStorage.getItem('demoName') || ''; email = sessionStorage.getItem('demoEmail') || ''; } catch (e) {}
     const sender = [name, email].filter(Boolean).join(' · ');
     document.getElementById('env-sender').textContent = sender ? 'Sending as ' + sender + '.' : '';
-    document.getElementById('env-step1').hidden = true;
-    document.getElementById('env-step2').hidden = false;
+    document.getElementById('flow-end-main').hidden = true;
+    document.getElementById('flow-end-data').hidden = false;
     document.getElementById('env-form').hidden = false;
     document.getElementById('env-done').hidden = true;
+    document.querySelector('#env-step2 .calc-note').style.display = '';
+  });
+  document.getElementById('flow-data-back').addEventListener('click', () => {
+    document.getElementById('flow-end-data').hidden = true;
+    document.getElementById('flow-end-main').hidden = false;
   });
   document.getElementById('env-form').addEventListener('submit', (e) => {
     e.preventDefault();
     let email = '';
     try { email = sessionStorage.getItem('demoEmail') || ''; } catch (e2) {}
     document.getElementById('env-confirm').textContent =
-      'Thanks, your request is in. Your Forter team will reach out' + (email ? ' at ' + email : '') + ' to arrange the transaction sample and build your version.';
+      'Thanks, your business case is on its way. Cristian Alfiero from our team will get in touch with you' + (email ? ' at ' + email : '') + '.';
     document.getElementById('env-form').hidden = true;
     document.querySelector('#env-step2 .calc-note').style.display = 'none';
     document.getElementById('env-done').hidden = false;
@@ -2577,8 +2610,17 @@
   const spot = document.getElementById('tour-spot');
   const pop = document.getElementById('tour-pop');
 
-  function startTour(steps, onComplete) { tourSteps = steps; tourIdx = 0; tourOnComplete = onComplete || null; renderTourStep(); }
-  function endTour() { spot.hidden = true; pop.hidden = true; tourSteps = null; tourOnComplete = null; }
+  function startTour(steps, onComplete) { tourSteps = steps; tourIdx = 0; tourOnComplete = onComplete || null; document.getElementById('dock-resume').hidden = true; renderTourStep(); }
+  function endTour() { spot.hidden = true; pop.hidden = true; tourSteps = null; tourOnComplete = null; document.getElementById('dock-resume').hidden = true; }
+  /* Minimize the walk-through (keep it resumable) so the user can explore freely */
+  function minimizeTour() {
+    spot.hidden = true; pop.hidden = true;
+    if (tourSteps) { document.getElementById('demo-dock').hidden = false; document.getElementById('dock-resume').hidden = false; }
+  }
+  function resumeTour() {
+    document.getElementById('dock-resume').hidden = true;
+    if (tourSteps) renderTourStep();
+  }
 
   function placeTour(step) {
     if (step.center || !step.target) {
@@ -2648,7 +2690,11 @@
     if (tourIdx > 0) { tourIdx--; renderTourStep(); }
   });
   document.getElementById('tp-skip').addEventListener('click', endTour);
-  window.addEventListener('resize', () => { if (tourSteps) placeTour(tourSteps[tourIdx]); });
+  document.getElementById('tp-min').addEventListener('click', minimizeTour);
+  document.getElementById('dock-resume').addEventListener('click', resumeTour);
+  document.querySelectorAll('.dock-goal[data-dgoal]').forEach(b => b.addEventListener('click', () => startPayGoal(b.dataset.dgoal)));
+  document.getElementById('dock-finish').addEventListener('click', () => { endTour(); showFlowEnd(); });
+  window.addEventListener('resize', () => { if (tourSteps && !pop.hidden) placeTour(tourSteps[tourIdx]); });
 
   /* Sub-tabs (visual only) — scoped to each tab's own row */
   document.querySelectorAll('.subtab').forEach(t => t.addEventListener('click', () => {
