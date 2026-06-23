@@ -394,7 +394,7 @@
 
   .welcome-overlay { position:fixed; inset:0; z-index:200; background:rgba(255,255,255,.28); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); display:flex; align-items:center; justify-content:center; padding:24px; }
   .welcome-overlay[hidden] { display:none; }
-  .welcome-card { position:relative; overflow:hidden; background:linear-gradient(150deg, rgba(0,30,110,.82) 0%, rgba(0,55,165,.78) 40%, rgba(20,95,215,.72) 100%); backdrop-filter:blur(16px) saturate(1.2); -webkit-backdrop-filter:blur(16px) saturate(1.2); border:1px solid rgba(255,255,255,.18); border-radius:18px; box-shadow:0 24px 60px rgba(0,34,85,.28); max-width:720px; width:100%; padding:34px 40px; }
+  .welcome-card { position:relative; overflow:hidden; background:linear-gradient(150deg, rgba(0,30,110,.82) 0%, rgba(0,55,165,.78) 40%, rgba(20,95,215,.72) 100%); backdrop-filter:blur(16px) saturate(1.2); -webkit-backdrop-filter:blur(16px) saturate(1.2); border:1px solid rgba(255,255,255,.18); border-radius:18px; box-shadow:0 24px 60px rgba(0,34,85,.28); max-width:720px; width:100%; padding:26px 40px 34px; }
   .welcome-card::before { content:""; position:absolute; inset:0; z-index:0; background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); pointer-events:none; }
   .welcome-card > div { position:relative; z-index:1; }
   .welcome-logo { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
@@ -1917,10 +1917,6 @@
 <div class="welcome-overlay" id="welcome-overlay">
   <div class="welcome-card">
     <div id="welcome-header">
-    <div class="welcome-logo">
-      <img src="po-assets/img/forter-logo-white.svg" alt="Forter" style="height:26px">
-    </div>
-    <div class="welcome-tagline">Know who to trust, before your bank does.</div>
     <h1 id="welcome-h1">Hi Avishek</h1>
     <p class="intro">Let’s solve your problems, one at a time.</p>
     </div><!-- /welcome-header -->
@@ -2363,7 +2359,7 @@
     document.getElementById('flow-end').hidden = false;
   }
   /* "Build my business case" → open the form directly (no double-ask) */
-  document.getElementById('flow-opt-data').addEventListener('click', () => {
+  function openBusinessCase() {
     let name = '', email = '';
     try { name = sessionStorage.getItem('demoName') || ''; email = sessionStorage.getItem('demoEmail') || ''; } catch (e) {}
     const sender = [name, email].filter(Boolean).join(' · ');
@@ -2373,7 +2369,9 @@
     document.getElementById('env-form').hidden = false;
     document.getElementById('env-done').hidden = true;
     document.querySelector('#env-step2 .calc-note').style.display = '';
-  });
+    document.getElementById('flow-end').hidden = false;
+  }
+  document.getElementById('flow-opt-data').addEventListener('click', openBusinessCase);
   document.getElementById('flow-data-back').addEventListener('click', () => {
     document.getElementById('flow-end-data').hidden = true;
     document.getElementById('flow-end-main').hidden = false;
@@ -2693,7 +2691,7 @@
   document.getElementById('tp-min').addEventListener('click', minimizeTour);
   document.getElementById('dock-resume').addEventListener('click', resumeTour);
   document.querySelectorAll('.dock-goal[data-dgoal]').forEach(b => b.addEventListener('click', () => startPayGoal(b.dataset.dgoal)));
-  document.getElementById('dock-finish').addEventListener('click', () => { endTour(); showFlowEnd(); });
+  document.getElementById('dock-finish').addEventListener('click', () => { endTour(); openBusinessCase(); });
   window.addEventListener('resize', () => { if (tourSteps && !pop.hidden) placeTour(tourSteps[tourIdx]); });
 
   /* Sub-tabs (visual only) — scoped to each tab's own row */
